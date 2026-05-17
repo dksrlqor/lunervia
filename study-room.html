@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lunervia Lab</title>
+    <meta
+      name="description"
+      content="Lunervia Lab은 공부, 기록, 집중 같은 일상 문제를 작은 소프트웨어 도구로 실험하는 공간입니다."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23170C79'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-family='Arial,sans-serif' font-size='36' font-weight='700' fill='%238ACBD0'%3EL%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260516t" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Lunervia 첫 화면으로 이동">
+          <span class="static-lunervia-logo static-lunervia-logo-header" aria-label="LUNERVIA">
+            <img src="assets/brand/lunervia-wordmark-static-navy.png?v=20260515a" alt="" />
+          </span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="메뉴 열기"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="nav" id="site-nav">
+          <a href="study-room.html">Lunervia Lab</a>
+          <div class="nav-project-menu" data-project-menu>
+            <div class="nav-project-row">
+              <a class="nav-project-link" href="projects.html">Launch Board</a>
+              <button class="nav-project-trigger" type="button" aria-expanded="false" aria-controls="project-proof-panel" aria-label="Launch Board 상세 메뉴 열기"></button>
+            </div>
+            <div class="project-proof-panel" id="project-proof-panel" hidden>
+              <a class="project-proof-open" href="proof-board.html" target="_blank" rel="noopener noreferrer">Proof Board</a>
+            </div>
+          </div>
+          <a href="index.html#community">브랜드</a>
+          <a href="updates.html">Dev Log</a>
+          <a href="index.html#contact">문의</a>
+        </nav>
+      </header>
+
+      <main id="home">
+        <section class="study-hero reveal">
+          <p class="eyebrow">Lunervia Lab</p>
+          <h1>작은 도구를 실험하는 Lunervia Lab.</h1>
+          <p>
+            Lunervia Lab은 공부, 기록, 집중처럼 일상 속 문제를 작은 소프트웨어 도구로 풀어보는 실험 공간입니다.
+            현재는 시험까지 남은 시간을 한눈에 확인할 수 있는 디데이 도구를 운영하고 있습니다.
+          </p>
+          <a class="button secondary" href="index.html">메인으로 돌아가기</a>
+        </section>
+
+        <section class="section section-study">
+          <div class="community-panel reveal">
+            <div class="community-copy">
+              <p class="eyebrow">실시간 디데이 도구</p>
+              <h2>남은 시간을 자동 계산하고 가까운 일정부터 정리합니다.</h2>
+              <p>
+                컴퓨터 시간을 기준으로 디데이와 총 남은 시간을 계산합니다.
+                시험 카드는 가장 가까운 날짜가 위로 오도록 자동 정렬됩니다.
+              </p>
+            </div>
+
+            <div class="exam-list">
+              <div class="exam-card" data-exam-date="2026-06-30T00:00:00+09:00">
+                <span class="exam-label">기말고사</span>
+                <strong>6월 30일 시작</strong>
+                <div class="exam-countdown">
+                  <div class="countdown-unit">
+                    <small>디데이</small>
+                    <span data-countdown-days>--</span>
+                  </div>
+                  <div class="countdown-unit">
+                    <small>남은 시간</small>
+                    <span class="time-parts">
+                      <span class="time-part"><b data-countdown-total-hours>--</b><em>시간</em></span>
+                      <span class="time-part"><b data-countdown-minutes>--</b><em>분</em></span>
+                      <span class="time-part"><b data-countdown-seconds>--</b><em>초</em></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="exam-card" data-exam-date="2026-06-04T00:00:00+09:00">
+                <span class="exam-label">학평/모평</span>
+                <strong>6월 4일</strong>
+                <div class="exam-countdown">
+                  <div class="countdown-unit">
+                    <small>디데이</small>
+                    <span data-countdown-days>--</span>
+                  </div>
+                  <div class="countdown-unit">
+                    <small>남은 시간</small>
+                    <span class="time-parts">
+                      <span class="time-part"><b data-countdown-total-hours>--</b><em>시간</em></span>
+                      <span class="time-part"><b data-countdown-minutes>--</b><em>분</em></span>
+                      <span class="time-part"><b data-countdown-seconds>--</b><em>초</em></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-grid">
+          <div class="footer-brand-block">
+            <a class="footer-brand" href="index.html#home" aria-label="LUNERVIA">
+              <span class="static-lunervia-logo static-lunervia-logo-footer" aria-label="LUNERVIA">
+                <img src="assets/brand/lunervia-wordmark-static-white.png?v=20260515a" alt="" />
+              </span>
+            </a>
+            <p>
+              Lunervia는 아이디어를 웹, 앱, 자동화, AI 연동으로 연결하는 소프트웨어 브랜드입니다.
+            </p>
+            <a class="footer-email" href="mailto:contact@lunervia.com">contact@lunervia.com</a>
+          </div>
+
+          <div class="footer-column">
+            <h3>Services</h3>
+            <a href="index.html#contact">웹사이트 제작</a>
+            <a href="index.html#contact">앱 기획</a>
+            <a href="index.html#contact">자동화 설계</a>
+            <a href="index.html#contact">AI 연동</a>
+          </div>
+
+          <div class="footer-column">
+            <h3>Projects</h3>
+            <a href="projects.html">DidingGo</a>
+            <a href="projects.html">LUNÉ</a>
+            <a href="projects.html">Loop</a>
+            <a href="study-room.html">Lunervia Lab</a>
+          </div>
+
+          <div class="footer-column">
+            <h3>Resources</h3>
+            <a href="reason.html">브랜드 노트</a>
+            <a href="updates.html">Dev Log</a>
+            <a href="index.html#contact">문의하기</a>
+          </div>
+
+          <div class="footer-column">
+            <h3>Social</h3>
+            <a class="instagram-app-link" href="https://www.instagram.com/lunerviasoft/" data-instagram-app="lunerviasoft" target="_blank" rel="noopener noreferrer">@lunerviasoft</a>
+            <a class="instagram-app-link" href="https://www.instagram.com/dksrlqor/" data-instagram-app="dksrlqor" target="_blank" rel="noopener noreferrer">@dksrlqor</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 Lunervia. All rights reserved.</span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="assets/vendor/lottie.min.js?v=20260515a"></script>
+    <script src="script.js?v=20260516t"></script>
+  </body>
+</html>
