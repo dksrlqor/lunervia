@@ -8,21 +8,27 @@
       name="description"
       content="Lunervia의 완성 화면, 배포 기록, 작업 증거를 모아두는 Proof Board입니다."
     />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23170C79'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-family='Arial,sans-serif' font-size='36' font-weight='700' fill='%238ACBD0'%3EL%3C/text%3E%3C/svg%3E" />
+    <meta name="theme-color" content="#0a0a0b" />
+    <!-- 파비콘: 블랙 + 인디고 'L' -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0a0b'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='14.5' fill='none' stroke='%237b74ff' stroke-opacity='0.5' stroke-width='1.5'/%3E%3Ctext x='50%25' y='57%25' text-anchor='middle' font-family='Arial,sans-serif' font-size='38' font-weight='700' fill='%239a93ff'%3EL%3C/text%3E%3C/svg%3E"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260516t" />
+    <link rel="stylesheet" href="styles.css?v=20260518a" />
   </head>
   <body class="projects-page proof-page">
     <div class="site-shell">
       <header class="topbar">
         <a class="brand" href="index.html" aria-label="Lunervia 첫 화면으로 이동">
-          <span class="static-lunervia-logo static-lunervia-logo-header" aria-label="LUNERVIA">
-            <img src="assets/brand/lunervia-wordmark-static-navy.png?v=20260515a" alt="" />
+          <!-- LOGO(헤더): 첨부한 '텍스트형' 흰색 로고를 아래 파일명으로 assets/brand/ 에 저장하세요 -->
+          <span class="brand-logo" aria-hidden="true">
+            <img src="assets/brand/lunervia-logo-text.png?v=20260518a" alt="" />
           </span>
         </a>
 
@@ -88,8 +94,9 @@
         <div class="footer-grid">
           <div class="footer-brand-block">
             <a class="footer-brand" href="index.html" aria-label="LUNERVIA">
-              <span class="static-lunervia-logo static-lunervia-logo-footer" aria-label="LUNERVIA">
-                <img src="assets/brand/lunervia-wordmark-static-white.png?v=20260515a" alt="" />
+              <!-- LOGO(푸터): 첨부한 '심볼+텍스트' 흰색 로고 -->
+              <span class="footer-logo" aria-hidden="true">
+                <img src="assets/brand/lunervia-logo-symbol-text.png?v=20260518a" alt="" />
               </span>
             </a>
             <p>
@@ -135,6 +142,6 @@
     </div>
 
     <script src="assets/vendor/lottie.min.js?v=20260515a"></script>
-    <script src="script.js?v=20260516t"></script>
+    <script src="script.js?v=20260518a"></script>
   </body>
 </html>

@@ -1,0 +1,2107 @@
+<!--
+File: worldletter-codex-core.html
+Project: World Letter MVP
+Version: Codex Core Functionality
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>월드레터 / World Letter MVP</title>
+
+  <!-- =========================
+       CSS SECTION
+  ========================== -->
+  <style>
+    :root {
+      --deep-navy: #0B1026;
+      --midnight: #121A3A;
+      --ivory: #FFF8EA;
+      --paper: #F8EEDC;
+      --pastel-blue: #AFCBFF;
+      --lavender: #CDB4DB;
+      --mint: #BDE0D0;
+      --soft-pink: #FFC8DD;
+      --ink: #23304F;
+      --muted: rgba(255, 248, 234, 0.72);
+      --glass: rgba(255, 248, 234, 0.11);
+      --glass-strong: rgba(255, 248, 234, 0.18);
+      --line: rgba(255, 248, 234, 0.22);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --paper-shadow: 0 18px 50px rgba(2, 6, 23, 0.22);
+      --radius-lg: 28px;
+      --radius-md: 22px;
+      --radius-sm: 18px;
+      --max-app: 520px;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--deep-navy);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ivory);
+      background:
+        linear-gradient(145deg, rgba(18, 26, 58, 0.78), rgba(11, 16, 38, 0.98)),
+        repeating-radial-gradient(circle at 12% 18%, rgba(255, 248, 234, 0.8) 0 1px, transparent 1px 120px),
+        repeating-radial-gradient(circle at 78% 10%, rgba(175, 203, 255, 0.7) 0 1px, transparent 1px 96px),
+        linear-gradient(180deg, #0B1026 0%, #121A3A 56%, #0B1026 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 0 16%, rgba(175, 203, 255, 0.08) 16% 16.4%, transparent 16.4% 100%),
+        linear-gradient(35deg, transparent 0 28%, rgba(189, 224, 208, 0.08) 28% 28.4%, transparent 28.4% 100%),
+        linear-gradient(165deg, transparent 0 72%, rgba(255, 200, 221, 0.07) 72% 72.3%, transparent 72.3% 100%);
+      opacity: 0.72;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(175, 203, 255, 0.85);
+      outline-offset: 3px;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(100%, var(--max-app));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 16px 34px;
+    }
+
+    .view {
+      display: none;
+      animation: fadeIn 220ms ease both;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 18px;
+      background: rgba(255, 248, 234, 0.13);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    .language-toggle {
+      min-width: 74px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 248, 234, 0.13);
+      color: var(--ivory);
+      border: 1px solid var(--line);
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .language-toggle:hover {
+      background: rgba(255, 248, 234, 0.2);
+    }
+
+    .language-toggle:active,
+    .button:active,
+    .action-card:active,
+    .icon-button:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 74px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 26px 0 34px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 176px;
+      margin-bottom: 22px;
+      border-radius: 36px;
+      border: 1px solid rgba(255, 248, 234, 0.18);
+      background:
+        linear-gradient(125deg, rgba(175, 203, 255, 0.22), rgba(205, 180, 219, 0.16)),
+        linear-gradient(180deg, rgba(255, 248, 234, 0.08), rgba(255, 248, 234, 0.04));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: "WORLD LETTER";
+      position: absolute;
+      left: 24px;
+      top: 20px;
+      color: rgba(255, 248, 234, 0.22);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+    }
+
+    .map-strip {
+      position: absolute;
+      inset: 24px 18px;
+      border: 1px solid rgba(255, 248, 234, 0.16);
+      border-radius: 32px;
+      background:
+        linear-gradient(90deg, transparent 0 14%, rgba(255, 248, 234, 0.16) 14% 14.4%, transparent 14.4% 100%),
+        linear-gradient(90deg, transparent 0 38%, rgba(189, 224, 208, 0.18) 38% 38.4%, transparent 38.4% 100%),
+        linear-gradient(90deg, transparent 0 64%, rgba(255, 200, 221, 0.17) 64% 64.4%, transparent 64.4% 100%),
+        linear-gradient(0deg, transparent 0 46%, rgba(175, 203, 255, 0.14) 46% 46.5%, transparent 46.5% 100%);
+    }
+
+    .plane {
+      position: absolute;
+      right: 38px;
+      top: 54px;
+      font-size: 2.35rem;
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28));
+      transform: rotate(-12deg);
+    }
+
+    .letter-stack {
+      position: absolute;
+      left: 42px;
+      bottom: 26px;
+      width: 94px;
+      height: 66px;
+      border-radius: 14px;
+      background: var(--paper);
+      box-shadow: var(--paper-shadow);
+      transform: rotate(-5deg);
+    }
+
+    .letter-stack::before,
+    .letter-stack::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+    }
+
+    .letter-stack::before {
+      background:
+        linear-gradient(145deg, transparent 0 48%, rgba(35, 48, 79, 0.12) 48% 50%, transparent 50% 100%),
+        linear-gradient(35deg, transparent 0 48%, rgba(35, 48, 79, 0.1) 48% 50%, transparent 50% 100%);
+    }
+
+    .letter-stack::after {
+      left: 10px;
+      top: -10px;
+      width: 78px;
+      height: 52px;
+      background: rgba(255, 248, 234, 0.9);
+      z-index: -1;
+      transform: rotate(8deg);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero-title {
+      margin-bottom: 10px;
+      color: var(--ivory);
+      font-size: clamp(2.6rem, 12vw, 4rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .slogan {
+      margin-bottom: 10px;
+      color: var(--paper);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .description,
+    .muted,
+    .fine-print {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .description {
+      margin-bottom: 22px;
+      font-size: 0.98rem;
+    }
+
+    .fine-print {
+      margin: 14px 0 0;
+      font-size: 0.82rem;
+    }
+
+    .button-row,
+    .inline-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: var(--deep-navy);
+      background: var(--ivory);
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
+    }
+
+    .button.secondary {
+      color: var(--ivory);
+      background: rgba(255, 248, 234, 0.13);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .button.soft {
+      background: var(--mint);
+    }
+
+    .button.pink {
+      background: var(--soft-pink);
+    }
+
+    .button.full {
+      width: 100%;
+    }
+
+    .button.is-muted {
+      opacity: 0.6;
+    }
+
+    .screen-head {
+      margin: 18px 0 22px;
+    }
+
+    .screen-title {
+      margin-bottom: 8px;
+      color: var(--ivory);
+      font-size: 1.9rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(255, 248, 234, 0.13);
+      border: 1px solid var(--line);
+      color: var(--paper);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .home-grid,
+    .secondary-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .home-grid {
+      margin: 18px 0;
+    }
+
+    .secondary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .action-card,
+    .mini-card,
+    .panel,
+    .letter-card,
+    .dashboard-card,
+    .record-card {
+      border: 1px solid var(--line);
+      background: var(--glass);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    .action-card {
+      width: 100%;
+      min-height: 104px;
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      color: var(--ivory);
+      text-align: left;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 248, 234, 0.17);
+      border-color: rgba(255, 248, 234, 0.34);
+    }
+
+    .action-card strong,
+    .mini-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.08rem;
+      letter-spacing: 0;
+    }
+
+    .action-card span,
+    .mini-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .mini-card {
+      min-height: 92px;
+      padding: 14px 12px;
+      border-radius: var(--radius-md);
+      color: var(--ivory);
+      text-align: left;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .mini-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 248, 234, 0.17);
+    }
+
+    .panel,
+    .letter-card {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    label,
+    .field-label {
+      color: var(--paper);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid rgba(35, 48, 79, 0.16);
+      border-radius: 20px;
+      background: rgba(255, 248, 234, 0.96);
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    textarea {
+      min-height: 176px;
+      padding: 16px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    select {
+      min-height: 48px;
+      padding: 0 14px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 12px 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--mint);
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin: 12px 0;
+      color: var(--paper);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .feedback.error {
+      color: var(--soft-pink);
+      font-weight: 800;
+    }
+
+    .feedback.success {
+      color: var(--mint);
+      font-weight: 800;
+    }
+
+    .send-zone {
+      position: relative;
+      min-height: 54px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .flying-plane {
+      position: absolute;
+      left: 12px;
+      top: 6px;
+      opacity: 0;
+      font-size: 1.8rem;
+      transform: translateX(0) rotate(-12deg);
+    }
+
+    .flying-plane.flying {
+      animation: planeFly 900ms ease-in-out both;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .meta-item {
+      min-height: 58px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255, 248, 234, 0.1);
+      border: 1px solid rgba(255, 248, 234, 0.14);
+    }
+
+    .meta-label {
+      display: block;
+      margin-bottom: 5px;
+      color: rgba(255, 248, 234, 0.62);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .meta-value {
+      display: block;
+      color: var(--ivory);
+      font-size: 0.88rem;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .letter-body {
+      min-height: 220px;
+      margin: 14px 0;
+      padding: 22px 18px;
+      border-radius: 24px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.05)),
+        var(--paper);
+      box-shadow: var(--paper-shadow);
+      line-height: 1.72;
+      white-space: pre-wrap;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .stat {
+      min-height: 60px;
+      padding: 10px;
+      border-radius: 18px;
+      background: rgba(255, 248, 234, 0.11);
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ivory);
+      font-size: 1.05rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .letter-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .letter-actions .button {
+      padding-inline: 12px;
+      font-size: 0.9rem;
+    }
+
+    .empty-state {
+      padding: 24px 18px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--glass);
+      color: var(--muted);
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .dashboard-list,
+    .record-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .dashboard-card,
+    .record-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      animation: slideUp 240ms ease both;
+    }
+
+    .rank-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 42px;
+      border-radius: 18px;
+      background: var(--pastel-blue);
+      color: var(--deep-navy);
+      font-weight: 900;
+    }
+
+    .score {
+      color: var(--mint);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .preview {
+      margin: 10px 0 14px;
+      color: var(--paper);
+      line-height: 1.55;
+    }
+
+    .compact-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .compact-stats span {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 248, 234, 0.12);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .record-card dl {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 8px 12px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .record-card dt {
+      color: rgba(255, 248, 234, 0.62);
+      font-weight: 800;
+    }
+
+    .record-card dd {
+      margin: 0;
+      color: var(--paper);
+      font-weight: 700;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(4, 8, 24, 0.72);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 180ms ease both;
+    }
+
+    .modal-card {
+      width: min(100%, 500px);
+      max-height: min(88vh, 720px);
+      overflow: auto;
+      padding: 22px;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 248, 234, 0.17), rgba(255, 248, 234, 0.1)),
+        var(--midnight);
+      box-shadow: var(--shadow);
+      animation: scaleIn 180ms ease both;
+    }
+
+    .modal-title {
+      margin-bottom: 10px;
+      color: var(--ivory);
+      font-size: 1.45rem;
+      line-height: 1.2;
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guide-list li {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 248, 234, 0.11);
+      color: var(--paper);
+      line-height: 1.45;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes planeFly {
+      0% {
+        opacity: 0;
+        transform: translateX(-20px) translateY(18px) rotate(-16deg);
+      }
+      15% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(430px) translateY(-26px) rotate(8deg);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .app {
+        padding-inline: 13px;
+      }
+
+      .secondary-grid,
+      .stats-row,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .letter-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      .button-row .button {
+        width: 100%;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =========================
+       HTML SECTION
+  ========================== -->
+  <main class="app" id="app">
+    <div class="topbar">
+      <div class="brand-mini" aria-label="World Letter">
+        <span class="brand-mark" aria-hidden="true">✈</span>
+        <span data-i18n="brandMini">월드레터 MVP</span>
+      </div>
+      <button class="language-toggle" type="button" data-action="toggle-language" id="languageToggle">KR / EN</button>
+    </div>
+
+    <section class="view" data-view="login" id="loginView">
+      <div class="hero">
+        <div class="hero-visual" aria-hidden="true">
+          <div class="map-strip"></div>
+          <div class="letter-stack"></div>
+          <div class="plane">✈</div>
+        </div>
+        <h1 class="hero-title" data-i18n="serviceName">월드레터</h1>
+        <p class="slogan" data-i18n="loginSlogan">말이 달라도 마음은 닿을 수 있어요.</p>
+        <p class="description" data-i18n="loginDescription">
+          익명으로 고민과 감정을 편지처럼 접어 보내면, 세계 어딘가의 누군가가 조심스럽게 펼쳐 읽고 하트, 세계로 보내기, 답장을 남길 수 있어요.
+        </p>
+        <div class="button-row" aria-label="Demo login actions">
+          <button class="button full" type="button" data-action="login" data-i18n="continueGoogle">Google로 계속하기</button>
+          <button class="button secondary full" type="button" data-action="login" data-i18n="continueApple">Apple로 계속하기</button>
+        </div>
+        <p class="fine-print" data-i18n="loginSafety">
+          익명 서비스를 안전하게 쓰기 위해 정확한 위치, 학교명, 주소, 전화번호, SNS ID는 적지 마세요.
+        </p>
+      </div>
+    </section>
+
+    <section class="view" data-view="home" id="homeView">
+      <div class="screen-head">
+        <span class="status-pill" id="remainingLettersPill">오늘 남은 편지 3개</span>
+        <h2 class="screen-title" data-i18n="homeTitle">세계 어딘가로 편지를 접어 보내요</h2>
+        <p class="muted" data-i18n="homeSafety">
+          월드레터는 따뜻하고 안전한 익명 편지 경험을 지향해요. 개인정보를 적지 않고, 서로의 속도를 존중해주세요.
+        </p>
+      </div>
+
+      <div class="home-grid">
+        <button class="action-card" type="button" data-nav="write">
+          <strong data-i18n="writeLetter">고민 편지 쓰기</strong>
+          <span data-i18n="writeLetterHint">오늘의 감정을 편지처럼 적어 종이비행기로 보내요.</span>
+        </button>
+        <button class="action-card" type="button" data-nav="receive">
+          <strong data-i18n="openLetter">도착한 편지 펼치기</strong>
+          <span data-i18n="openLetterHint">세계 어딘가에서 날아온 익명 편지를 읽어요.</span>
+        </button>
+        <button class="action-card" type="button" data-nav="dashboard">
+          <strong data-i18n="worldHearts">세계의 마음</strong>
+          <span data-i18n="worldHeartsHint">오늘 가장 많이 하트와 세계로 보내기를 받은 편지를 봐요.</span>
+        </button>
+      </div>
+
+      <div class="secondary-grid">
+        <button class="mini-card" type="button" data-nav="box">
+          <strong data-i18n="myLetterBox">내 종이함</strong>
+          <span data-i18n="myLetterBoxHint">보낸 기록</span>
+        </button>
+        <button class="mini-card" type="button" data-action="open-safety">
+          <strong data-i18n="safetyGuide">안전 가이드</strong>
+          <span data-i18n="safetyGuideHint">작성 전 확인</span>
+        </button>
+        <button class="mini-card" type="button" data-action="open-support">
+          <strong data-i18n="supportShort">후원하기</strong>
+          <span data-i18n="supportHint">순위 영향 없음</span>
+        </button>
+      </div>
+
+      <p class="fine-print">
+        <button class="button secondary" type="button" data-action="logout" data-i18n="logout">로그아웃</button>
+      </p>
+    </section>
+
+    <section class="view" data-view="write" id="writeView">
+      <div class="screen-head">
+        <span class="status-pill" id="writeRemainingPill">오늘 남은 편지 3개</span>
+        <h2 class="screen-title" data-i18n="writeTitle">고민 편지 쓰기</h2>
+        <p class="muted" data-i18n="writeGuide">
+          이름이나 연락처 대신 지금의 감정을 안전하게 적어주세요. 하루에 최대 3개의 편지를 보낼 수 있어요.
+        </p>
+      </div>
+
+      <form class="panel" id="writeForm">
+        <div class="field">
+          <label for="letterText" data-i18n="letterBodyLabel">고민 본문</label>
+          <textarea id="letterText" data-i18n-placeholder="letterBodyPlaceholder" placeholder="오늘 마음에 오래 남은 일을 조심스럽게 적어주세요."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="categorySelect" data-i18n="categoryLabel">감정 카테고리</label>
+          <select id="categorySelect"></select>
+        </div>
+
+        <div class="field">
+          <label for="countrySelect" data-i18n="countryLabel">국가</label>
+          <select id="countrySelect"></select>
+        </div>
+
+        <div class="field">
+          <label for="languageSelect" data-i18n="languageLabel">언어</label>
+          <select id="languageSelect"></select>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="dashboardOptIn">
+          <span data-i18n="dashboardOptIn">공개 대시보드 후보로 사용되는 것에 동의해요.</span>
+        </label>
+
+        <label class="check-row">
+          <input type="checkbox" id="safetyCheck">
+          <span data-i18n="safetyCheck">정확한 위치, 학교명, 주소, 전화번호, SNS ID를 적지 않았고 안전 수칙을 확인했어요.</span>
+        </label>
+
+        <p class="feedback" id="writeFeedback" aria-live="polite"></p>
+
+        <div class="button-row">
+          <button class="button soft" type="submit" id="sendLetterButton" data-i18n="sendPaperPlane">종이비행기로 보내기</button>
+          <button class="button secondary" type="button" data-nav="home" data-i18n="backHome">홈으로 돌아가기</button>
+        </div>
+
+        <div class="send-zone" aria-hidden="true">
+          <span class="flying-plane" id="flyingPlane">✈</span>
+        </div>
+      </form>
+    </section>
+
+    <section class="view" data-view="receive" id="receiveView">
+      <div class="screen-head">
+        <h2 class="screen-title" data-i18n="receiveTitle">도착한 편지 펼치기</h2>
+        <p class="muted" data-i18n="receiveGuide">
+          숨김이나 신고된 편지는 다시 표시되지 않아요. 읽을 준비가 되었을 때 천천히 펼쳐주세요.
+        </p>
+      </div>
+      <p class="feedback" id="receiveFeedback" aria-live="polite"></p>
+      <div id="receiveContent"></div>
+    </section>
+
+    <section class="view" data-view="dashboard" id="dashboardView">
+      <div class="screen-head">
+        <h2 class="screen-title" data-i18n="dashboardTitle">세계의 마음</h2>
+        <p class="muted" data-i18n="dashboardDescription">
+          세계의 마음은 하트, 세계로 보내기, 저장, 국가 간 반응 등을 기준으로 정렬됩니다. 후원이나 결제는 순위에 영향을 주지 않습니다.
+        </p>
+      </div>
+      <div class="dashboard-list" id="dashboardList"></div>
+      <button class="button secondary full" type="button" data-nav="home" data-i18n="backHome">홈으로 돌아가기</button>
+    </section>
+
+    <section class="view" data-view="box" id="boxView">
+      <div class="screen-head">
+        <span class="status-pill" id="boxTodayCount">오늘 보낸 편지 0개</span>
+        <h2 class="screen-title" data-i18n="boxTitle">내 종이함</h2>
+        <p class="muted" data-i18n="boxGuide">
+          종이함에는 보낸 기록만 남아요. 사용자가 쓴 고민 본문은 다시 보여주지 않습니다.
+        </p>
+      </div>
+      <div class="record-list" id="boxList"></div>
+      <button class="button secondary full" type="button" data-nav="home" data-i18n="backHome">홈으로 돌아가기</button>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="replyModal" role="dialog" aria-modal="true" aria-labelledby="replyModalTitle">
+    <div class="modal-card">
+      <h2 class="modal-title" id="replyModalTitle" data-i18n="replyModalTitle">💬 답장</h2>
+      <p class="muted" data-i18n="replyGuide">짧아도 괜찮아요. 개인정보를 묻거나 연락처를 요구하지 말아주세요.</p>
+      <textarea id="replyText" data-i18n-placeholder="replyPlaceholder" placeholder="편지를 쓴 사람에게 건네고 싶은 말을 적어주세요."></textarea>
+      <p class="feedback" id="replyFeedback" aria-live="polite"></p>
+      <div class="button-row">
+        <button class="button soft" type="button" data-action="submit-reply" data-i18n="sendReply">답장 보내기</button>
+        <button class="button secondary" type="button" data-action="close-modal" data-modal="replyModal" data-i18n="close">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+    <div class="modal-card">
+      <h2 class="modal-title" id="supportModalTitle">♡ 월드레터 후원하기</h2>
+      <p class="muted" data-i18n="supportDescription">
+        월드레터는 서버 비용, 무료 번역, 디자인, 개발을 위해 후원을 받을 수 있습니다.
+        후원은 선택이며, 순위·노출·기능에 영향을 주지 않습니다.
+      </p>
+      <p class="feedback" id="supportFeedback" aria-live="polite"></p>
+      <div class="button-row">
+        <button class="button pink" type="button" data-action="dummy-support" data-i18n="supportButton">♡ 월드레터 후원하기</button>
+        <button class="button secondary" type="button" data-action="close-modal" data-modal="supportModal" data-i18n="close">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="safetyModal" role="dialog" aria-modal="true" aria-labelledby="safetyModalTitle">
+    <div class="modal-card">
+      <h2 class="modal-title" id="safetyModalTitle" data-i18n="safetyTitle">안전 가이드</h2>
+      <ul class="guide-list" id="safetyGuideList"></ul>
+      <button class="button secondary full" type="button" data-action="close-modal" data-modal="safetyModal" data-i18n="close">닫기</button>
+    </div>
+  </div>
+
+  <!-- =========================
+       JAVASCRIPT SECTION
+  ========================== -->
+  <script>
+    (function () {
+      "use strict";
+
+      const STORAGE_KEY = "worldletter_state_v1";
+      const DAILY_LIMIT = 3;
+
+      const dummyLetters = [
+        {
+          id: "L001",
+          country: "대한민국",
+          countryEn: "South Korea",
+          language: "한국어",
+          category: "진로",
+          categoryEn: "Future",
+          originalText: "요즘 내가 정말 좋아하는 일을 찾고 있는지, 아니면 남들이 좋다고 말하는 길을 따라가고 있는지 헷갈려요. 큰 결정을 앞두면 마음이 작아져서 자꾸 미루게 됩니다. 천천히 생각해도 괜찮다고 스스로에게 말해주고 싶어요.",
+          translatedText: "I am not sure if I am looking for work I truly like, or if I am following a path other people call good. Big decisions make me feel small, so I keep delaying them. I want to tell myself that it is okay to think slowly.",
+          preview: "큰 결정을 앞두면 마음이 작아져서 자꾸 미루게 됩니다.",
+          hearts: 24,
+          sends: 8,
+          replies: 3,
+          saved: 4,
+          crossCountry: 6,
+          replyLikes: 2,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L002",
+          country: "일본",
+          countryEn: "Japan",
+          language: "日本語",
+          category: "친구 관계",
+          categoryEn: "Friendship",
+          originalText: "A close friend and I have become quiet around each other. Nothing dramatic happened, but our conversations are shorter now. I miss how easy it used to feel, and I wonder if growing up sometimes means becoming a little distant.",
+          translatedText: "가까웠던 친구와 요즘 서로 말수가 줄었어요. 특별한 일이 있었던 건 아니지만 대화가 짧아졌습니다. 예전처럼 편했던 시간이 그립고, 어른이 된다는 게 조금씩 멀어지는 일인지 궁금해요.",
+          preview: "친구와 특별한 일 없이 조금씩 멀어진 느낌이 들어요.",
+          hearts: 31,
+          sends: 12,
+          replies: 4,
+          saved: 9,
+          crossCountry: 7,
+          replyLikes: 5,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L003",
+          country: "캐나다",
+          countryEn: "Canada",
+          language: "English",
+          category: "새 환경",
+          categoryEn: "New Place",
+          originalText: "I moved to a new place this season, and everyone is kind, but I still feel like I am watching life from the doorway. I know belonging takes time. I just wish I could stop comparing my beginning with other people's comfort.",
+          translatedText: "이번 계절에 새로운 곳으로 왔고 사람들은 친절하지만, 아직 문밖에서 삶을 바라보는 느낌이 들어요. 익숙해지는 데 시간이 필요하다는 걸 알아요. 다만 나의 시작을 다른 사람의 편안함과 비교하지 않고 싶습니다.",
+          preview: "새로운 곳에서 친절한 사람들 사이에 있어도 아직 문밖에 선 것 같아요.",
+          hearts: 18,
+          sends: 10,
+          replies: 2,
+          saved: 5,
+          crossCountry: 9,
+          replyLikes: 3,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L004",
+          country: "브라질",
+          countryEn: "Brazil",
+          language: "Português",
+          category: "가족",
+          categoryEn: "Family",
+          originalText: "Lately I keep saying I am fine at home because I do not want my family to worry. It is not a big secret, just a tired feeling that follows me around. I hope one day I can say, gently, that I also need a quiet place to rest.",
+          translatedText: "요즘 가족이 걱정할까 봐 집에서는 계속 괜찮다고 말해요. 큰 비밀은 아니고, 그냥 피곤한 느낌이 계속 따라다닙니다. 언젠가는 나도 조용히 쉴 곳이 필요하다고 부드럽게 말할 수 있으면 좋겠어요.",
+          preview: "가족에게 괜찮은 척하는 일이 조금씩 피곤해졌어요.",
+          hearts: 27,
+          sends: 7,
+          replies: 5,
+          saved: 6,
+          crossCountry: 8,
+          replyLikes: 4,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L005",
+          country: "프랑스",
+          countryEn: "France",
+          language: "Français",
+          category: "시험",
+          categoryEn: "Exams",
+          originalText: "Exam season makes every hour feel measured. Even when I rest, part of me counts what I should be doing. I want to remember that my worth is not a score, and that a calm breath can be useful too.",
+          translatedText: "시험 기간에는 모든 시간이 측정되는 것처럼 느껴져요. 쉬고 있어도 마음 한쪽에서는 해야 할 일을 세고 있습니다. 나의 가치가 점수만은 아니고, 차분한 숨도 도움이 된다는 걸 기억하고 싶어요.",
+          preview: "쉬는 시간에도 해야 할 일을 세게 되는 시험 기간이에요.",
+          hearts: 22,
+          sends: 14,
+          replies: 3,
+          saved: 8,
+          crossCountry: 5,
+          replyLikes: 4,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L006",
+          country: "인도네시아",
+          countryEn: "Indonesia",
+          language: "Bahasa Indonesia",
+          category: "꿈",
+          categoryEn: "Dreams",
+          originalText: "I keep waiting for the perfect moment to start a small dream. The moment never feels perfect, so the dream stays in my notes. Maybe I can begin with a tiny step that no one else needs to see.",
+          translatedText: "작은 꿈을 시작하기에 완벽한 순간을 계속 기다리고 있어요. 그런데 그 순간은 늘 완벽하지 않아서 꿈은 메모장에만 남아 있습니다. 아무도 보지 않아도 되는 아주 작은 한 걸음부터 시작해보고 싶어요.",
+          preview: "완벽한 순간을 기다리느라 작은 꿈이 메모장에만 남아 있어요.",
+          hearts: 35,
+          sends: 11,
+          replies: 6,
+          saved: 10,
+          crossCountry: 12,
+          replyLikes: 6,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L007",
+          country: "독일",
+          countryEn: "Germany",
+          language: "Deutsch",
+          category: "언어",
+          categoryEn: "Language",
+          originalText: "Living where I cannot say everything easily is humbling. I understand more than I can answer, and sometimes my quietness looks like distance. I hope people can see that I am trying to cross the space between words.",
+          translatedText: "하고 싶은 말을 쉽게 다 할 수 없는 나라에서 지내는 일은 마음을 겸손하게 만들어요. 알아듣는 것보다 대답하는 것이 더 어렵고, 가끔 내 조용함이 거리감처럼 보입니다. 말 사이의 공간을 건너려고 노력하는 걸 알아주면 좋겠어요.",
+          preview: "말이 잘 통하지 않는 곳에서 조용함이 거리감처럼 보일까 걱정돼요.",
+          hearts: 29,
+          sends: 9,
+          replies: 4,
+          saved: 7,
+          crossCountry: 11,
+          replyLikes: 7,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L008",
+          country: "미국",
+          countryEn: "United States",
+          language: "English",
+          category: "솔직함",
+          categoryEn: "Honesty",
+          originalText: "There is someone I want to be honest with, but I am afraid of changing the comfortable shape of our days. I do not need a perfect answer. I just want the courage to speak kindly and listen well.",
+          translatedText: "솔직해지고 싶은 사람이 있지만, 지금의 편안한 관계가 달라질까 봐 망설여져요. 완벽한 답을 원하는 건 아닙니다. 다정하게 말하고 잘 들을 수 있는 용기를 갖고 싶어요.",
+          preview: "솔직해지고 싶은데 지금의 편안한 관계가 달라질까 봐 망설여져요.",
+          hearts: 26,
+          sends: 13,
+          replies: 5,
+          saved: 6,
+          crossCountry: 10,
+          replyLikes: 5,
+          reports: 0,
+          dashboardApproved: true
+        },
+        {
+          id: "L009",
+          country: "스페인",
+          countryEn: "Spain",
+          language: "Español",
+          category: "일상",
+          categoryEn: "Daily Life",
+          originalText: "Some days feel ordinary from the outside, but inside I am carrying many small thoughts. I am learning that I do not need a dramatic reason to ask for warmth. A simple kind word can be enough.",
+          translatedText: "겉으로는 평범한 하루인데 속으로는 작은 생각들을 많이 들고 다니는 날이 있어요. 따뜻함을 바라는 데 꼭 거창한 이유가 필요하지 않다는 걸 배우고 있습니다. 단순한 다정한 말 한마디도 충분할 수 있어요.",
+          preview: "평범한 하루 속에서도 작은 생각들을 많이 들고 다닐 때가 있어요.",
+          hearts: 16,
+          sends: 6,
+          replies: 2,
+          saved: 3,
+          crossCountry: 4,
+          replyLikes: 2,
+          reports: 0,
+          dashboardApproved: true
+        }
+      ];
+
+      const i18n = {
+        ko: {
+          brandMini: "월드레터 MVP",
+          serviceName: "월드레터",
+          loginSlogan: "말이 달라도 마음은 닿을 수 있어요.",
+          loginDescription: "익명으로 고민과 감정을 편지처럼 접어 보내면, 세계 어딘가의 누군가가 조심스럽게 펼쳐 읽고 하트, 세계로 보내기, 답장을 남길 수 있어요.",
+          continueGoogle: "Google로 계속하기",
+          continueApple: "Apple로 계속하기",
+          loginSafety: "익명 서비스를 안전하게 쓰기 위해 정확한 위치, 학교명, 주소, 전화번호, SNS ID는 적지 마세요.",
+          homeTitle: "세계 어딘가로 편지를 접어 보내요",
+          homeSafety: "월드레터는 따뜻하고 안전한 익명 편지 경험을 지향해요. 개인정보를 적지 않고, 서로의 속도를 존중해주세요.",
+          writeLetter: "고민 편지 쓰기",
+          writeLetterHint: "오늘의 감정을 편지처럼 적어 종이비행기로 보내요.",
+          openLetter: "도착한 편지 펼치기",
+          openLetterHint: "세계 어딘가에서 날아온 익명 편지를 읽어요.",
+          worldHearts: "세계의 마음",
+          worldHeartsHint: "오늘 가장 많이 하트와 세계로 보내기를 받은 편지를 봐요.",
+          myLetterBox: "내 종이함",
+          myLetterBoxHint: "보낸 기록",
+          safetyGuide: "안전 가이드",
+          safetyGuideHint: "작성 전 확인",
+          supportShort: "후원하기",
+          supportHint: "순위 영향 없음",
+          logout: "로그아웃",
+          writeTitle: "고민 편지 쓰기",
+          writeGuide: "이름이나 연락처 대신 지금의 감정을 안전하게 적어주세요. 하루에 최대 3개의 편지를 보낼 수 있어요.",
+          letterBodyLabel: "고민 본문",
+          letterBodyPlaceholder: "오늘 마음에 오래 남은 일을 조심스럽게 적어주세요.",
+          categoryLabel: "감정 카테고리",
+          countryLabel: "국가",
+          languageLabel: "언어",
+          dashboardOptIn: "공개 대시보드 후보로 사용되는 것에 동의해요.",
+          safetyCheck: "정확한 위치, 학교명, 주소, 전화번호, SNS ID를 적지 않았고 안전 수칙을 확인했어요.",
+          sendPaperPlane: "종이비행기로 보내기",
+          backHome: "홈으로 돌아가기",
+          receiveTitle: "도착한 편지 펼치기",
+          receiveGuide: "숨김이나 신고된 편지는 다시 표시되지 않아요. 읽을 준비가 되었을 때 천천히 펼쳐주세요.",
+          dashboardTitle: "세계의 마음",
+          dashboardDescription: "세계의 마음은 하트, 세계로 보내기, 저장, 국가 간 반응 등을 기준으로 정렬됩니다. 후원이나 결제는 순위에 영향을 주지 않습니다.",
+          boxTitle: "내 종이함",
+          boxGuide: "종이함에는 보낸 기록만 남아요. 사용자가 쓴 고민 본문은 다시 보여주지 않습니다.",
+          replyModalTitle: "💬 답장",
+          replyGuide: "짧아도 괜찮아요. 개인정보를 묻거나 연락처를 요구하지 말아주세요.",
+          replyPlaceholder: "편지를 쓴 사람에게 건네고 싶은 말을 적어주세요.",
+          sendReply: "답장 보내기",
+          close: "닫기",
+          supportDescription: "월드레터는 서버 비용, 무료 번역, 디자인, 개발을 위해 후원을 받을 수 있습니다. 후원은 선택이며, 순위·노출·기능에 영향을 주지 않습니다.",
+          supportButton: "♡ 월드레터 후원하기",
+          safetyTitle: "안전 가이드",
+          remainingLetters: "오늘 남은 편지 {count}개",
+          todaySentCount: "오늘 보낸 편지 {count}개",
+          emptyLetter: "편지 내용을 먼저 적어주세요.",
+          shortLetter: "조금만 더 적어주면 편지가 더 잘 도착할 수 있어요.",
+          safetyRequired: "안전 수칙을 확인해주세요.",
+          dailyLimitReached: "오늘 보낼 수 있는 편지를 모두 사용했어요.",
+          letterSent: "편지가 세계 어딘가로 날아가고 있어요.",
+          replyEmpty: "답장 내용을 적어주세요.",
+          replySuccess: "당신의 답장이 어딘가에 도착했어요.",
+          reportDone: "신고가 접수되었어요. 이 편지는 다시 표시되지 않습니다.",
+          hideDone: "이 편지를 숨겼어요.",
+          supportDemo: "현재는 데모 버전이라 실제 결제는 진행되지 않아요.",
+          original: "원문",
+          translated: "번역",
+          showingOriginal: "원문 보기 중",
+          showingTranslated: "번역 보기 중",
+          heartButton: "🤍 하트",
+          sendWorldwideButton: "🌍 세계로 보내기",
+          replyButton: "💬 답장",
+          hide: "숨기기",
+          report: "신고",
+          getAnother: "다른 편지 받기",
+          home: "홈으로",
+          country: "국가",
+          language: "언어",
+          category: "카테고리",
+          heartCount: "하트 수",
+          sendCount: "세계로 보내기 수",
+          replyCount: "답장 수",
+          worldScore: "World Score",
+          noLettersAvailable: "지금은 펼칠 수 있는 편지가 없어요. 숨김과 신고 기록은 브라우저에 안전하게 저장되어 있습니다.",
+          noDashboard: "표시할 대시보드 편지가 없어요.",
+          noSentLetters: "아직 보낸 편지가 없어요. 오늘의 마음을 조심스럽게 접어 보내볼까요?",
+          recordCategory: "카테고리",
+          recordCountry: "국가",
+          recordLanguage: "언어",
+          recordCreated: "보낸 시간",
+          recordStatus: "상태",
+          flyingStatus: "세계 어딘가로 날아가는 중",
+          openedStatus: "누군가가 펼쳐 읽었어요",
+          repliedStatus: "답장이 도착했어요"
+        },
+        en: {
+          brandMini: "World Letter MVP",
+          serviceName: "World Letter",
+          loginSlogan: "Even across languages, hearts can reach each other.",
+          loginDescription: "Write an anonymous letter about your feelings, and someone somewhere in the world can open it, leave a Heart, Send Worldwide, or Reply.",
+          continueGoogle: "Continue with Google",
+          continueApple: "Continue with Apple",
+          loginSafety: "For safety, do not share exact locations, school names, addresses, phone numbers, or social IDs.",
+          homeTitle: "Fold a letter for somewhere in the world",
+          homeSafety: "World Letter is a warm and safe anonymous letter experience. Avoid personal details and respect each other gently.",
+          writeLetter: "Write a Letter",
+          writeLetterHint: "Write today's feeling like a letter and send it as a paper plane.",
+          openLetter: "Open a Letter",
+          openLetterHint: "Read an anonymous letter that arrived from somewhere in the world.",
+          worldHearts: "World Hearts",
+          worldHeartsHint: "See letters receiving Hearts and Send Worldwide actions today.",
+          myLetterBox: "My Letter Box",
+          myLetterBoxHint: "Sent records",
+          safetyGuide: "Safety Guide",
+          safetyGuideHint: "Before writing",
+          supportShort: "Support",
+          supportHint: "No ranking effect",
+          logout: "Log out",
+          writeTitle: "Write a Letter",
+          writeGuide: "Write your feelings safely instead of names or contact details. You can send up to three letters per day.",
+          letterBodyLabel: "Letter body",
+          letterBodyPlaceholder: "Gently write what stayed with you today.",
+          categoryLabel: "Feeling category",
+          countryLabel: "Country",
+          languageLabel: "Language",
+          dashboardOptIn: "I agree that this may be considered for the public dashboard.",
+          safetyCheck: "I did not include exact locations, school names, addresses, phone numbers, or social IDs, and I checked the safety rules.",
+          sendPaperPlane: "Send by Paper Plane",
+          backHome: "Back Home",
+          receiveTitle: "Open a Letter",
+          receiveGuide: "Hidden or reported letters will not appear again. Open a letter slowly when you are ready.",
+          dashboardTitle: "World Hearts",
+          dashboardDescription: "World Hearts is sorted by Hearts, Send Worldwide, saves, cross-country reactions, and similar signals. Support or payment never affects ranking.",
+          boxTitle: "My Letter Box",
+          boxGuide: "The letter box keeps sent records only. It never shows the full text you wrote.",
+          replyModalTitle: "💬 Reply",
+          replyGuide: "A short reply is okay. Do not ask for private information or contact details.",
+          replyPlaceholder: "Write something gentle for the letter writer.",
+          sendReply: "Send Reply",
+          close: "Close",
+          supportDescription: "World Letter may receive support for server costs, free translation, design, and development. Support is optional and does not affect ranking, exposure, or features.",
+          supportButton: "♡ Support World Letter",
+          safetyTitle: "Safety Guide",
+          remainingLetters: "{count} letters left today",
+          todaySentCount: "{count} letters sent today",
+          emptyLetter: "Please write your letter first.",
+          shortLetter: "A little more detail can help your letter arrive better.",
+          safetyRequired: "Please check the safety rules.",
+          dailyLimitReached: "You used all letters available for today.",
+          letterSent: "Your letter is flying somewhere in the world.",
+          replyEmpty: "Please write your reply.",
+          replySuccess: "Your reply has arrived somewhere.",
+          reportDone: "Report received. This letter will not be shown again.",
+          hideDone: "This letter has been hidden.",
+          supportDemo: "This is a demo version, so no real payment will happen.",
+          original: "Original",
+          translated: "Translation",
+          showingOriginal: "Showing original",
+          showingTranslated: "Showing translation",
+          heartButton: "🤍 Heart",
+          sendWorldwideButton: "🌍 Send Worldwide",
+          replyButton: "💬 Reply",
+          hide: "Hide",
+          report: "Report",
+          getAnother: "Open Another",
+          home: "Home",
+          country: "Country",
+          language: "Language",
+          category: "Category",
+          heartCount: "Heart count",
+          sendCount: "Send Worldwide count",
+          replyCount: "Reply count",
+          worldScore: "World Score",
+          noLettersAvailable: "There are no letters available to open right now. Hidden and reported records are stored in this browser.",
+          noDashboard: "No dashboard letters to show.",
+          noSentLetters: "You have not sent any letters yet. Would you like to gently fold today's feeling and send it?",
+          recordCategory: "Category",
+          recordCountry: "Country",
+          recordLanguage: "Language",
+          recordCreated: "Sent time",
+          recordStatus: "Status",
+          flyingStatus: "Flying somewhere in the world",
+          openedStatus: "Someone opened and read it",
+          repliedStatus: "A reply has arrived"
+        }
+      };
+
+      const categoryOptions = [
+        { value: "진로", ko: "진로", en: "Future" },
+        { value: "친구 관계", ko: "친구 관계", en: "Friendship" },
+        { value: "가족", ko: "가족", en: "Family" },
+        { value: "새 환경", ko: "새 환경", en: "New Place" },
+        { value: "시험", ko: "시험", en: "Exams" },
+        { value: "꿈", ko: "꿈", en: "Dreams" },
+        { value: "언어", ko: "언어", en: "Language" },
+        { value: "솔직함", ko: "솔직함", en: "Honesty" }
+      ];
+
+      const countryOptions = [
+        { value: "대한민국", ko: "대한민국", en: "South Korea" },
+        { value: "일본", ko: "일본", en: "Japan" },
+        { value: "캐나다", ko: "캐나다", en: "Canada" },
+        { value: "브라질", ko: "브라질", en: "Brazil" },
+        { value: "프랑스", ko: "프랑스", en: "France" },
+        { value: "인도네시아", ko: "인도네시아", en: "Indonesia" },
+        { value: "독일", ko: "독일", en: "Germany" },
+        { value: "미국", ko: "미국", en: "United States" }
+      ];
+
+      const languageOptions = [
+        { value: "한국어", ko: "한국어", en: "Korean" },
+        { value: "English", ko: "영어", en: "English" },
+        { value: "日本語", ko: "일본어", en: "Japanese" },
+        { value: "Français", ko: "프랑스어", en: "French" },
+        { value: "Português", ko: "포르투갈어", en: "Portuguese" },
+        { value: "Español", ko: "스페인어", en: "Spanish" },
+        { value: "Deutsch", ko: "독일어", en: "German" },
+        { value: "Bahasa Indonesia", ko: "인도네시아어", en: "Indonesian" }
+      ];
+
+      const safetyGuideItems = {
+        ko: [
+          "정확한 위치를 공유하지 마세요.",
+          "학교명, 주소, 전화번호, SNS ID를 적지 마세요.",
+          "상대에게 연락처를 요구하지 마세요.",
+          "조롱, 혐오, 괴롭힘 표현은 허용되지 않습니다.",
+          "월드레터는 전문 상담 또는 의료 서비스를 대체하지 않습니다.",
+          "힘든 마음이 오래 지속된다면 신뢰할 수 있는 어른이나 전문가에게 도움을 요청하세요."
+        ],
+        en: [
+          "Do not share your exact location.",
+          "Do not write school names, addresses, phone numbers, or social IDs.",
+          "Do not ask another person for contact details.",
+          "Mockery, hate, and harassment are not allowed.",
+          "World Letter does not replace professional counseling or medical services.",
+          "If difficult feelings continue for a long time, ask a trusted adult or professional for help."
+        ]
+      };
+
+      const state = {
+        isLoggedIn: false,
+        lang: "ko",
+        today: getTodayKey(),
+        dailyLetterCount: 0,
+        sentLetters: [],
+        hiddenLetterIds: [],
+        reportedLetterIds: [],
+        reactions: {},
+        currentReceivedLetterId: null,
+        currentView: "login",
+        receiveTextMode: "translated"
+      };
+
+      // Calculate a YYYY-MM-DD date key in the browser's local time.
+      function getTodayKey() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      }
+
+      // Escape user-controlled values before injecting HTML strings.
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // World Hearts dashboard score. Support and payment are intentionally excluded.
+      function calculateWorldScore(letter) {
+        return letter.hearts * 3
+          + letter.sends * 5
+          + letter.saved * 2
+          + letter.crossCountry * 4
+          + letter.replyLikes * 2
+          - letter.reports * 10;
+      }
+
+      const App = {
+        init() {
+          this.loadState();
+          this.bindEvents();
+          this.translatePage();
+          this.renderSelects();
+          this.showView(state.isLoggedIn ? state.currentView : "login");
+        },
+
+        t(key) {
+          return (i18n[state.lang] && i18n[state.lang][key]) || i18n.ko[key] || key;
+        },
+
+        format(key, values) {
+          return this.t(key).replace(/\{(\w+)\}/g, function (_, name) {
+            return Object.prototype.hasOwnProperty.call(values, name) ? values[name] : "";
+          });
+        },
+
+        loadState() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+              this.resetDailyCountIfNeeded();
+              return;
+            }
+
+            const saved = JSON.parse(raw);
+            Object.assign(state, {
+              isLoggedIn: Boolean(saved.isLoggedIn),
+              lang: saved.lang === "en" ? "en" : "ko",
+              today: typeof saved.today === "string" ? saved.today : getTodayKey(),
+              dailyLetterCount: Number.isFinite(saved.dailyLetterCount) ? saved.dailyLetterCount : 0,
+              sentLetters: Array.isArray(saved.sentLetters) ? saved.sentLetters : [],
+              hiddenLetterIds: Array.isArray(saved.hiddenLetterIds) ? saved.hiddenLetterIds : [],
+              reportedLetterIds: Array.isArray(saved.reportedLetterIds) ? saved.reportedLetterIds : [],
+              reactions: saved.reactions && typeof saved.reactions === "object" ? saved.reactions : {},
+              currentReceivedLetterId: typeof saved.currentReceivedLetterId === "string" ? saved.currentReceivedLetterId : null,
+              currentView: typeof saved.currentView === "string" ? saved.currentView : "home",
+              receiveTextMode: saved.receiveTextMode === "original" ? "original" : "translated"
+            });
+          } catch (error) {
+            console.warn("World Letter state could not be loaded.", error);
+          }
+
+          this.resetDailyCountIfNeeded();
+        },
+
+        saveState() {
+          const snapshot = {
+            isLoggedIn: state.isLoggedIn,
+            lang: state.lang,
+            today: state.today,
+            dailyLetterCount: state.dailyLetterCount,
+            sentLetters: state.sentLetters,
+            hiddenLetterIds: state.hiddenLetterIds,
+            reportedLetterIds: state.reportedLetterIds,
+            reactions: state.reactions,
+            currentReceivedLetterId: state.currentReceivedLetterId,
+            currentView: state.currentView,
+            receiveTextMode: state.receiveTextMode
+          };
+
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+        },
+
+        resetDailyCountIfNeeded() {
+          const today = getTodayKey();
+          if (state.today !== today) {
+            state.today = today;
+            state.dailyLetterCount = 0;
+            this.saveState();
+          }
+        },
+
+        bindEvents() {
+          document.addEventListener("click", (event) => {
+            const navButton = event.target.closest("[data-nav]");
+            if (navButton) {
+              this.showView(navButton.dataset.nav);
+              return;
+            }
+
+            const actionButton = event.target.closest("[data-action]");
+            if (!actionButton) return;
+
+            const action = actionButton.dataset.action;
+            if (action === "login") this.login();
+            if (action === "logout") this.logout();
+            if (action === "toggle-language") this.toggleLanguage();
+            if (action === "toggle-letter-mode") this.toggleLetterMode();
+            if (action === "heart") this.addReaction("hearts");
+            if (action === "send-worldwide") this.addReaction("sends");
+            if (action === "open-reply") this.openReplyModal();
+            if (action === "submit-reply") this.submitReply();
+            if (action === "hide-letter") this.hideCurrentLetter();
+            if (action === "report-letter") this.reportCurrentLetter();
+            if (action === "new-letter") this.pickAndRenderLetter(true);
+            if (action === "open-support") this.openModal("supportModal");
+            if (action === "dummy-support") this.showSupportDemo();
+            if (action === "open-safety") this.openModal("safetyModal");
+            if (action === "close-modal") this.closeModal(actionButton.dataset.modal);
+          });
+
+          document.querySelectorAll(".modal-overlay").forEach((overlay) => {
+            overlay.addEventListener("click", (event) => {
+              if (event.target === overlay) this.closeModal(overlay.id);
+            });
+          });
+
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+              document.querySelectorAll(".modal-overlay.active").forEach((modal) => this.closeModal(modal.id));
+            }
+          });
+
+          document.getElementById("writeForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            this.submitLetter();
+          });
+        },
+
+        login() {
+          state.isLoggedIn = true;
+          state.currentView = "home";
+          this.saveState();
+          this.showView("home");
+        },
+
+        logout() {
+          state.isLoggedIn = false;
+          state.currentView = "login";
+          this.saveState();
+          this.showView("login");
+        },
+
+        toggleLanguage() {
+          state.lang = state.lang === "ko" ? "en" : "ko";
+          document.documentElement.lang = state.lang;
+          this.saveState();
+          this.translatePage();
+          this.renderSelects();
+          this.renderView(state.currentView);
+        },
+
+        translatePage() {
+          document.documentElement.lang = state.lang;
+          document.querySelectorAll("[data-i18n]").forEach((node) => {
+            node.textContent = this.t(node.dataset.i18n);
+          });
+          document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+            node.placeholder = this.t(node.dataset.i18nPlaceholder);
+          });
+          document.getElementById("languageToggle").textContent = state.lang === "ko" ? "KR / EN" : "EN / KR";
+          this.renderSafetyGuide();
+        },
+
+        showView(viewName) {
+          if (!state.isLoggedIn && viewName !== "login") {
+            viewName = "login";
+          }
+
+          state.currentView = viewName;
+          document.querySelectorAll(".view").forEach((view) => {
+            view.classList.toggle("active", view.dataset.view === viewName);
+          });
+          this.renderView(viewName);
+          this.saveState();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        },
+
+        renderView(viewName) {
+          this.resetDailyCountIfNeeded();
+          if (viewName === "home") this.renderHome();
+          if (viewName === "write") this.renderWrite();
+          if (viewName === "receive") this.pickAndRenderLetter(false);
+          if (viewName === "dashboard") this.renderDashboard();
+          if (viewName === "box") this.renderLetterBox();
+        },
+
+        renderHome() {
+          document.getElementById("remainingLettersPill").textContent = this.format("remainingLetters", {
+            count: this.getRemainingLetters()
+          });
+        },
+
+        renderWrite() {
+          const remaining = this.getRemainingLetters();
+          document.getElementById("writeRemainingPill").textContent = this.format("remainingLetters", { count: remaining });
+          document.getElementById("sendLetterButton").classList.toggle("is-muted", remaining <= 0);
+        },
+
+        renderSelects() {
+          this.fillSelect("categorySelect", categoryOptions);
+          this.fillSelect("countrySelect", countryOptions);
+          this.fillSelect("languageSelect", languageOptions);
+        },
+
+        fillSelect(id, options) {
+          const select = document.getElementById(id);
+          if (!select) return;
+          const currentValue = select.value;
+          select.innerHTML = options.map((option) => {
+            const label = state.lang === "ko" ? option.ko : option.en;
+            return `<option value="${escapeHtml(option.value)}">${escapeHtml(label)}</option>`;
+          }).join("");
+          if (currentValue) select.value = currentValue;
+        },
+
+        getRemainingLetters() {
+          return Math.max(0, DAILY_LIMIT - state.dailyLetterCount);
+        },
+
+        submitLetter() {
+          const text = document.getElementById("letterText").value.trim();
+          const safetyChecked = document.getElementById("safetyCheck").checked;
+          const feedback = document.getElementById("writeFeedback");
+
+          if (state.dailyLetterCount >= DAILY_LIMIT) {
+            this.setFeedback(feedback, this.t("dailyLimitReached"), "error");
+            return;
+          }
+
+          if (!text) {
+            this.setFeedback(feedback, this.t("emptyLetter"), "error");
+            return;
+          }
+
+          if (text.length < 20) {
+            this.setFeedback(feedback, this.t("shortLetter"), "error");
+            return;
+          }
+
+          if (!safetyChecked) {
+            this.setFeedback(feedback, this.t("safetyRequired"), "error");
+            return;
+          }
+
+          const sentLetter = {
+            id: "S" + Date.now(),
+            category: document.getElementById("categorySelect").value,
+            country: document.getElementById("countrySelect").value,
+            language: document.getElementById("languageSelect").value,
+            createdAt: new Date().toISOString(),
+            dashboardOptIn: document.getElementById("dashboardOptIn").checked,
+            status: "flying"
+          };
+
+          state.dailyLetterCount += 1;
+          state.sentLetters.unshift(sentLetter);
+          this.saveState();
+
+          document.getElementById("letterText").value = "";
+          document.getElementById("dashboardOptIn").checked = false;
+          document.getElementById("safetyCheck").checked = false;
+          this.setFeedback(feedback, this.t("letterSent"), "success");
+          this.animatePlane();
+          this.renderWrite();
+        },
+
+        animatePlane() {
+          const plane = document.getElementById("flyingPlane");
+          plane.classList.remove("flying");
+          void plane.offsetWidth;
+          plane.classList.add("flying");
+          window.setTimeout(() => plane.classList.remove("flying"), 1000);
+        },
+
+        pickAndRenderLetter(forceNew) {
+          const available = dummyLetters.filter((letter) => {
+            return !state.hiddenLetterIds.includes(letter.id) && !state.reportedLetterIds.includes(letter.id);
+          });
+
+          if (available.length === 0) {
+            state.currentReceivedLetterId = null;
+            this.saveState();
+            this.renderReceiveEmpty();
+            return;
+          }
+
+          const currentStillAvailable = available.some((letter) => letter.id === state.currentReceivedLetterId);
+          if (forceNew || !currentStillAvailable) {
+            const pool = available.length > 1
+              ? available.filter((letter) => letter.id !== state.currentReceivedLetterId)
+              : available;
+            const next = pool[Math.floor(Math.random() * pool.length)];
+            state.currentReceivedLetterId = next.id;
+            state.receiveTextMode = "translated";
+            this.saveState();
+          }
+
+          this.renderReceiveLetter();
+        },
+
+        renderReceiveEmpty() {
+          document.getElementById("receiveContent").innerHTML = `
+            <div class="empty-state">
+              <p>${escapeHtml(this.t("noLettersAvailable"))}</p>
+              <div class="button-row">
+                <button class="button secondary" type="button" data-nav="home">${escapeHtml(this.t("home"))}</button>
+              </div>
+            </div>
+          `;
+        },
+
+        renderReceiveLetter() {
+          const letter = this.getHydratedLetter(state.currentReceivedLetterId);
+          if (!letter) {
+            this.renderReceiveEmpty();
+            return;
+          }
+
+          const isOriginal = state.receiveTextMode === "original";
+          const body = isOriginal ? letter.originalText : letter.translatedText;
+          const modeLabel = isOriginal ? this.t("showingOriginal") : this.t("showingTranslated");
+          const nextMode = isOriginal ? this.t("translated") : this.t("original");
+
+          document.getElementById("receiveContent").innerHTML = `
+            <article class="letter-card">
+              <div class="meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">${escapeHtml(this.t("country"))}</span>
+                  <span class="meta-value">${escapeHtml(this.getCountryLabel(letter))}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">${escapeHtml(this.t("language"))}</span>
+                  <span class="meta-value">${escapeHtml(letter.language)}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">${escapeHtml(this.t("category"))}</span>
+                  <span class="meta-value">${escapeHtml(this.getCategoryLabel(letter))}</span>
+                </div>
+              </div>
+
+              <div class="inline-row">
+                <span class="status-pill">${escapeHtml(modeLabel)}</span>
+                <button class="button secondary" type="button" data-action="toggle-letter-mode">${escapeHtml(nextMode)}</button>
+              </div>
+
+              <div class="letter-body">${escapeHtml(body)}</div>
+
+              <div class="stats-row">
+                <div class="stat">
+                  <strong id="receiveHearts">${letter.hearts}</strong>
+                  <span>${escapeHtml(this.t("heartCount"))}</span>
+                </div>
+                <div class="stat">
+                  <strong id="receiveSends">${letter.sends}</strong>
+                  <span>${escapeHtml(this.t("sendCount"))}</span>
+                </div>
+                <div class="stat">
+                  <strong id="receiveReplies">${letter.replies}</strong>
+                  <span>${escapeHtml(this.t("replyCount"))}</span>
+                </div>
+              </div>
+
+              <div class="letter-actions">
+                <button class="button" type="button" data-action="heart">${escapeHtml(this.t("heartButton"))}</button>
+                <button class="button soft" type="button" data-action="send-worldwide">${escapeHtml(this.t("sendWorldwideButton"))}</button>
+                <button class="button secondary" type="button" data-action="open-reply">${escapeHtml(this.t("replyButton"))}</button>
+                <button class="button secondary" type="button" data-action="hide-letter">${escapeHtml(this.t("hide"))}</button>
+                <button class="button secondary" type="button" data-action="report-letter">${escapeHtml(this.t("report"))}</button>
+                <button class="button secondary" type="button" data-action="new-letter">${escapeHtml(this.t("getAnother"))}</button>
+                <button class="button secondary" type="button" data-nav="home">${escapeHtml(this.t("home"))}</button>
+              </div>
+            </article>
+          `;
+        },
+
+        toggleLetterMode() {
+          state.receiveTextMode = state.receiveTextMode === "original" ? "translated" : "original";
+          this.saveState();
+          this.renderReceiveLetter();
+        },
+
+        addReaction(type) {
+          const id = state.currentReceivedLetterId;
+          if (!id) return;
+          this.ensureReaction(id);
+          state.reactions[id][type] += 1;
+          this.saveState();
+          this.renderReceiveLetter();
+        },
+
+        ensureReaction(id) {
+          if (!state.reactions[id]) {
+            state.reactions[id] = { hearts: 0, sends: 0, replies: 0, reports: 0 };
+          }
+          ["hearts", "sends", "replies", "reports"].forEach((key) => {
+            if (!Number.isFinite(state.reactions[id][key])) state.reactions[id][key] = 0;
+          });
+        },
+
+        openReplyModal() {
+          if (!state.currentReceivedLetterId) return;
+          document.getElementById("replyText").value = "";
+          this.setFeedback(document.getElementById("replyFeedback"), "", "");
+          this.openModal("replyModal");
+        },
+
+        submitReply() {
+          const replyText = document.getElementById("replyText").value.trim();
+          const feedback = document.getElementById("replyFeedback");
+          if (!replyText) {
+            this.setFeedback(feedback, this.t("replyEmpty"), "error");
+            return;
+          }
+
+          const id = state.currentReceivedLetterId;
+          this.ensureReaction(id);
+          state.reactions[id].replies += 1;
+          this.saveState();
+          this.setFeedback(feedback, this.t("replySuccess"), "success");
+          this.renderReceiveLetter();
+
+          window.setTimeout(() => {
+            this.closeModal("replyModal");
+          }, 850);
+        },
+
+        hideCurrentLetter() {
+          const id = state.currentReceivedLetterId;
+          if (!id) return;
+          this.pushUnique(state.hiddenLetterIds, id);
+          state.currentReceivedLetterId = null;
+          this.saveState();
+          this.setFeedback(document.getElementById("receiveFeedback"), this.t("hideDone"), "success");
+          this.renderAfterRemoval();
+        },
+
+        reportCurrentLetter() {
+          const id = state.currentReceivedLetterId;
+          if (!id) return;
+          this.pushUnique(state.reportedLetterIds, id);
+          this.ensureReaction(id);
+          state.reactions[id].reports += 1;
+          state.currentReceivedLetterId = null;
+          this.saveState();
+          this.setFeedback(document.getElementById("receiveFeedback"), this.t("reportDone"), "success");
+          this.renderAfterRemoval();
+        },
+
+        renderAfterRemoval() {
+          document.getElementById("receiveContent").innerHTML = `
+            <div class="empty-state">
+              <div class="button-row">
+                <button class="button soft" type="button" data-action="new-letter">${escapeHtml(this.t("getAnother"))}</button>
+                <button class="button secondary" type="button" data-nav="home">${escapeHtml(this.t("home"))}</button>
+              </div>
+            </div>
+          `;
+        },
+
+        renderDashboard() {
+          const list = document.getElementById("dashboardList");
+          const topLetters = dummyLetters
+            .filter((letter) => letter.dashboardApproved && !state.reportedLetterIds.includes(letter.id))
+            .map((letter) => {
+              const hydrated = this.getHydratedLetter(letter.id);
+              return Object.assign({}, hydrated, { worldScore: calculateWorldScore(hydrated) });
+            })
+            .sort((a, b) => b.worldScore - a.worldScore)
+            .slice(0, 5);
+
+          if (topLetters.length === 0) {
+            list.innerHTML = `<div class="empty-state">${escapeHtml(this.t("noDashboard"))}</div>`;
+            return;
+          }
+
+          list.innerHTML = topLetters.map((letter, index) => `
+            <article class="dashboard-card">
+              <div class="rank-line">
+                <span class="rank">TOP ${index + 1}</span>
+                <span class="score">${escapeHtml(this.t("worldScore"))}: ${letter.worldScore}</span>
+              </div>
+              <div class="compact-stats">
+                <span>${escapeHtml(this.getCountryLabel(letter))}</span>
+                <span>${escapeHtml(this.getCategoryLabel(letter))}</span>
+              </div>
+              <p class="preview">${escapeHtml(letter.preview)}</p>
+              <div class="compact-stats">
+                <span>${escapeHtml(this.t("heartCount"))}: ${letter.hearts}</span>
+                <span>${escapeHtml(this.t("sendCount"))}: ${letter.sends}</span>
+                <span>${escapeHtml(this.t("replyCount"))}: ${letter.replies}</span>
+              </div>
+            </article>
+          `).join("");
+        },
+
+        renderLetterBox() {
+          document.getElementById("boxTodayCount").textContent = this.format("todaySentCount", {
+            count: state.dailyLetterCount
+          });
+
+          const list = document.getElementById("boxList");
+          if (state.sentLetters.length === 0) {
+            list.innerHTML = `<div class="empty-state">${escapeHtml(this.t("noSentLetters"))}</div>`;
+            return;
+          }
+
+          list.innerHTML = state.sentLetters.map((letter, index) => `
+            <article class="record-card">
+              <dl>
+                <dt>${escapeHtml(this.t("recordCategory"))}</dt>
+                <dd>${escapeHtml(this.getOptionLabel(categoryOptions, letter.category))}</dd>
+                <dt>${escapeHtml(this.t("recordCountry"))}</dt>
+                <dd>${escapeHtml(this.getOptionLabel(countryOptions, letter.country))}</dd>
+                <dt>${escapeHtml(this.t("recordLanguage"))}</dt>
+                <dd>${escapeHtml(this.getOptionLabel(languageOptions, letter.language))}</dd>
+                <dt>${escapeHtml(this.t("recordCreated"))}</dt>
+                <dd>${escapeHtml(this.formatDateTime(letter.createdAt))}</dd>
+                <dt>${escapeHtml(this.t("recordStatus"))}</dt>
+                <dd>${escapeHtml(this.getSentStatus(letter, index))}</dd>
+              </dl>
+            </article>
+          `).join("");
+        },
+
+        renderSafetyGuide() {
+          const list = document.getElementById("safetyGuideList");
+          if (!list) return;
+          list.innerHTML = safetyGuideItems[state.lang].map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+        },
+
+        getHydratedLetter(id) {
+          const base = dummyLetters.find((letter) => letter.id === id);
+          if (!base) return null;
+          const reaction = state.reactions[id] || {};
+          return Object.assign({}, base, {
+            hearts: base.hearts + (Number.isFinite(reaction.hearts) ? reaction.hearts : 0),
+            sends: base.sends + (Number.isFinite(reaction.sends) ? reaction.sends : 0),
+            replies: base.replies + (Number.isFinite(reaction.replies) ? reaction.replies : 0),
+            reports: base.reports + (Number.isFinite(reaction.reports) ? reaction.reports : 0)
+          });
+        },
+
+        getCountryLabel(letter) {
+          return state.lang === "ko" ? letter.country : letter.countryEn;
+        },
+
+        getCategoryLabel(letter) {
+          return state.lang === "ko" ? letter.category : letter.categoryEn;
+        },
+
+        getOptionLabel(options, value) {
+          const option = options.find((item) => item.value === value);
+          if (!option) return value || "";
+          return state.lang === "ko" ? option.ko : option.en;
+        },
+
+        getSentStatus(letter, index) {
+          if (letter.status === "opened") return this.t("openedStatus");
+          if (letter.status === "replied") return this.t("repliedStatus");
+          if (index > 0 && index % 5 === 0) return this.t("repliedStatus");
+          if (index > 0 && index % 2 === 0) return this.t("openedStatus");
+          return this.t("flyingStatus");
+        },
+
+        formatDateTime(isoString) {
+          const date = new Date(isoString);
+          if (Number.isNaN(date.getTime())) return "";
+          return date.toLocaleString(state.lang === "ko" ? "ko-KR" : "en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+        },
+
+        pushUnique(list, value) {
+          if (!list.includes(value)) list.push(value);
+        },
+
+        setFeedback(node, message, type) {
+          if (!node) return;
+          node.textContent = message;
+          node.className = "feedback";
+          if (type) node.classList.add(type);
+        },
+
+        openModal(id) {
+          if (id === "supportModal") {
+            this.setFeedback(document.getElementById("supportFeedback"), "", "");
+          }
+          if (id === "safetyModal") {
+            this.renderSafetyGuide();
+          }
+          const modal = document.getElementById(id);
+          if (modal) modal.classList.add("active");
+        },
+
+        closeModal(id) {
+          const modal = document.getElementById(id);
+          if (modal) modal.classList.remove("active");
+        },
+
+        showSupportDemo() {
+          this.setFeedback(document.getElementById("supportFeedback"), this.t("supportDemo"), "success");
+        }
+      };
+
+      window.addEventListener("DOMContentLoaded", () => App.init());
+    })();
+  </script>
+</body>
+</html>

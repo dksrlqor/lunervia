@@ -1,3 +1,181 @@
+/* ============================================================
+   코드 인트로 컨트롤러
+   - index.html 첫 진입 시 매번 '안녕하세요 ><' 타이핑 인트로 재생
+   - #code-intro 가 없는 페이지에서는 즉시 종료 (다른 페이지 영향 0)
+   - prefers-reduced-motion 시 타이핑 없이 짧게 표시 후 종료
+   - Skip 버튼 / 화면 클릭 / Esc 로 즉시 건너뛰기
+   ============================================================ */
+(() => {
+  const intro = document.getElementById("code-intro");
+
+  if (!intro) {
+    return;
+  }
+
+  const root = document.documentElement;
+  const linesHost = intro.querySelector("#code-intro-lines");
+  const statusEl = intro.querySelector("#code-intro-status");
+  const progressEl = intro.querySelector("#code-intro-progress");
+  const skipButton = intro.querySelector("[data-intro-skip]");
+  const reduceMotion = window.matchMedia
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+
+  // 타이핑되는 코드 라인 — 첫 줄에 '안녕하세요 ><' 가 반드시 먼저 출력됩니다.
+  const introLines = [
+    { text: "안녕하세요 ><", kind: "greeting", speed: 60 },
+    { text: 'const brand = "Lunervia";', kind: "code", speed: 13 },
+    { text: 'brand.connect(["web", "app", "automation", "ai"]);', kind: "code", speed: 10 },
+    { text: "// 아이디어를 실제 소프트웨어로 연결합니다", kind: "comment", speed: 15 },
+    { text: "▸ 메인 화면을 불러오는 중…", kind: "log", speed: 20 },
+  ];
+
+  const timers = new Set();
+  let finished = false;
+
+  const wait = (ms) =>
+    new Promise((resolve) => {
+      const id = window.setTimeout(() => {
+        timers.delete(id);
+        resolve();
+      }, ms);
+      timers.add(id);
+    });
+
+  root.classList.add("code-intro-lock");
+
+  const finish = () => {
+    if (finished) {
+      return;
+    }
+
+    finished = true;
+    timers.forEach((id) => window.clearTimeout(id));
+    timers.clear();
+
+    root.classList.remove("code-intro-lock");
+    root.classList.add("code-intro-done");
+    intro.classList.add("is-hiding");
+    window.scrollTo(0, 0);
+
+    window.setTimeout(() => {
+      intro.classList.add("is-done");
+      intro.setAttribute("aria-hidden", "true");
+    }, 640);
+  };
+
+  // 종료 트리거: Skip 버튼 / 화면 클릭 / Esc
+  if (skipButton) {
+    skipButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      finish();
+    });
+  }
+
+  intro.addEventListener("click", finish);
+
+  document.addEventListener("keydown", (event) => {
+    if (!finished && event.key === "Escape") {
+      finish();
+    }
+  });
+
+  // 안전장치: 어떤 경우에도 일정 시간 뒤에는 인트로가 종료됩니다.
+  window.setTimeout(finish, 9000);
+
+  const setProgress = (percent, label) => {
+    if (progressEl) {
+      progressEl.style.width = `${percent}%`;
+    }
+
+    if (statusEl && label) {
+      statusEl.textContent = label;
+    }
+  };
+
+  const addLine = (line, index) => {
+    const row = document.createElement("div");
+    row.className = `code-intro__line is-${line.kind}`;
+
+    const gutter = document.createElement("span");
+    gutter.className = "code-intro__gutter";
+    gutter.textContent = String(index + 1);
+
+    const text = document.createElement("span");
+    text.className = "code-intro__text";
+
+    row.append(gutter, text);
+
+    if (linesHost) {
+      linesHost.appendChild(row);
+    }
+
+    return text;
+  };
+
+  const typeInto = async (textEl, line) => {
+    const caret = document.createElement("span");
+    caret.className = "code-intro__caret";
+    textEl.appendChild(caret);
+
+    for (let i = 0; i < line.text.length; i += 1) {
+      if (finished) {
+        break;
+      }
+
+      caret.before(document.createTextNode(line.text[i]));
+      await wait(line.speed);
+    }
+
+    caret.remove();
+  };
+
+  const playReduced = () => {
+    introLines.forEach((line, index) => {
+      addLine(line, index).textContent = line.text;
+    });
+    setProgress(100, "ready");
+    window.setTimeout(finish, 900);
+  };
+
+  const playFull = async () => {
+    setProgress(10, "booting");
+    await wait(340);
+
+    for (let index = 0; index < introLines.length; index += 1) {
+      if (finished) {
+        return;
+      }
+
+      const line = introLines[index];
+      const textEl = addLine(line, index);
+
+      if (index === 1) {
+        setProgress(38, "compiling");
+      } else if (index === introLines.length - 1) {
+        setProgress(74, "linking");
+      }
+
+      await typeInto(textEl, line);
+      await wait(index === 0 ? 300 : 120);
+    }
+
+    if (finished) {
+      return;
+    }
+
+    setProgress(100, "ready");
+    await wait(560);
+    finish();
+  };
+
+  if (reduceMotion) {
+    playReduced();
+  } else {
+    playFull();
+  }
+})();
+
 const menuToggle = document.querySelector(".menu-toggle");
 const nav = document.querySelector(".nav");
 const revealItems = document.querySelectorAll(".reveal");
@@ -26,7 +204,8 @@ const animatedHeaderLogoLetters = animatedHeaderLogo ? [...animatedHeaderLogo.qu
 const animatedFooterLogos = document.querySelectorAll('[data-lunervia-logo="footer"]');
 const refreshFromTopKey = "lunervia-refresh-from-top";
 const brandTopTolerance = 1;
-const lottieButtonSelector = ".button, .product-detail-button, .status-tab, .menu-toggle, .nav-project-trigger, .contact-email, .instagram-link";
+// 메뉴 버튼은 CSS 햄버거(열림 시 X 변형)를 사용하므로 Lottie 대상에서 제외합니다.
+const lottieButtonSelector = ".button, .product-detail-button, .status-tab, .nav-project-trigger, .contact-email, .instagram-link";
 const lottieIconPaths = {
   arrow: "assets/lottieflow/arrow-right.json",
   menu: "assets/lottieflow/menu-nav-11-14.json",
@@ -1184,3 +1363,33 @@ if (typedMessage) {
 
   typeLoop();
 }
+
+/* ============================================================
+   브랜드 로고 폴백
+   - 새 로고 파일(assets/brand/lunervia-logo-text.png,
+     assets/brand/lunervia-logo-symbol-text.png)이 아직 없으면
+     기존 흰색 워드마크로 자연스럽게 대체합니다.
+   - 사용자가 새 로고 파일을 추가하면 폴백은 동작하지 않습니다.
+   ============================================================ */
+const setupBrandLogoFallback = () => {
+  const fallbackSrc = "assets/brand/lunervia-wordmark-white.png";
+  const logoImages = document.querySelectorAll(
+    ".brand-logo img, .hero-logo img, .footer-logo img, .reason-section-logo img, .reason-logo-image"
+  );
+
+  logoImages.forEach((img) => {
+    const swapToFallback = () => {
+      if (!img.src.includes("lunervia-wordmark-white.png")) {
+        img.src = fallbackSrc;
+      }
+    };
+
+    if (img.complete && img.naturalWidth === 0) {
+      swapToFallback();
+    } else {
+      img.addEventListener("error", swapToFallback, { once: true });
+    }
+  });
+};
+
+setupBrandLogoFallback();
