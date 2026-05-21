@@ -1,42 +1,43 @@
 /* ============================================================
    LUNERVIA — quiet software brand site
-   - Black-based premium minimal design
-   - Tokens via :root, single design system
+   - 따뜻한 크림/아이보리 톤 (Anthropic 의 종이 느낌 참고, 복제 X)
+   - 검정 텍스트로 또렷한 대비, 포인트는 브라운/차콜로 절제
    ============================================================ */
 
 /* -------- 1. Tokens -------- */
 :root {
-  /* 배경 단계 */
-  --bg: #08080a;
-  --bg-soft: #0d0d10;
-  --surface: #131318;
-  --surface-2: #1a1a20;
-  --surface-3: #22222a;
+  /* 배경 단계 — 종이같은 크림톤 */
+  --bg: #F7F3EA;
+  --bg-soft: #EFE7DA;
+  --bg-card: #FBF8F1;
+  --bg-paper: #F4EFE2;
 
   /* 경계선 */
-  --line-soft: rgba(255, 255, 255, 0.06);
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.14);
+  --line-soft: #E5DDCE;
+  --line: #D8CFC0;
+  --line-strong: #BFB4A4;
 
   /* 텍스트 (검정 대비 충분히 확보) */
-  --text: #ffffff;
-  --text-2: #d6d6d6;
-  --text-3: #a1a1aa;
-  --text-4: #71717a;
+  --text: #1F1F1B;
+  --text-2: #3D3933;
+  --text-3: #5F5A50;
+  --text-4: #8A8378;
 
-  /* 포인트 (절제된 보라/푸른빛) */
-  --accent: #8b9cff;
-  --accent-2: #a78bfa;
-  --accent-soft: rgba(139, 156, 255, 0.16);
-  --accent-line: rgba(139, 156, 255, 0.38);
-  --accent-glow: rgba(139, 156, 255, 0.32);
-  --accent-mint: #94d5c6;
+  /* 포인트 — 절제된 브라운 + 차콜 */
+  --accent: #8A6F4D;
+  --accent-2: #6B5238;
+  --accent-soft: rgba(138, 111, 77, 0.12);
+  --accent-line: rgba(138, 111, 77, 0.42);
+  --accent-glow: rgba(138, 111, 77, 0.22);
 
-  /* 코드 에디터 톤 */
-  --code-bg: #0c0c12;
-  --code-bar: #131319;
-  --code-line: #6c6c78;
-  --code-text: #e3e3ea;
+  --charcoal: #2F2F2A;
+  --charcoal-soft: #45443D;
+
+  /* 코드 에디터 (light/paper theme) */
+  --code-bg: #FBF8F1;
+  --code-bar: #EFE7DA;
+  --code-line-num: #C0B6A3;
+  --code-text: #2F2F2A;
 
   /* 라운드 */
   --r-sm: 6px;
@@ -85,10 +86,10 @@ body {
   line-height: 1.65;
   color: var(--text-2);
   background-color: var(--bg);
-  /* 검정 위에 아주 옅은 푸른빛 글로우로 평평함 완화 */
+  /* 종이 위 미세한 따뜻한 톤 변화 — 평평함을 부드럽게 풀어줌 */
   background-image:
-    radial-gradient(900px 600px at 84% -8%, rgba(139, 156, 255, 0.08), transparent 60%),
-    radial-gradient(720px 500px at 12% -10%, rgba(167, 139, 250, 0.06), transparent 70%);
+    radial-gradient(1100px 700px at 84% -8%, rgba(138, 111, 77, 0.07), transparent 65%),
+    radial-gradient(900px 600px at 8% -6%, rgba(47, 47, 42, 0.04), transparent 70%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -99,8 +100,6 @@ img {
   display: block;
 }
 
-/* HTML `hidden` 속성이 author 리셋(img { display: block })에 의해
-   덮이지 않도록 명시적으로 보호합니다. */
 [hidden] {
   display: none !important;
 }
@@ -141,8 +140,8 @@ p {
 }
 
 ::selection {
-  background: var(--accent);
-  color: #0b0b10;
+  background: var(--charcoal);
+  color: var(--bg);
 }
 
 :focus-visible {
@@ -156,9 +155,9 @@ p {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8, 8, 10, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(247, 243, 234, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -177,22 +176,22 @@ p {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 4px 0;
   border-radius: var(--r-sm);
   cursor: pointer;
 }
 
 .brand-img {
-  height: 28px;
+  height: 30px;
   width: auto;
   max-width: 220px;
-  filter: drop-shadow(0 4px 16px rgba(139, 156, 255, 0.16));
+  filter: drop-shadow(0 3px 12px rgba(138, 111, 77, 0.18));
   transition: filter var(--t-mid) var(--ease-out);
 }
 
 .brand:hover .brand-img {
-  filter: drop-shadow(0 4px 18px rgba(139, 156, 255, 0.42));
+  filter: drop-shadow(0 4px 14px rgba(138, 111, 77, 0.34));
 }
 
 .brand-text {
@@ -203,7 +202,7 @@ p {
 
 .brand-text-main {
   font-family: var(--font-display);
-  font-size: 1.18rem;
+  font-size: 1.22rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--text);
@@ -235,10 +234,11 @@ p {
 
 .nav-menu a:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(47, 47, 42, 0.05);
 }
 
-.nav-menu a:hover::after {
+.nav-menu a:hover::after,
+.nav-menu a[aria-current="page"]::after {
   opacity: 1;
   transform: scaleX(1);
 }
@@ -270,7 +270,7 @@ p {
 }
 
 .nav-toggle:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(47, 47, 42, 0.06);
 }
 
 .nav-toggle > span {
@@ -368,7 +368,7 @@ p {
   height: 60vw;
   max-width: 720px;
   max-height: 720px;
-  background: radial-gradient(closest-side, rgba(139, 156, 255, 0.18), transparent 70%);
+  background: radial-gradient(closest-side, rgba(138, 111, 77, 0.16), transparent 70%);
   filter: blur(14px);
   pointer-events: none;
   z-index: 0;
@@ -386,7 +386,6 @@ p {
   align-items: center;
 }
 
-/* grid 자식이 min-content 로 밀리지 않도록 보호 */
 .hero-copy,
 .hero-code {
   min-width: 0;
@@ -460,15 +459,15 @@ p {
 }
 
 .btn-primary {
-  background: var(--text);
-  color: #0a0a0c;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  background: var(--charcoal);
+  color: var(--bg-card);
+  box-shadow: 0 0 0 1px rgba(47, 47, 42, 0.06) inset;
 }
 
 .btn-primary:hover {
-  background: #f2f2f5;
+  background: #1F1F1B;
   transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 24px rgba(47, 47, 42, 0.18);
 }
 
 .btn-secondary {
@@ -478,8 +477,8 @@ p {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: var(--accent-line);
+  background: var(--bg-card);
+  border-color: var(--accent);
   transform: translateY(-1px);
 }
 
@@ -491,7 +490,7 @@ p {
   transform: translate(2px, -2px);
 }
 
-/* -------- 8. VS Code window -------- */
+/* -------- 8. Code editor (light/paper theme) -------- */
 .hero-code {
   position: relative;
   width: 100%;
@@ -504,9 +503,8 @@ p {
   border-radius: 14px;
   overflow: hidden;
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(139, 156, 255, 0.06),
-    0 0 60px rgba(139, 156, 255, 0.06);
+    0 24px 50px rgba(47, 47, 42, 0.1),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
   transition:
     transform var(--t-mid) var(--ease-out),
     box-shadow var(--t-mid) var(--ease-out),
@@ -517,8 +515,8 @@ p {
   transform: translateY(-3px);
   border-color: var(--accent-line);
   box-shadow:
-    0 38px 82px rgba(0, 0, 0, 0.6),
-    0 0 70px rgba(139, 156, 255, 0.18);
+    0 30px 60px rgba(47, 47, 42, 0.14),
+    0 0 50px rgba(138, 111, 77, 0.12);
 }
 
 .codewin-bar {
@@ -539,12 +537,13 @@ p {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #3a3a44;
+  background: var(--line-strong);
 }
 
-.dot-red { background: #ff5f57; }
-.dot-yellow { background: #febc2e; }
-.dot-green { background: #28c840; }
+/* 점은 따뜻한 톤 (브랜드와 어울리도록) */
+.dot-red { background: #C97A6A; }
+.dot-yellow { background: #C9A968; }
+.dot-green { background: #8FAA76; }
 
 .codewin-tabs {
   display: flex;
@@ -558,7 +557,7 @@ p {
   font-size: 0.78rem;
   letter-spacing: 0.02em;
   color: var(--text-3);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-soft);
   border-radius: 6px 6px 0 0;
   border: 1px solid var(--line-soft);
   border-bottom: none;
@@ -581,8 +580,6 @@ p {
   line-height: 1.78;
   color: var(--code-text);
   min-height: 320px;
-  /* 좁은 화면에서 코드 라인이 길면 페이지 가로 스크롤을 만들지 않고
-     코드 박스 내부에서만 스크롤 되도록 합니다. */
   overflow-x: auto;
 }
 
@@ -593,31 +590,31 @@ p {
   padding-right: 20px;
 }
 
+.code-line > .ln {
+  text-align: right;
+  padding-right: 16px;
+  color: var(--code-line-num);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
 .code-line > span:nth-child(2) {
   min-width: 0;
   white-space: pre;
 }
 
-.code-line > .ln {
-  text-align: right;
-  padding-right: 16px;
-  color: var(--code-line);
-  user-select: none;
-  font-variant-numeric: tabular-nums;
-}
-
-/* 신택스 컬러 — 차분하고 절제된 톤 */
-.kw   { color: #a78bfa; }
-.str  { color: #94d5c6; }
-.var  { color: #93b5ff; }
-.fn   { color: #f0a8b8; }
-.lit  { color: #fcd9a8; }
-.prop { color: #b9b1d4; }
-.cm   { color: #6b6b78; font-style: italic; }
+/* 신택스 — 종이 위에 어울리는 절제된 어스톤 */
+.kw   { color: #8A6F4D; font-weight: 600; }
+.str  { color: #5C7A52; }
+.var  { color: #4F6A82; }
+.fn   { color: #6B5238; }
+.lit  { color: #A6783F; }
+.prop { color: #6B5238; }
+.cm   { color: #A39B89; font-style: italic; }
 
 /* 타이핑 텍스트와 커서 */
 #typed {
-  color: #94d5c6;
+  color: #5C7A52;
 }
 
 .caret {
@@ -653,19 +650,19 @@ p {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #2bd07a;
-  box-shadow: 0 0 8px rgba(43, 208, 122, 0.6);
+  background: #8FAA76;
+  box-shadow: 0 0 6px rgba(143, 170, 118, 0.5);
 }
 
 .codewin-status .status-sep {
   opacity: 0.45;
 }
 
-/* -------- 9. About / Why -------- */
+/* -------- 9. About / Why teaser -------- */
 .section-about {
   border-top: 1px solid var(--line-soft);
   background:
-    radial-gradient(900px 500px at 50% 0%, rgba(139, 156, 255, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 50% 0%, rgba(138, 111, 77, 0.07), transparent 65%),
     transparent;
 }
 
@@ -674,32 +671,23 @@ p {
   max-width: 760px;
 }
 
-.about-body {
+.about-teaser {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 22px;
   margin-top: 6px;
-  font-size: 1.05rem;
-  line-height: 1.85;
+  padding: clamp(26px, 4vw, 38px);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-xl);
+}
+
+.about-teaser p {
+  font-size: 1.04rem;
+  line-height: 1.78;
   color: var(--text-2);
-}
-
-.about-body p {
-  max-width: 60ch;
-}
-
-.about-emphasis {
-  position: relative;
-  padding: 18px 22px;
-  margin: 6px 0;
-  font-family: var(--font-display);
-  font-size: 1.18rem !important;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  color: var(--text) !important;
-  background: var(--accent-soft);
-  border-left: 2px solid var(--accent);
-  border-radius: 0 var(--r-md) var(--r-md) 0;
+  max-width: 58ch;
 }
 
 /* -------- 10. Product card -------- */
@@ -714,10 +702,8 @@ p {
   align-items: center;
   margin-top: clamp(40px, 5vw, 64px);
   padding: clamp(28px, 4vw, 48px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    var(--surface);
-  border: 1px solid var(--line);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-xl);
   transition:
     transform var(--t-mid) var(--ease-out),
@@ -728,7 +714,7 @@ p {
 .product-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent-line);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4), 0 0 50px rgba(139, 156, 255, 0.12);
+  box-shadow: 0 24px 50px rgba(47, 47, 42, 0.1), 0 0 50px rgba(138, 111, 77, 0.1);
 }
 
 .product-media {
@@ -737,9 +723,9 @@ p {
   min-width: 0;
   aspect-ratio: 1 / 1;
   background:
-    radial-gradient(closest-side, rgba(139, 156, 255, 0.18), transparent 70%),
-    var(--surface-2);
-  border: 1px solid var(--line);
+    radial-gradient(closest-side, rgba(138, 111, 77, 0.1), transparent 70%),
+    var(--bg-paper);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-lg);
   overflow: hidden;
   display: flex;
@@ -749,10 +735,10 @@ p {
 
 .product-img,
 .partner-img {
-  width: 70%;
-  height: 70%;
+  width: 78%;
+  height: 78%;
   object-fit: contain;
-  filter: drop-shadow(0 18px 40px rgba(139, 156, 255, 0.28));
+  filter: drop-shadow(0 12px 28px rgba(47, 47, 42, 0.16));
 }
 
 .media-placeholder {
@@ -769,7 +755,6 @@ p {
   text-align: center;
   width: 100%;
   max-width: 100%;
-  /* 파일 경로 같은 긴 토큰이 박스를 부풀리지 않게 강제 줄바꿈 */
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -797,7 +782,7 @@ p {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border-radius: var(--r-pill);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line);
 }
 
 .badge-soon {
@@ -808,7 +793,7 @@ p {
 
 .badge-mute {
   color: var(--text-3);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-soft);
 }
 
 .product-name {
@@ -847,8 +832,8 @@ p {
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   color: var(--text-2);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-pill);
 }
 
@@ -864,10 +849,8 @@ p {
   align-items: center;
   margin-top: clamp(40px, 5vw, 64px);
   padding: clamp(28px, 4vw, 48px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
-    var(--surface);
-  border: 1px solid var(--line);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-xl);
   transition:
     transform var(--t-mid) var(--ease-out),
@@ -878,7 +861,7 @@ p {
 .partner-card:hover {
   transform: translateY(-3px);
   border-color: var(--accent-line);
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.4), 0 0 50px rgba(139, 156, 255, 0.12);
+  box-shadow: 0 24px 50px rgba(47, 47, 42, 0.1), 0 0 50px rgba(138, 111, 77, 0.1);
 }
 
 .partner-media {
@@ -887,9 +870,9 @@ p {
   min-width: 0;
   aspect-ratio: 1 / 1;
   background:
-    radial-gradient(closest-side, rgba(148, 213, 198, 0.16), transparent 72%),
-    var(--surface-2);
-  border: 1px solid var(--line);
+    radial-gradient(closest-side, rgba(143, 170, 118, 0.16), transparent 72%),
+    var(--bg-paper);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-lg);
   overflow: hidden;
   display: flex;
@@ -947,8 +930,8 @@ p {
   flex-direction: column;
   gap: 8px;
   padding: 26px 24px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
   border-radius: var(--r-lg);
   transition:
     transform var(--t-mid) var(--ease-out),
@@ -960,8 +943,8 @@ p {
 .contact-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent-line);
-  background: var(--surface-2);
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.4), 0 0 40px rgba(139, 156, 255, 0.1);
+  background: var(--bg-paper);
+  box-shadow: 0 18px 38px rgba(47, 47, 42, 0.1), 0 0 36px rgba(138, 111, 77, 0.08);
 }
 
 .contact-card-soon {
@@ -970,8 +953,8 @@ p {
 
 .contact-card-soon:hover {
   transform: none;
-  border-color: var(--line);
-  background: var(--surface);
+  border-color: var(--line-soft);
+  background: var(--bg-card);
   box-shadow: none;
 }
 
@@ -1034,12 +1017,11 @@ p {
   margin-bottom: 4px;
 }
 
-/* 푸터 워드마크는 크게 — 브랜드 풋프린트 */
 .footer-brand-img {
   height: clamp(40px, 6vw, 60px);
   width: auto;
   max-width: 320px;
-  filter: drop-shadow(0 6px 28px rgba(139, 156, 255, 0.22));
+  filter: drop-shadow(0 6px 22px rgba(138, 111, 77, 0.22));
 }
 
 .footer-brand-text {
@@ -1063,7 +1045,85 @@ p {
   margin-top: 6px;
 }
 
-/* -------- 14. Responsive -------- */
+/* -------- 14. Article (why.html) -------- */
+.article-page {
+  background: var(--bg);
+}
+
+.article-page-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vw, 96px) var(--gutter) clamp(64px, 9vw, 120px);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 28px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-3);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), gap var(--t-fast) var(--ease-out);
+}
+
+.back-link:hover {
+  color: var(--text);
+  border-bottom-color: var(--text);
+  gap: 10px;
+}
+
+.back-link-bottom {
+  margin-top: clamp(48px, 7vw, 72px);
+  margin-bottom: 0;
+}
+
+.article {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-title {
+  font-size: clamp(2.1rem, 4.6vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  margin: 6px 0 30px;
+  line-height: 1.1;
+  max-width: 22ch;
+}
+
+.article-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-size: 1.08rem;
+  line-height: 1.88;
+  color: var(--text-2);
+}
+
+.article-body p {
+  max-width: 62ch;
+}
+
+.article-emphasis {
+  padding: 22px 26px;
+  margin: 8px 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem !important;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text) !important;
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  max-width: 62ch;
+}
+
+/* -------- 15. Responsive -------- */
 @media (max-width: 960px) {
   .hero-inner {
     grid-template-columns: 1fr;
@@ -1108,12 +1168,12 @@ p {
     align-items: stretch;
     gap: 2px;
     padding: 10px;
-    background: rgba(13, 13, 16, 0.95);
+    background: rgba(251, 248, 241, 0.97);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     border: 1px solid var(--line);
     border-radius: var(--r-lg);
-    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 22px 40px rgba(47, 47, 42, 0.14);
     opacity: 0;
     transform: translateY(-8px) scale(0.99);
     pointer-events: none;
@@ -1178,7 +1238,7 @@ p {
   }
 }
 
-/* -------- 15. Reduced motion -------- */
+/* -------- 16. Reduced motion -------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

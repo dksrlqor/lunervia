@@ -8,12 +8,12 @@
       name="description"
       content="Lunervia 는 감정과 기술 사이에서 조용하지만 필요한 소프트웨어를 만드는 브랜드입니다."
     />
-    <meta name="theme-color" content="#08080a" />
+    <meta name="theme-color" content="#F7F3EA" />
 
-    <!-- 파비콘: 거의 검정 + 흰 'L' -->
+    <!-- 파비콘: 차콜 + 크림 'L' -->
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2308080a'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='12.5' fill='none' stroke='%238b9cff' stroke-opacity='0.35' stroke-width='1.5'/%3E%3Ctext x='50%25' y='57%25' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23ffffff'%3EL%3C/text%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F2F2A'/%3E%3Ctext x='50%25' y='57%25' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23F7F3EA'%3EL%3C/text%3E%3C/svg%3E"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +21,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260522a" />
+    <link rel="stylesheet" href="styles.css?v=20260522b" />
   </head>
   <body>
     <!-- =================== 상단 네비게이션 =================== -->
@@ -34,7 +34,7 @@
         <a class="brand" href="#" id="brand-link" aria-label="Lunervia 메인으로 새로고침">
           <img
             class="brand-img"
-            src="assets/brand/lunervia-logo-text.png?v=20260522a"
+            src="assets/brand/lunervia-logo-text.png?v=20260522b"
             alt="LUNERVIA"
             hidden
           />
@@ -126,7 +126,8 @@
         </div>
       </section>
 
-      <!-- =================== ABOUT / Why Lunervia =================== -->
+      <!-- =================== ABOUT / Why Lunervia (teaser) ===================
+           긴 본문은 why.html 로 분리되어 새 탭에서 열립니다. -->
       <section class="section section-about" id="about">
         <div class="section-inner about">
           <div class="reveal">
@@ -134,28 +135,20 @@
             <h2 class="section-title">루네르비아를 만든 이유</h2>
           </div>
 
-          <div class="about-body reveal">
+          <div class="about-teaser reveal">
             <p>
               루네르비아는 단순히 프로그램을 만드는 이름이 아니라, 내가 세상을 바라보는 방식에서 시작된 브랜드입니다.
+              거창한 기술보다 사람의 감정과 경험에서 출발하고, 사용자의 하루에 조용히 남는 소프트웨어를 만들고자 합니다.
             </p>
-            <p>
-              누군가에게는 너무 작아서 지나쳐지는 불편함이, 다른 누군가에게는 하루를 무겁게 만드는 문제가 될 수 있다고 생각했습니다.
-              그래서 루네르비아는 거창한 기술보다 사람의 감정과 경험에서 출발합니다.
-            </p>
-            <p class="about-emphasis">
-              우리는 빠르게 소비되고 잊히는 서비스보다, 사용자의 하루에 조용히 남는 소프트웨어를 만들고자 합니다.
-            </p>
-            <p>
-              고민을 기록하고, 감정을 나누고, 사람과 사람 사이의 연결을 조금 더 안전하고 따뜻하게 만드는 도구를 만드는 것이 루네르비아의 방향입니다.
-            </p>
-            <p>
-              루네르비아는 아직 완성된 거대한 회사가 아니라, 하나의 가능성에서 출발한 작은 브랜드입니다. 하지만 그 시작이 작다고 해서 목표까지 작지는 않습니다.
-              우리는 작은 아이디어를 실험하고, 실패를 기록하며, 결국 누군가에게 필요한 제품으로 만들어가는 과정을 중요하게 생각합니다.
-            </p>
-            <p>
-              기술은 차갑게 보일 수 있지만, 그 기술이 향하는 곳은 결국 사람이어야 한다고 믿습니다.
-              루네르비아는 그런 믿음으로 감정, 기록, 연결, 일상의 문제를 소프트웨어로 풀어가려 합니다.
-            </p>
+            <a
+              class="btn btn-secondary btn-icon"
+              href="why.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>자세히 읽기</span>
+              <span class="btn-arrow" aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
       </section>
@@ -180,7 +173,7 @@
                      파일을 넣으면 자동으로 이미지가 표시됩니다. -->
               <img
                 class="product-img"
-                src="assets/brand/product-letter.png?v=20260522a"
+                src="assets/brand/product-letter.png?v=20260522b"
                 alt="Night Letter — quiet anonymous letters"
                 hidden
               />
@@ -233,7 +226,7 @@
                      assets/brand/ 에 저장해 주세요. -->
               <img
                 class="partner-img"
-                src="assets/brand/partner-todak.png?v=20260522a"
+                src="assets/brand/partner-todak.png?v=20260522b"
                 alt="Todak Aquarium Diary — 토닥어항일기"
                 hidden
               />
@@ -325,7 +318,7 @@
         <div class="footer-brand">
           <img
             class="footer-brand-img"
-            src="assets/brand/lunervia-logo-symbol.png?v=20260522a"
+            src="assets/brand/lunervia-logo-symbol.png?v=20260522b"
             alt="LUNERVIA"
             hidden
           />
@@ -336,6 +329,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260522a"></script>
+    <script src="script.js?v=20260522b"></script>
   </body>
 </html>
