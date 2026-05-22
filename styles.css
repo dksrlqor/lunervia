@@ -953,49 +953,141 @@ p {
   background: var(--bg-soft);
 }
 
-.footer-inner {
+.footer-top {
   max-width: var(--max);
   margin: 0 auto;
-  padding: clamp(48px, 7vw, 72px) var(--gutter) clamp(36px, 5vw, 56px);
+  padding: clamp(54px, 8vw, 88px) var(--gutter) clamp(40px, 5vw, 60px);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: clamp(36px, 6vw, 80px);
+}
+
+.footer-brand-block {
   display: flex;
   flex-direction: column;
-  gap: 14px;
   align-items: flex-start;
+  gap: 18px;
 }
 
 .footer-brand {
   display: inline-flex;
   align-items: center;
-  margin-bottom: 4px;
+  border-radius: var(--r-sm);
 }
 
 .footer-brand-img {
-  height: clamp(40px, 6vw, 60px);
+  height: clamp(38px, 5.5vw, 52px);
   width: auto;
-  max-width: 320px;
+  max-width: 280px;
   /* 흰색 로고를 크림 배경에서 보이도록 어둡게 변환 */
   filter: brightness(0);
 }
 
 .footer-brand-text {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--text);
 }
 
-.footer-line {
+.footer-tagline {
   max-width: 44ch;
   color: var(--text-3);
   font-size: 0.96rem;
-  line-height: 1.65;
+  line-height: 1.75;
 }
 
-.footer-meta {
-  font-size: 0.84rem;
+.footer-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 44px);
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.footer-col a,
+.footer-soon {
+  padding: 6px 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.footer-col a {
+  color: var(--text-2);
+  border-bottom: 1px solid transparent;
+  transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+
+.footer-col a:hover {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+.footer-soon {
   color: var(--text-4);
-  margin-top: 6px;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--line-soft);
+}
+
+.footer-bottom-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 22px var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 22px;
+}
+
+.footer-copyright {
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+
+.footer-built {
+  font-size: 0.85rem;
+  color: var(--text-4);
+}
+
+.footer-top-link {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  transition: color var(--t-fast) var(--ease-out);
+}
+
+.footer-top-link:hover {
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .footer-top-link {
+    margin-left: 0;
+  }
 }
 
 /* -------- 14. Article (why.html) -------- */
