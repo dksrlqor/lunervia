@@ -21,7 +21,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260522b" />
+    <link rel="stylesheet" href="styles.css?v=20260522c" />
   </head>
   <body>
     <!-- =================== 상단 네비게이션 =================== -->
@@ -32,12 +32,14 @@
              - 이미지 로고(텍스트형)를 assets/brand/lunervia-logo-text.png 로
                저장하면 자동으로 이미지가 보이고 텍스트가 숨겨집니다. -->
         <a class="brand" href="#" id="brand-link" aria-label="Lunervia 메인으로 새로고침">
-          <img
-            class="brand-img"
-            src="assets/brand/lunervia-logo-text.png?v=20260522b"
-            alt="LUNERVIA"
-            hidden
-          />
+          <!-- 로고 이미지에 투명 여백이 많아 .brand-logo 박스로 잘라 표시합니다. -->
+          <span class="brand-logo" hidden>
+            <img
+              class="brand-img"
+              src="assets/brand/lunervia-logo-text.png?v=20260522c"
+              alt="LUNERVIA"
+            />
+          </span>
           <span class="brand-text">
             <span class="brand-text-main">Lunervia</span>
             <span class="brand-text-kr">루네르비아</span>
@@ -89,37 +91,18 @@
             </div>
           </div>
 
-          <!-- VS Code 스타일 코드 에디터 카드 -->
+          <!-- 히어로 메시지 패널 — 은은한 검정 배경 위에 볼드 타이핑 문구 -->
           <div class="hero-code reveal" aria-hidden="true">
             <div class="codewin">
               <div class="codewin-bar">
-                <div class="codewin-dots">
-                  <span class="codewin-dot dot-red"></span>
-                  <span class="codewin-dot dot-yellow"></span>
-                  <span class="codewin-dot dot-green"></span>
-                </div>
-                <div class="codewin-tabs">
-                  <span class="codewin-tab is-active">lunervia.tsx</span>
-                </div>
-                <div class="codewin-spacer"></div>
+                <span class="codewin-dot"></span>
+                <span class="codewin-dot"></span>
+                <span class="codewin-dot"></span>
               </div>
               <div class="codewin-body">
-                <div class="code-line"><span class="ln">1</span><span class="cm">// lunervia.tsx</span></div>
-                <div class="code-line"><span class="ln">2</span><span></span></div>
-                <div class="code-line"><span class="ln">3</span><span><span class="kw">import</span> { <span class="var">Brand</span> } <span class="kw">from</span> <span class="str">"./core"</span>;</span></div>
-                <div class="code-line"><span class="ln">4</span><span></span></div>
-                <div class="code-line"><span class="ln">5</span><span><span class="kw">export const</span> <span class="var">greet</span> = <span class="str">"<span id="typed">안녕하세요!</span><span class="caret" aria-hidden="true"></span>"</span>;</span></div>
-                <div class="code-line"><span class="ln">6</span><span></span></div>
-                <div class="code-line"><span class="ln">7</span><span><span class="var">Brand</span>.<span class="fn">create</span>({</span></div>
-                <div class="code-line"><span class="ln">8</span><span>  <span class="prop">quiet</span>: <span class="lit">true</span>,</span></div>
-                <div class="code-line"><span class="ln">9</span><span>  <span class="prop">meaningful</span>: <span class="lit">true</span>,</span></div>
-                <div class="code-line"><span class="ln">10</span><span>});</span></div>
-              </div>
-              <div class="codewin-status">
-                <span class="status-dot"></span>
-                <span>typescript</span>
-                <span class="status-sep">·</span>
-                <span>UTF-8</span>
+                <p class="codewin-message">
+                  <span class="typed-text" id="typed">안녕하세요!</span><span class="caret" aria-hidden="true"></span>
+                </p>
               </div>
             </div>
           </div>
@@ -329,6 +312,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260522b"></script>
+    <script src="script.js?v=20260522c"></script>
   </body>
 </html>

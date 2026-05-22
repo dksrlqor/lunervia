@@ -52,13 +52,20 @@
     img.addEventListener("error", handleError, { once: true });
   };
 
-  // 브랜드 로고
+  // 브랜드 로고 (헤더) — 이미지 로드 성공 시 .brand-logo 박스를 보이고 텍스트 숨김
+  const brandLogo = $(".brand-logo");
   const brandImg = $(".brand-img");
   const brandText = $(".brand-text");
   wireImageFallback(
     brandImg,
-    () => { if (brandText) brandText.hidden = true; },
-    () => { if (brandText) brandText.hidden = false; }
+    () => {
+      if (brandLogo) brandLogo.hidden = false;
+      if (brandText) brandText.hidden = true;
+    },
+    () => {
+      if (brandLogo) brandLogo.hidden = true;
+      if (brandText) brandText.hidden = false;
+    }
   );
 
   // 푸터 워드마크
