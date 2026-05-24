@@ -150,52 +150,9 @@ p {
   border-radius: 4px;
 }
 
-/* 인트로/오버레이가 떠 있을 때 body 스크롤 잠금 */
-body.intro-active,
+/* 오버레이가 떠 있을 때 body 스크롤 잠금 */
 body.why-open {
   overflow: hidden;
-}
-
-/* ============================================================
-   LOADING INTRO — 첫 진입 시 잠깐 떴다가 사라지는 오프닝
-   ============================================================ */
-.boot-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-  background-image:
-    radial-gradient(800px 540px at 50% 40%, rgba(138, 111, 77, 0.16), transparent 70%),
-    radial-gradient(900px 600px at 50% 80%, rgba(47, 47, 42, 0.05), transparent 70%);
-  opacity: 1;
-  transition: opacity 0.6s var(--ease-out), visibility 0s linear 0.6s;
-  pointer-events: none;
-}
-
-.boot-intro.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.boot-intro-mark {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--text);
-  opacity: 0;
-  transform: translateY(8px);
-  animation: bootFade 1.8s var(--ease-out) forwards;
-}
-
-@keyframes bootFade {
-  0%   { opacity: 0; transform: translateY(8px); letter-spacing: 0.22em; }
-  35%  { opacity: 1; transform: none; letter-spacing: 0.18em; }
-  75%  { opacity: 1; }
-  100% { opacity: 0; }
 }
 
 /* ============================================================
@@ -219,36 +176,6 @@ body.why-open {
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   transform-origin: left center;
   transition: width 0.12s linear;
-}
-
-/* ============================================================
-   CURSOR LIGHT — 마우스를 따라가는 은은한 빛 (데스크톱 전용)
-   JS 가 --x / --y 변수만 갱신합니다.
-   ============================================================ */
-.cursor-light {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 520px;
-  height: 520px;
-  margin: -260px 0 0 -260px;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(closest-side, rgba(138, 111, 77, 0.16), transparent 72%);
-  opacity: 0;
-  transform: translate3d(var(--x, -1000px), var(--y, -1000px), 0);
-  transition: opacity 0.5s var(--ease-out);
-  mix-blend-mode: multiply;
-}
-
-.cursor-light.is-on {
-  opacity: 1;
-}
-
-@media (hover: none), (max-width: 960px) {
-  .cursor-light {
-    display: none;
-  }
 }
 
 /* -------- 3. Top navigation -------- */
@@ -1983,12 +1910,6 @@ body.why-open {
 
   .float {
     animation: none;
-  }
-
-  .boot-intro {
-    /* JS 가 곧바로 숨김 처리하지만, JS 가 비활성인 경우도 즉시 사라지게 */
-    opacity: 0;
-    visibility: hidden;
   }
 
   .why-panel {

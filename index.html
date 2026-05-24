@@ -22,21 +22,10 @@
     <link rel="stylesheet" href="styles.css?v=20260523a" />
   </head>
   <body>
-    <!-- =========================================================
-         LOADING INTRO — 첫 진입 시 'Lunervia' 글자가 짧게 떴다 사라짐
-         JS 와 CSS 가 함께 처리하며, reduced-motion 환경에서는 즉시 숨김
-         ========================================================= -->
-    <div class="boot-intro" id="boot-intro" aria-hidden="true">
-      <span class="boot-intro-mark">Lunervia</span>
-    </div>
-
     <!-- 스크롤 진행률 (상단 얇은 바) -->
     <div class="scroll-progress" aria-hidden="true">
       <span class="scroll-progress-fill" id="scroll-progress-fill"></span>
     </div>
-
-    <!-- 마우스를 따라가는 은은한 빛 (데스크톱 전용 — JS 에서 좌표 갱신) -->
-    <div class="cursor-light" aria-hidden="true" id="cursor-light"></div>
 
     <!-- ============================== TOPBAR ============================== -->
     <header class="nav">

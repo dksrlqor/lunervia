@@ -2,19 +2,17 @@
    LUNERVIA — quiet software brand site
    ------------------------------------------------------------
    기능 모듈
-   1. 부팅 인트로 (Lunervia 페이드인)
-   2. 브랜드 로고 클릭 → 부드럽게 상단으로
-   3. 이미지 폴백 (로고/제품/파트너) — 로드 성공 시 표시
-   4. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
-   5. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
-   6. Hero 터미널 창 안 타이핑 사이클 (첫 문구 = '안녕하세요!')
-   7. IntersectionObserver 기반 reveal (스태거 포함)
-   8. 스크롤 진행률 바 갱신
-   9. 마우스를 따라가는 빛 (데스크톱 전용)
-   10. KO / EN 언어 토글 + localStorage 영속화 (data-i18n / data-i18n-html)
-   11. Why Lunervia 내부 오버레이 — 새 탭이 아니라 사이트 안 스토리룸
-       - data-open-why 로 열고, data-close-why / Esc / 배경 클릭으로 닫음
-       - 열려 있을 때 body 스크롤 잠금 + 포커스 트랩
+   1. 브랜드 로고 클릭 → 부드럽게 상단으로
+   2. 이미지 폴백 (로고/제품/파트너) — 로드 성공 시 표시
+   3. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
+   4. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
+   5. Hero 터미널 창 안 타이핑 사이클 (첫 문구 = '안녕하세요!')
+   6. IntersectionObserver 기반 reveal (스태거 포함)
+   7. 스크롤 진행률 바 갱신
+   8. KO / EN 언어 토글 + localStorage 영속화 (data-i18n / data-i18n-html)
+   9. Why Lunervia 내부 오버레이 — 새 탭이 아니라 사이트 안 스토리룸
+      - data-open-why 로 열고, data-close-why / Esc / 배경 클릭으로 닫음
+      - 열려 있을 때 body 스크롤 잠금 + 포커스 트랩
    ============================================================ */
 
 (() => {
@@ -24,28 +22,7 @@
   const prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* -------- 1. 부팅 인트로 ----------------------------------------- */
-  const bootIntro = $("#boot-intro");
-  if (bootIntro) {
-    document.body.classList.add("intro-active");
-    const hideIntro = () => {
-      bootIntro.classList.add("is-hidden");
-      document.body.classList.remove("intro-active");
-    };
-    if (prefersReducedMotion) {
-      // 접근성: 모션 줄이기를 선호하면 즉시 숨김
-      window.setTimeout(hideIntro, 80);
-    } else {
-      // CSS 애니메이션과 맞춘 1.85s 후 살짝 자연스럽게 사라짐
-      window.setTimeout(hideIntro, 1850);
-    }
-    // 안전망 — 3초가 지나면 무조건 해제
-    window.setTimeout(() => {
-      if (!bootIntro.classList.contains("is-hidden")) hideIntro();
-    }, 3000);
-  }
-
-  /* -------- 2. 브랜드 로고 클릭 → 맨 위로 ----------------------------- */
+  /* -------- 1. 브랜드 로고 클릭 → 맨 위로 ----------------------------- */
   const brandLink = $("#brand-link");
   if (brandLink) {
     brandLink.addEventListener("click", (event) => {
@@ -59,7 +36,7 @@
     });
   }
 
-  /* -------- 3. 이미지 폴백 ----------------------------------------- */
+  /* -------- 2. 이미지 폴백 ----------------------------------------- */
   const wireImageFallback = (img, onSuccess, onFail) => {
     if (!img) return;
     const handleLoad = () => {
@@ -127,7 +104,7 @@
     );
   });
 
-  /* -------- 4. 모바일 메뉴 토글 ----------------------------------- */
+  /* -------- 3. 모바일 메뉴 토글 ----------------------------------- */
   const navToggle = $(".nav-toggle");
   const navMenu = $(".nav-menu");
 
@@ -157,12 +134,12 @@
     });
   }
 
-  /* -------- 5. 앵커 링크 — 메뉴 닫고 부드럽게 스크롤 ---------------- */
+  /* -------- 4. 앵커 링크 — 메뉴 닫고 부드럽게 스크롤 ---------------- */
   $$('.nav-menu a[href^="#"]').forEach((a) => {
     a.addEventListener("click", () => closeMobileMenu());
   });
 
-  /* -------- 6. Hero 터미널 타이핑 사이클 -------------------------- */
+  /* -------- 5. Hero 터미널 타이핑 사이클 -------------------------- */
   const phrases = [
     "안녕하세요!",
     "Lunervia builds emotional software.",
@@ -228,7 +205,7 @@
 
   startTypingLoop();
 
-  /* -------- 7. IntersectionObserver reveal ------------------------ */
+  /* -------- 6. IntersectionObserver reveal ------------------------ */
   const revealItems = $$(".reveal");
 
   if ("IntersectionObserver" in window && !prefersReducedMotion) {
@@ -252,7 +229,7 @@
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }
 
-  /* -------- 8. 스크롤 진행률 바 ----------------------------------- */
+  /* -------- 7. 스크롤 진행률 바 ----------------------------------- */
   const progressFill = $("#scroll-progress-fill");
   if (progressFill) {
     let ticking = false;
@@ -277,36 +254,7 @@
     updateProgress();
   }
 
-  /* -------- 9. 마우스를 따라가는 빛 (데스크톱 전용) ----------------- */
-  const cursorLight = $("#cursor-light");
-  const isFinePointer = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (cursorLight && isFinePointer && !prefersReducedMotion) {
-    let pending = false;
-    let lastX = 0;
-    let lastY = 0;
-    const apply = () => {
-      cursorLight.style.setProperty("--x", `${lastX}px`);
-      cursorLight.style.setProperty("--y", `${lastY}px`);
-      pending = false;
-    };
-    document.addEventListener(
-      "pointermove",
-      (event) => {
-        if (event.pointerType && event.pointerType !== "mouse") return;
-        lastX = event.clientX;
-        lastY = event.clientY;
-        if (!cursorLight.classList.contains("is-on")) cursorLight.classList.add("is-on");
-        if (!pending) {
-          window.requestAnimationFrame(apply);
-          pending = true;
-        }
-      },
-      { passive: true }
-    );
-    document.addEventListener("pointerleave", () => cursorLight.classList.remove("is-on"));
-  }
-
-  /* -------- 10. KO / EN 언어 토글 --------------------------------- */
+  /* -------- 8. KO / EN 언어 토글 ---------------------------------- */
   /*
      UI 문구는 모두 data-i18n / data-i18n-html 로 표시.
      번역 키는 ko 기준 + en 매핑.
@@ -536,7 +484,7 @@
     });
   });
 
-  /* -------- 11. Why Lunervia 내부 오버레이 ------------------------ */
+  /* -------- 9. Why Lunervia 내부 오버레이 ------------------------- */
   const whyOverlay = $("#why-overlay");
   let lastFocusBeforeWhy = null;
   let whyKeydownHandler = null;
