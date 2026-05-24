@@ -20,7 +20,7 @@ http://127.0.0.1:5173/
 
 상단 네비게이션
 1. `Lunervia` 워드마크 (헤더 좌측) — 클릭 시 부드럽게 맨 위로
-2. 메뉴: 소개 · 제품 · 협력 · 철학 · 문의 · `Why Lunervia` (오버레이 트리거)
+2. 메뉴: 소개 · 제품 · 협력 · 철학 · 문의 · `SNS`(새 탭으로 `sns.html`) · `Why Lunervia` (오버레이 트리거)
 3. 우측에 KO / EN 언어 토글
 
 본문 섹션 — 모두 `01 / About` 형태의 번호 라벨 + 큰 타이틀
@@ -28,7 +28,13 @@ http://127.0.0.1:5173/
 - `02 / Philosophy` — Brand Manifesto 블록인용구 + 3개 매니페스토 카드 + `루네르비아를 만든 이유` 자세히 읽기 CTA
 - `03 / Products` — Night Letter (실제 코드네임은 노출하지 않음)
 - `04 / Partners` — Todak Aquarium Diary (Instagram, App Store)
-- `05 / Contact` — 공식 Instagram / 개인 Instagram / Email coming soon
+- `05 / Contact` — 공식 Instagram / 개인 Instagram / TikTok / Email coming soon (4 카드)
+
+SNS 페이지 (sns.html)
+- 상단 네비 `SNS` 또는 푸터 `모든 SNS 모아보기` 링크로 새 탭 열림.
+- 카드별 플랫폼 풀 브랜딩 — 인스타 카드는 보라·핑크·오렌지 그라데이션이 천천히 도는 모션, 틱톡 카드는 블랙 + 시안/마젠타 글로우 글리치 모션.
+- 4 카드 구성: 공식 Instagram, 개인 Instagram, TikTok, Email (조용한 회색).
+- 헤더/푸터/언어토글은 메인과 동일 마크업 — `script.js` 의 i18n / 메뉴 토글 등이 그대로 작동.
 
 Hero
 - 좌: eyebrow / 큰 타이틀 / 부 카피 / CTA 2개 / 브랜드 키워드 칩 (Emotion / Software / Letters / Warmth / Connection / Translation)
@@ -89,6 +95,7 @@ Why Lunervia (내부 오버레이)
 
 - Instagram `@lunerviasoft` → https://www.instagram.com/lunerviasoft/
 - Instagram `@dksrlqor`     → https://www.instagram.com/dksrlqor/
+- TikTok    `@dksrlqor`     → https://www.tiktok.com/@dksrlqor
 - Instagram `@todaklife`    → https://www.instagram.com/todaklife/
 - App Store 토닥어항일기   → https://apps.apple.com/kr/app/todak-aquarium-diary/id6765705899?l=en-GB
 
@@ -113,6 +120,7 @@ Why Lunervia (내부 오버레이)
 - `styles.css` — 디자인 시스템 + 모든 컴포넌트 + 반응형 + reduced-motion
 - `script.js` — 인트로 / 이미지 폴백 / 네비 / 타이핑 / reveal / 진행률 바 / 커서 라이트 / 언어 토글 / Why 오버레이
 - `why.html` — Why Lunervia 본문의 정적 fallback 페이지 (메인 UI 에선 직접 링크하지 않음 — 검색엔진/딥링크용)
+- `sns.html` — 인스타·틱톡·이메일을 모아 보여주는 SNS 페이지. 카드별 플랫폼 풀 브랜딩 + 모션. 상단 `SNS` 네비에서 새 탭으로 연결됨.
 - `serve_no_cache.py` — 로컬 무캐시 개발 서버 (포트 5173)
 - `assets/brand/` — 4장의 브랜드/제품/협업사 이미지
 - `.env.example` — 환경변수 형식 예시 (실제 키는 절대 넣지 않음)
@@ -129,7 +137,8 @@ Why Lunervia (내부 오버레이)
    - 열린 동안 뒤 배경 스크롤이 잠기는지 + 포커스가 안에 갇히는지.
 6. 상단 진행률 바가 스크롤에 따라 채워지는지.
 7. 모바일 뷰포트에서 햄버거 메뉴가 정상 동작하고, 가로 스크롤이 없는지.
-8. 콘솔 에러 0.
+8. 상단 `SNS` 클릭 시 새 탭으로 `sns.html` 이 열리고, 인스타 카드는 그라데이션이 천천히 도는지 + 틱톡 카드는 시안/마젠타 글로우가 보이는지.
+9. 콘솔 에러 0.
 
 ## 배포
 

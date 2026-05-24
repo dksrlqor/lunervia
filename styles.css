@@ -353,6 +353,31 @@ body.why-open {
   transform: translateY(-1px);
 }
 
+/* SNS 트리거 — 새 탭으로 sns.html 열기 (네비 링크와 톤은 비슷, 강조는 살짝) */
+.nav-sns {
+  position: relative;
+  padding: 9px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text-2);
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, rgba(221, 42, 123, 0.08), rgba(81, 91, 212, 0.08));
+  border: 1px solid var(--line-soft);
+  transition:
+    background var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.nav-sns:hover {
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(221, 42, 123, 0.14), rgba(81, 91, 212, 0.14));
+  border-color: var(--accent-line);
+  transform: translateY(-1px);
+}
+
 /* 언어 토글 (KO / EN) */
 .nav-lang {
   display: inline-flex;
@@ -1172,6 +1197,11 @@ body.why-open {
   margin-top: 6px;
 }
 
+/* 4 카드(공식 인스타 / 개인 인스타 / 틱톡 / 이메일) 로 확장됐을 때 */
+.contact-grid.contact-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .contact-card {
   display: flex;
   flex-direction: column;
@@ -1765,6 +1795,312 @@ body.why-open {
   }
 }
 
+/* ============================================================
+   SNS PAGE — sns.html 전용
+   - 페이지 골격(헤더/푸터/배경)은 크림 톤 그대로
+   - 카드는 플랫폼 풀 브랜딩 (인스타 그라데이션 / 틱톡 블랙+글리치 글로우)
+   ============================================================ */
+.sns-page {
+  background: var(--bg);
+}
+
+.sns-page-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) var(--gutter) clamp(64px, 9vw, 120px);
+}
+
+.sns-hero {
+  margin: 28px 0 clamp(36px, 5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 640px;
+}
+
+.sns-title {
+  margin: 0;
+  font-size: clamp(2rem, 4.4vw, 2.85rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.12;
+}
+
+.sns-hero-lead {
+  margin: 0;
+  font-size: 1.04rem;
+  line-height: 1.78;
+  color: var(--text-3);
+  max-width: 56ch;
+}
+
+/* 카드 그리드 */
+.sns-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 2.4vw, 26px);
+  margin: 0 0 clamp(48px, 7vw, 72px);
+}
+
+@media (max-width: 720px) {
+  .sns-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 카드 공통 — 위치 컨테이너만 잡고 표면 디자인은 각 변형에서 */
+.sns-card {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  isolation: isolate; /* 내부 ::before / glow 가 카드 밖으로 새지 않게 */
+  min-height: 224px;
+  transition: transform var(--t-mid) var(--ease-out), box-shadow var(--t-mid) var(--ease-out);
+}
+
+.sns-card:hover {
+  transform: translateY(-4px);
+}
+
+.sns-card-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: clamp(22px, 3vw, 30px);
+  height: 100%;
+}
+
+.sns-card-link-disabled {
+  cursor: default;
+}
+
+.sns-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sns-card-platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sns-card-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.sns-card-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.sns-card-handle {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+  line-height: 1.15;
+}
+
+.sns-card-meta {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.sns-card-cta {
+  margin-top: auto;
+  padding-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.sns-card-arrow {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.sns-card:hover .sns-card-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ===== 인스타 카드 — 풀 그라데이션 ===== */
+.sns-card-instagram {
+  background:
+    linear-gradient(135deg,
+      #F58529 0%,
+      #DD2A7B 35%,
+      #8134AF 70%,
+      #515BD4 100%);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  box-shadow:
+    0 18px 38px rgba(129, 52, 175, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  animation: gradientShift 14s linear infinite;
+}
+
+.sns-card-instagram:hover {
+  box-shadow:
+    0 28px 60px rgba(129, 52, 175, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset;
+}
+
+/* 카드 위로 비스듬히 지나가는 광택 — 시각적 깊이용 */
+.sns-card-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 65%);
+  transform: translateX(-100%);
+  transition: transform 0.9s var(--ease-out);
+  z-index: 0;
+}
+
+.sns-card-instagram:hover .sns-card-shine {
+  transform: translateX(100%);
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== 틱톡 카드 — 블랙 + 시안/마젠타 글리치 글로우 ===== */
+.sns-card-tiktok {
+  background: #010101;
+  color: #fff;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.sns-card-tiktok:hover {
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+}
+
+.sns-card-tiktok .sns-card-badge {
+  background: rgba(37, 244, 238, 0.18);
+  color: #25F4EE;
+}
+
+.sns-card-tiktok .sns-card-handle {
+  color: #fff;
+  text-shadow:
+    -1px 0 0 rgba(254, 44, 85, 0.55),
+     1px 0 0 rgba(37, 244, 238, 0.55);
+  transition: text-shadow var(--t-mid) var(--ease-spring);
+}
+
+.sns-card-tiktok:hover .sns-card-handle {
+  text-shadow:
+    -2.5px 0 0 rgba(254, 44, 85, 0.75),
+     2.5px 0 0 rgba(37, 244, 238, 0.75);
+}
+
+/* 두 가지 색의 흐릿한 글로우를 양쪽에 배치 — hover 시 더 강해짐 */
+.sns-card-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity var(--t-mid) var(--ease-out), transform var(--t-mid) var(--ease-out);
+  z-index: 0;
+}
+
+.sns-card-glow-cyan {
+  top: -80px;
+  right: -80px;
+  background: #25F4EE;
+}
+
+.sns-card-glow-magenta {
+  bottom: -90px;
+  left: -90px;
+  background: #FE2C55;
+}
+
+.sns-card-tiktok:hover .sns-card-glow {
+  opacity: 0.85;
+}
+
+.sns-card-tiktok:hover .sns-card-glow-cyan {
+  transform: translate(-10px, 10px);
+}
+
+.sns-card-tiktok:hover .sns-card-glow-magenta {
+  transform: translate(10px, -10px);
+}
+
+/* ===== 이메일 (조용한 카드) ===== */
+.sns-card-email-soon {
+  background: var(--bg-paper);
+  border: 1px solid var(--line-soft);
+  color: var(--text-2);
+}
+
+.sns-card-email-soon:hover {
+  transform: none; /* 비활성 카드는 부상 X */
+}
+
+.sns-card-email-soon .sns-card-platform,
+.sns-card-email-soon .sns-card-handle,
+.sns-card-email-soon .sns-card-meta {
+  color: var(--text-2);
+}
+
+.sns-card-email-soon .sns-card-platform {
+  color: var(--accent);
+}
+
+.sns-card-email-soon .sns-card-handle {
+  color: var(--text);
+}
+
+.sns-card-email-soon .sns-card-badge.sns-card-badge-mute {
+  background: var(--bg-soft);
+  color: var(--text-3);
+}
+
 /* -------- 15. Responsive -------- */
 @media (max-width: 960px) {
   .hero-inner {
@@ -1791,7 +2127,8 @@ body.why-open {
     margin: 0 auto;
   }
 
-  .contact-grid {
+  .contact-grid,
+  .contact-grid.contact-grid-4 {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -1851,7 +2188,8 @@ body.why-open {
     font-size: 1rem;
   }
 
-  .contact-grid {
+  .contact-grid,
+  .contact-grid.contact-grid-4 {
     grid-template-columns: 1fr;
   }
 
@@ -1914,5 +2252,14 @@ body.why-open {
 
   .why-panel {
     transition: none;
+  }
+
+  .sns-card-instagram {
+    animation: none;
+    background-position: 50% 50%;
+  }
+
+  .sns-card-shine {
+    display: none;
   }
 }
