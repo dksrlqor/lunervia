@@ -150,6 +150,107 @@ p {
   border-radius: 4px;
 }
 
+/* 인트로/오버레이가 떠 있을 때 body 스크롤 잠금 */
+body.intro-active,
+body.why-open {
+  overflow: hidden;
+}
+
+/* ============================================================
+   LOADING INTRO — 첫 진입 시 잠깐 떴다가 사라지는 오프닝
+   ============================================================ */
+.boot-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  background-image:
+    radial-gradient(800px 540px at 50% 40%, rgba(138, 111, 77, 0.16), transparent 70%),
+    radial-gradient(900px 600px at 50% 80%, rgba(47, 47, 42, 0.05), transparent 70%);
+  opacity: 1;
+  transition: opacity 0.6s var(--ease-out), visibility 0s linear 0.6s;
+  pointer-events: none;
+}
+
+.boot-intro.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot-intro-mark {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: bootFade 1.8s var(--ease-out) forwards;
+}
+
+@keyframes bootFade {
+  0%   { opacity: 0; transform: translateY(8px); letter-spacing: 0.22em; }
+  35%  { opacity: 1; transform: none; letter-spacing: 0.18em; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR — 상단에 얇게 진행률 표시
+   ============================================================ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 110;
+  background: transparent;
+  pointer-events: none;
+}
+
+.scroll-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform-origin: left center;
+  transition: width 0.12s linear;
+}
+
+/* ============================================================
+   CURSOR LIGHT — 마우스를 따라가는 은은한 빛 (데스크톱 전용)
+   JS 가 --x / --y 변수만 갱신합니다.
+   ============================================================ */
+.cursor-light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 520px;
+  height: 520px;
+  margin: -260px 0 0 -260px;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(138, 111, 77, 0.16), transparent 72%);
+  opacity: 0;
+  transform: translate3d(var(--x, -1000px), var(--y, -1000px), 0);
+  transition: opacity 0.5s var(--ease-out);
+  mix-blend-mode: multiply;
+}
+
+.cursor-light.is-on {
+  opacity: 1;
+}
+
+@media (hover: none), (max-width: 960px) {
+  .cursor-light {
+    display: none;
+  }
+}
+
 /* -------- 3. Top navigation -------- */
 .nav {
   position: sticky;
@@ -301,6 +402,67 @@ p {
   transform: translateY(-3.5px) rotate(-45deg);
 }
 
+/* Why Lunervia 트리거 — 메뉴 안 버튼 (링크와 톤 맞춤) */
+.nav-why {
+  position: relative;
+  padding: 9px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-sm);
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.nav-why:hover {
+  background: var(--bg-card);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* 언어 토글 (KO / EN) */
+.nav-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: rgba(251, 248, 241, 0.6);
+}
+
+.nav-lang-btn {
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  border-radius: 999px;
+  transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+
+.nav-lang-btn:hover {
+  color: var(--text);
+}
+
+.nav-lang-btn.is-active {
+  color: var(--bg-card);
+  background: var(--charcoal);
+}
+
+.nav-lang-sep {
+  color: var(--text-4);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+
 /* -------- 4. Section primitives -------- */
 .section {
   width: 100%;
@@ -346,6 +508,39 @@ p {
   margin-bottom: clamp(36px, 5vw, 52px);
   font-size: 1.02rem;
   color: var(--text-3);
+}
+
+/* 섹션 번호 라벨 — '01 / About' 형태 */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.section-label-num {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.section-label-sep {
+  color: var(--text-4);
+}
+
+/* 부드러운 부유 유틸 — 파트너 카드 같은 곳에 사용 */
+.float {
+  animation: floatY 7s ease-in-out infinite;
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
 }
 
 /* -------- 5. Reveal motion -------- */
@@ -442,6 +637,34 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+/* 브랜드 키워드 칩 — hero 하단 (Emotion / Software / Letters / ...) */
+.brand-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 30px 0 0;
+  padding: 0;
+}
+
+.brand-chips li {
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-pill);
+  transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+}
+
+.brand-chips li:hover {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  transform: translateY(-2px);
 }
 
 /* -------- 7. Buttons -------- */
@@ -640,6 +863,151 @@ p {
   line-height: 1.78;
   color: var(--text-2);
   max-width: 58ch;
+}
+
+/* About 메타 그리드 — Founded / Based in / Focus / Stage */
+.about-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(16px, 2vw, 28px);
+  margin-top: clamp(32px, 4vw, 48px);
+  padding: clamp(22px, 3vw, 32px);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-xl);
+}
+
+.about-meta li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: clamp(8px, 2vw, 18px);
+  border-right: 1px solid var(--line-soft);
+}
+
+.about-meta li:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.about-meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.about-meta-value {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .about-meta {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 18px;
+  }
+
+  .about-meta li {
+    border-right: 0;
+    padding-right: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .about-meta li:nth-last-child(-n+2) {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* -------- 9b. Philosophy / Brand Manifesto -------- */
+.section-philosophy {
+  border-top: 1px solid var(--line-soft);
+  background:
+    radial-gradient(900px 540px at 80% 0%, rgba(138, 111, 77, 0.08), transparent 65%),
+    transparent;
+}
+
+.philosophy-big {
+  margin: clamp(18px, 3vw, 30px) 0 clamp(34px, 4vw, 52px);
+  padding: clamp(26px, 4vw, 42px);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--r-xl) var(--r-xl) 0;
+  max-width: 62ch;
+}
+
+.manifesto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+  margin: 0 0 clamp(36px, 5vw, 48px);
+}
+
+.manifesto-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(22px, 3vw, 30px);
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  transition:
+    transform var(--t-mid) var(--ease-out),
+    border-color var(--t-mid) var(--ease-out),
+    box-shadow var(--t-mid) var(--ease-out);
+}
+
+.manifesto-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-line);
+  box-shadow: 0 20px 38px rgba(47, 47, 42, 0.08), 0 0 36px rgba(138, 111, 77, 0.06);
+}
+
+.manifesto-num {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin: 0 0 2px;
+}
+
+.manifesto-name {
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  margin: 0;
+}
+
+.manifesto-desc {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--text-3);
+  margin: 0;
+}
+
+.philosophy-cta {
+  margin-top: 4px;
+}
+
+@media (max-width: 860px) {
+  .manifesto-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* -------- 10. Product card -------- */
@@ -1168,6 +1536,308 @@ p {
   max-width: 62ch;
 }
 
+/* ============================================================
+   WHY LUNERVIA · INTERNAL OVERLAY (브랜드 스토리룸이 열리는 느낌)
+   - 새 탭이 아니라 사이트 내부에서 우측에서 부드럽게 펼쳐짐
+   - 배경은 종이 위에 종이가 살짝 떠 있는 듯한 톤
+   - body.why-open 일 때 배경이 살짝 흐려지고 어두워짐
+   ============================================================ */
+.why-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.why-overlay:not([hidden]) {
+  pointer-events: auto;
+}
+
+.why-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 31, 27, 0.32);
+  backdrop-filter: blur(8px) saturate(115%);
+  -webkit-backdrop-filter: blur(8px) saturate(115%);
+  opacity: 0;
+  transition: opacity 0.42s var(--ease-out);
+}
+
+.why-overlay.is-open .why-backdrop {
+  opacity: 1;
+}
+
+.why-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(820px, 100%);
+  height: 100%;
+  background: var(--bg-card);
+  background-image:
+    radial-gradient(900px 540px at 100% 0%, rgba(138, 111, 77, 0.1), transparent 60%),
+    radial-gradient(700px 500px at 0% 100%, rgba(47, 47, 42, 0.04), transparent 70%);
+  border-left: 1px solid var(--line);
+  box-shadow: -32px 0 80px rgba(47, 47, 42, 0.18);
+  transform: translateX(100%);
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.why-overlay.is-open .why-panel {
+  transform: none;
+}
+
+.why-panel-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px clamp(24px, 4vw, 44px);
+  background: rgba(251, 248, 241, 0.86);
+  border-bottom: 1px solid var(--line-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.why-panel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.why-close {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-pill);
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  transition:
+    transform var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out);
+}
+
+.why-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.why-close:hover {
+  background: var(--bg-paper);
+  border-color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.why-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.why-content {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: clamp(36px, 6vw, 64px) clamp(24px, 4vw, 44px) clamp(48px, 7vw, 88px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.why-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.12;
+  margin: 0 0 6px;
+}
+
+.why-intro {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.28rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin: 0 0 8px;
+}
+
+.why-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: 1.04rem;
+  line-height: 1.85;
+  color: var(--text-2);
+}
+
+.why-body p {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.why-emphasis {
+  margin: 8px 0;
+  padding: 24px 26px;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  max-width: 60ch;
+}
+
+.why-en {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--text-3);
+  max-width: 60ch;
+}
+
+/* Why 안에 들어간 협업사 카드 */
+.why-partners {
+  margin-top: clamp(28px, 4vw, 40px);
+  padding-top: clamp(24px, 3vw, 32px);
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.why-partners-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0;
+}
+
+.why-partners-intro {
+  font-size: 0.98rem;
+  color: var(--text-3);
+  margin: 0 0 8px;
+  max-width: 56ch;
+}
+
+.why-partner-card {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 18px;
+  padding: 18px;
+  background: var(--bg-paper);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  align-items: start;
+}
+
+.why-partner-media {
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.why-partner-media img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.why-partner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.why-partner-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.why-partner-desc {
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin: 0;
+  max-width: 52ch;
+}
+
+.why-partner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 4px;
+}
+
+.why-partner-actions a {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-2);
+  border-bottom: 1px solid transparent;
+  transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+
+.why-partner-actions a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.why-foot {
+  margin-top: clamp(28px, 4vw, 40px);
+}
+
+.why-back .btn-arrow-left {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.why-back:hover .btn-arrow-left {
+  transform: translateX(-3px);
+}
+
+@media (max-width: 720px) {
+  .why-panel {
+    width: 100%;
+  }
+
+  .why-partner-card {
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .why-partner-media {
+    width: 64px;
+    height: 64px;
+  }
+}
+
 /* -------- 15. Responsive -------- */
 @media (max-width: 960px) {
   .hero-inner {
@@ -1196,6 +1866,12 @@ p {
 
   .contact-grid {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .nav-lang {
+    display: none;
   }
 }
 
@@ -1239,6 +1915,13 @@ p {
   .nav-menu a::after {
     left: 14px;
     right: 14px;
+  }
+
+  .nav-why {
+    margin-top: 6px;
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 1rem;
   }
 
   .contact-grid {
@@ -1296,5 +1979,19 @@ p {
   .caret {
     opacity: 0.6;
     animation: none;
+  }
+
+  .float {
+    animation: none;
+  }
+
+  .boot-intro {
+    /* JS 가 곧바로 숨김 처리하지만, JS 가 비활성인 경우도 즉시 사라지게 */
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .why-panel {
+    transition: none;
   }
 }

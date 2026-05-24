@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lunervia — quiet software for real feelings</title>
+    <title>Lunervia — software for warmer digital experiences</title>
     <meta
       name="description"
-      content="Lunervia 는 감정과 기술 사이에서 조용하지만 필요한 소프트웨어를 만드는 브랜드입니다."
+      content="Lunervia 는 사람의 감정과 고민을 기술로 더 따뜻하게 연결하는 작은 소프트웨어 브랜드입니다."
     />
     <meta name="theme-color" content="#F7F3EA" />
-
-    <!-- 파비콘: 차콜 + 크림 'L' -->
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F2F2A'/%3E%3Ctext x='50%25' y='57%25' text-anchor='middle' font-family='Georgia,serif' font-size='38' font-weight='600' fill='%23F7F3EA'%3EL%3C/text%3E%3C/svg%3E"
@@ -21,22 +19,33 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260522c" />
+    <link rel="stylesheet" href="styles.css?v=20260523a" />
   </head>
   <body>
-    <!-- =================== 상단 네비게이션 =================== -->
+    <!-- =========================================================
+         LOADING INTRO — 첫 진입 시 'Lunervia' 글자가 짧게 떴다 사라짐
+         JS 와 CSS 가 함께 처리하며, reduced-motion 환경에서는 즉시 숨김
+         ========================================================= -->
+    <div class="boot-intro" id="boot-intro" aria-hidden="true">
+      <span class="boot-intro-mark">Lunervia</span>
+    </div>
+
+    <!-- 스크롤 진행률 (상단 얇은 바) -->
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress-fill" id="scroll-progress-fill"></span>
+    </div>
+
+    <!-- 마우스를 따라가는 은은한 빛 (데스크톱 전용 — JS 에서 좌표 갱신) -->
+    <div class="cursor-light" aria-hidden="true" id="cursor-light"></div>
+
+    <!-- ============================== TOPBAR ============================== -->
     <header class="nav">
       <div class="nav-inner">
-        <!-- BRAND
-             - 텍스트 로고를 기본으로 보여줍니다.
-             - 이미지 로고(텍스트형)를 assets/brand/lunervia-logo-text.png 로
-               저장하면 자동으로 이미지가 보이고 텍스트가 숨겨집니다. -->
-        <a class="brand" href="#" id="brand-link" aria-label="Lunervia 메인으로 새로고침">
-          <!-- 로고 이미지에 투명 여백이 많아 .brand-logo 박스로 잘라 표시합니다. -->
+        <a class="brand" href="#hero" id="brand-link" aria-label="Lunervia 메인으로">
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260522c"
+              src="assets/brand/lunervia-logo-text.png?v=20260523a"
               alt="LUNERVIA"
             />
           </span>
@@ -58,40 +67,54 @@
         </button>
 
         <nav class="nav-menu" id="nav-menu" aria-label="주 메뉴">
-          <a href="#about">소개</a>
-          <a href="#products">제품</a>
-          <a href="#partners">협력</a>
-          <a href="#contact">문의</a>
+          <a href="#about" data-i18n="nav.about">About</a>
+          <a href="#products" data-i18n="nav.products">Products</a>
+          <a href="#partners" data-i18n="nav.partners">Partners</a>
+          <a href="#philosophy" data-i18n="nav.philosophy">Philosophy</a>
+          <a href="#contact" data-i18n="nav.contact">Contact</a>
+          <button type="button" class="nav-why" data-open-why data-i18n="nav.why">Why Lunervia</button>
         </nav>
+
+        <div class="nav-lang" role="group" aria-label="Language">
+          <button type="button" class="nav-lang-btn is-active" data-lang="ko" aria-label="한국어">KO</button>
+          <span class="nav-lang-sep" aria-hidden="true">/</span>
+          <button type="button" class="nav-lang-btn" data-lang="en" aria-label="English">EN</button>
+        </div>
       </div>
     </header>
 
     <main>
-      <!-- =================== HERO =================== -->
+      <!-- ============================== HERO ============================== -->
       <section class="hero" id="hero">
         <div class="hero-inner">
           <div class="hero-copy reveal">
-            <p class="eyebrow">Welcome to Lunervia</p>
-            <h1 class="hero-title">
-              작은 아이디어를,<br />
-              <span class="hero-title-soft">오래 남는 소프트웨어로.</span>
+            <p class="eyebrow" data-i18n="hero.eyebrow">Welcome to Lunervia</p>
+            <h1 class="hero-title" data-i18n-html="hero.title">
+              감정과 기술 사이에,<br />루네르비아가 있습니다.
             </h1>
-            <p class="hero-sub">
-              감정과 기술 사이에서, 조용하지만 필요한 제품을 만듭니다.
-              <span class="hero-sub-en">We build quiet software for real feelings.</span>
+            <p class="hero-sub" data-i18n="hero.sub">
+              따뜻한 디지털 경험을 만드는 작은 소프트웨어 브랜드입니다.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#products">
-                <span>제품 보기</span>
-                <span aria-hidden="true">→</span>
+              <a class="btn btn-primary btn-icon" href="#products">
+                <span data-i18n="hero.cta.products">제품 보기</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
               </a>
-              <a class="btn btn-secondary" href="#contact">
-                <span>문의하기</span>
-              </a>
+              <a class="btn btn-secondary" href="#contact" data-i18n="hero.cta.contact">문의하기</a>
             </div>
+
+            <!-- 브랜드 키워드 칩 -->
+            <ul class="brand-chips" aria-label="brand keywords" role="list">
+              <li>Emotion</li>
+              <li>Software</li>
+              <li>Letters</li>
+              <li>Warmth</li>
+              <li>Connection</li>
+              <li>Translation</li>
+            </ul>
           </div>
 
-          <!-- 히어로 터미널 창 — '안녕하세요!' 부터 문구가 타이핑됨 -->
+          <!-- Hero 터미널 창 (코딩 스튜디오 분위기) -->
           <div class="hero-code reveal" aria-hidden="true">
             <div class="codewin">
               <div class="codewin-bar">
@@ -102,7 +125,9 @@
               </div>
               <div class="codewin-body">
                 <p class="codewin-line">
-                  <span class="term-prompt">➜</span> <span class="term-dir">~</span> <span class="typed-text" id="typed">안녕하세요!</span><span class="caret" aria-hidden="true"></span>
+                  <span class="term-prompt">➜</span>
+                  <span class="term-dir">~</span>
+                  <span class="typed-text" id="typed">안녕하세요!</span><span class="caret" aria-hidden="true"></span>
                 </p>
               </div>
             </div>
@@ -110,55 +135,102 @@
         </div>
       </section>
 
-      <!-- =================== ABOUT / Why Lunervia (teaser) ===================
-           긴 본문은 why.html 로 분리되어 새 탭에서 열립니다. -->
+      <!-- ============================== ABOUT ============================== -->
       <section class="section section-about" id="about">
-        <div class="section-inner about">
-          <div class="reveal">
-            <p class="eyebrow">Why Lunervia</p>
-            <h2 class="section-title">루네르비아를 만든 이유</h2>
-          </div>
+        <div class="section-inner">
+          <p class="section-label reveal">
+            <span class="section-label-num">01</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="about.label">About</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="about.title">작지만 진지한 소프트웨어 브랜드</h2>
+          <p class="section-lead reveal" data-i18n="about.lead">
+            루네르비아는 사람의 감정과 고민을 기술로 더 따뜻하게 연결하는 작은 소프트웨어 브랜드입니다. 웹과 모바일을 가리지 않고, 사용자가 오래 기억할 수 있는 작은 경험을 차분히 쌓아갑니다.
+          </p>
 
-          <div class="about-teaser reveal">
-            <p>
-              루네르비아는 단순히 프로그램을 만드는 이름이 아니라, 내가 세상을 바라보는 방식에서 시작된 브랜드입니다.
-              거창한 기술보다 사람의 감정과 경험에서 출발하고, 사용자의 하루에 조용히 남는 소프트웨어를 만들고자 합니다.
-            </p>
-            <a
-              class="btn btn-secondary btn-icon"
-              href="why.html"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>자세히 읽기</span>
-              <span class="btn-arrow" aria-hidden="true">↗</span>
-            </a>
+          <ul class="about-meta reveal" role="list">
+            <li>
+              <p class="about-meta-label">Founded</p>
+              <p class="about-meta-value">2026</p>
+            </li>
+            <li>
+              <p class="about-meta-label">Based in</p>
+              <p class="about-meta-value">Seoul, KR</p>
+            </li>
+            <li>
+              <p class="about-meta-label" data-i18n="about.focusLabel">Focus</p>
+              <p class="about-meta-value" data-i18n="about.focusValue">감성 소프트웨어 · 웹앱 · 모바일</p>
+            </li>
+            <li>
+              <p class="about-meta-label">Stage</p>
+              <p class="about-meta-value" data-i18n="about.stageValue">조용히 성장 중</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ====================== PHILOSOPHY · BRAND MANIFESTO ====================== -->
+      <section class="section section-philosophy" id="philosophy">
+        <div class="section-inner">
+          <p class="section-label reveal">
+            <span class="section-label-num">02</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="philosophy.label">Philosophy</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="philosophy.title">Brand Manifesto</h2>
+
+          <blockquote class="philosophy-big reveal" data-i18n="philosophy.big">
+            우리는 기술이 사람을 더 차갑게 만들지 않도록, 감정이 머물 수 있는 디지털 공간을 만듭니다.
+          </blockquote>
+
+          <ul class="manifesto-grid reveal" role="list">
+            <li class="manifesto-card">
+              <p class="manifesto-num">01</p>
+              <h3 class="manifesto-name">Warmth over noise</h3>
+              <p class="manifesto-desc" data-i18n="philosophy.card1">시끄러운 기능보다 오래 남는 따뜻함을 선택합니다.</p>
+            </li>
+            <li class="manifesto-card">
+              <p class="manifesto-num">02</p>
+              <h3 class="manifesto-name">Small moments matter</h3>
+              <p class="manifesto-desc" data-i18n="philosophy.card2">작은 문장, 작은 버튼, 작은 경험도 누군가의 하루를 바꿀 수 있다고 믿습니다.</p>
+            </li>
+            <li class="manifesto-card">
+              <p class="manifesto-num">03</p>
+              <h3 class="manifesto-name">Software with a human pulse</h3>
+              <p class="manifesto-desc" data-i18n="philosophy.card3">사람의 감정이 느껴지는 소프트웨어를 만들고자 합니다.</p>
+            </li>
+          </ul>
+
+          <div class="reveal">
+            <button type="button" class="btn btn-secondary btn-icon philosophy-cta" data-open-why>
+              <span data-i18n="philosophy.cta">루네르비아를 만든 이유 자세히 읽기</span>
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- =================== PRODUCTS =================== -->
+      <!-- ============================== PRODUCTS ============================== -->
       <section class="section section-products" id="products">
         <div class="section-inner">
-          <div class="reveal">
-            <p class="eyebrow">Product</p>
-            <h2 class="section-title">지금 만들고 있는 것</h2>
-            <p class="section-lead">
-              아직 출시 전이지만, 마음과 마음 사이를 잇는 작은 소프트웨어를 차분히 다듬고 있습니다.
-            </p>
-          </div>
+          <p class="section-label reveal">
+            <span class="section-label-num">03</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="products.label">Products</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="products.title">지금 만들고 있는 것</h2>
+          <p class="section-lead reveal" data-i18n="products.lead">
+            아직 출시 전이지만, 마음과 마음 사이를 잇는 작은 소프트웨어를 차분히 다듬고 있습니다.
+          </p>
 
-          <article class="product-card reveal">
+          <article class="product-card reveal" data-tilt>
             <div class="product-media">
-              <!-- PRODUCT IMAGE
-                   - 첨부하신 '편지/봉투' 이미지를 아래 파일명으로
-                     assets/brand/ 에 저장해 주세요.
-                   - 파일이 없으면 자리 표시(.media-placeholder)가 보이고,
-                     파일을 넣으면 자동으로 이미지가 표시됩니다. -->
+              <!-- 제품 로고: 첨부한 편지 비주얼 — assets/brand/product-letter.png
+                   이미지가 없으면 placeholder 가 보입니다. -->
               <img
                 class="product-img"
-                src="assets/brand/product-letter.png?v=20260522b"
-                alt="Night Letter — quiet anonymous letters"
+                src="assets/brand/product-letter.png"
+                alt=""
                 hidden
               />
               <div class="media-placeholder" aria-hidden="true">
@@ -173,45 +245,43 @@
                 <span class="badge badge-mute">Anonymous letters</span>
               </div>
               <h3 class="product-name">Night Letter</h3>
-              <p class="product-tagline">
-                조용한 익명 편지가 거리와 언어를 넘어 누군가에게 닿습니다.
+              <p class="product-tagline" data-i18n="product.tagline">
+                익명의 마음이 거리와 언어를 넘어 누군가에게 닿습니다.
               </p>
-              <p class="product-desc">
-                Night Letter 는 익명의 감정과 고민이 편지처럼 흐르는 소셜 서비스입니다.
-                사용자는 자신의 마음을 조용히 남기고, 어딘가의 다른 사용자가 그 편지를 펼쳐 읽고 따뜻한 답장을 보냅니다.
-                언어와 거리가 달라도 마음이 닿을 수 있다는 믿음에서 출발한 프로젝트입니다.
+              <p class="product-desc" data-i18n="product.desc">
+                Night Letter 는 익명의 감정과 고민이 편지처럼 흐르는 글로벌 감성 서비스입니다. 사용자는 자신의 마음을 조용히 남기고, 어딘가의 다른 사용자가 그 편지를 펼쳐 읽고 따뜻한 답장을 보냅니다. 말이 달라도 마음이 닿을 수 있다는 믿음에서 시작한 프로젝트입니다.
               </p>
               <ul class="feature-pills" role="list">
                 <li>Anonymous letters</li>
                 <li>Emotional connection</li>
                 <li>Global replies</li>
                 <li>Safe conversation</li>
+                <li>Translation</li>
               </ul>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- =================== PARTNERS =================== -->
+      <!-- ============================== PARTNERS ============================== -->
       <section class="section section-partners" id="partners">
         <div class="section-inner">
-          <div class="reveal">
-            <p class="eyebrow">Partner</p>
-            <h2 class="section-title">함께하는 곳</h2>
-            <p class="section-lead">
-              루네르비아는 일상의 작은 순간을 소중하게 남기는 동료 브랜드와 함께 합니다.
-            </p>
-          </div>
+          <p class="section-label reveal">
+            <span class="section-label-num">04</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="partners.label">Partners</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="partners.title">함께하는 곳</h2>
+          <p class="section-lead reveal" data-i18n="partners.lead">
+            루네르비아는 일상의 작은 순간을 소중히 다루는 동료 브랜드들과 함께 자랍니다.
+          </p>
 
-          <article class="partner-card reveal">
+          <article class="partner-card reveal float">
             <div class="partner-media">
-              <!-- PARTNER IMAGE
-                   - 첨부하신 '어항(토닥어항일기)' 이미지를 아래 파일명으로
-                     assets/brand/ 에 저장해 주세요. -->
               <img
                 class="partner-img"
-                src="assets/brand/partner-todak.png?v=20260522b"
-                alt="Todak Aquarium Diary — 토닥어항일기"
+                src="assets/brand/partner-todak.png"
+                alt="Todak Aquarium Diary"
                 hidden
               />
               <div class="media-placeholder" aria-hidden="true">
@@ -221,28 +291,17 @@
             </div>
 
             <div class="partner-content">
-              <p class="partner-kicker">Todak Aquarium Diary · 토닥어항일기</p>
-              <h3 class="partner-name">작은 어항 속 일상을 기록하는 다이어리</h3>
-              <p class="partner-desc">
-                토닥어항일기는 작은 어항 속 생명과 일상을 기록하는 감성적인 다이어리 앱입니다.
-                루네르비아는 토닥어항일기와 함께, 일상의 작은 순간을 소중하게 남기는 경험에 주목합니다.
+              <p class="partner-kicker">Todak Aquarium Diary · 토닥 어항일기</p>
+              <h3 class="partner-name" data-i18n="partners.name">작은 어항 속 일상을 기록하는 다이어리</h3>
+              <p class="partner-desc" data-i18n="partners.desc">
+                토닥 어항일기는 사용자가 자신의 어항과 작은 일상을 기록할 수 있도록 돕는 따뜻한 다이어리 서비스입니다. 루네르비아는 이런 섬세한 기록의 가치를 존중하며, 서로의 서비스가 더 좋은 사용자 경험을 만들 수 있도록 함께 고민합니다.
               </p>
               <div class="partner-actions">
-                <a
-                  class="btn btn-secondary btn-icon"
-                  href="https://www.instagram.com/todaklife/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span>Instagram @todaklife</span>
+                <a class="btn btn-secondary btn-icon" href="https://www.instagram.com/todaklife/" target="_blank" rel="noopener noreferrer">
+                  <span>Instagram · @todaklife</span>
                   <span class="btn-arrow" aria-hidden="true">↗</span>
                 </a>
-                <a
-                  class="btn btn-secondary btn-icon"
-                  href="https://apps.apple.com/kr/app/todak-aquarium-diary/id6765705899?l=en-GB"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a class="btn btn-secondary btn-icon" href="https://apps.apple.com/kr/app/todak-aquarium-diary/id6765705899?l=en-GB" target="_blank" rel="noopener noreferrer">
                   <span>App Store</span>
                   <span class="btn-arrow" aria-hidden="true">↗</span>
                 </a>
@@ -252,83 +311,75 @@
         </div>
       </section>
 
-      <!-- =================== CONTACT =================== -->
+      <!-- ============================== CONTACT ============================== -->
       <section class="section section-contact" id="contact">
         <div class="section-inner">
-          <div class="reveal">
-            <p class="eyebrow">Contact</p>
-            <h2 class="section-title">문의하기</h2>
-            <p class="section-lead">
-              제품 협업, 제작 문의, 비즈니스 이야기 모두 환영합니다. Instagram 메시지를 가장 빠르게 확인합니다.
-            </p>
-          </div>
+          <p class="section-label reveal">
+            <span class="section-label-num">05</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="contact.label">Contact</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="contact.title">문의하기</h2>
+          <p class="section-lead reveal" data-i18n="contact.lead">
+            함께 만들고 싶은 아이디어가 있다면 편하게 연락해 주세요. Instagram 메시지를 가장 빠르게 확인합니다.
+          </p>
 
           <div class="contact-grid reveal">
-            <a
-              class="contact-card"
-              href="https://www.instagram.com/lunerviasoft/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span class="contact-label">Official Instagram</span>
+            <a class="contact-card" href="https://www.instagram.com/lunerviasoft/" target="_blank" rel="noopener noreferrer">
+              <span class="contact-label" data-i18n="contact.official.label">Official Instagram</span>
               <strong class="contact-handle">@lunerviasoft</strong>
-              <span class="contact-meta">Lunervia 공식 채널 — 작업 소식과 문의</span>
-              <span class="contact-cta">메시지 보내기 <span aria-hidden="true">↗</span></span>
+              <span class="contact-meta" data-i18n="contact.official.meta">Lunervia 공식 채널 — 브랜드 소식과 협업 문의</span>
+              <span class="contact-cta" data-i18n-html="contact.cta">메시지 보내기 <span aria-hidden="true">↗</span></span>
             </a>
-            <a
-              class="contact-card"
-              href="https://www.instagram.com/dksrlqor/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span class="contact-label">Personal Instagram</span>
+            <a class="contact-card" href="https://www.instagram.com/dksrlqor/" target="_blank" rel="noopener noreferrer">
+              <span class="contact-label" data-i18n="contact.personal.label">Personal Instagram</span>
               <strong class="contact-handle">@dksrlqor</strong>
-              <span class="contact-meta">개인 계정 — 작업 기록과 일상</span>
-              <span class="contact-cta">메시지 보내기 <span aria-hidden="true">↗</span></span>
+              <span class="contact-meta" data-i18n="contact.personal.meta">개인 계정 — 작업 기록과 일상</span>
+              <span class="contact-cta" data-i18n-html="contact.cta">메시지 보내기 <span aria-hidden="true">↗</span></span>
             </a>
             <div class="contact-card contact-card-soon">
-              <span class="contact-label">Email</span>
-              <strong class="contact-handle">coming soon</strong>
-              <span class="contact-meta">이메일 채널은 곧 열립니다</span>
+              <span class="contact-label" data-i18n="contact.email.label">Email</span>
+              <strong class="contact-handle" data-i18n="contact.email.handle">coming soon</strong>
+              <span class="contact-meta" data-i18n="contact.email.meta">이메일 채널은 곧 열립니다</span>
             </div>
           </div>
         </div>
       </section>
     </main>
 
+    <!-- ============================== FOOTER ============================== -->
     <footer class="footer">
       <div class="footer-top">
         <div class="footer-brand-block">
-          <!-- 푸터 워드마크 — 심볼+텍스트 이미지가 있으면 자동 표시 -->
           <a class="footer-brand" href="#hero" aria-label="Lunervia 맨 위로">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260522c"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260523a"
               alt="LUNERVIA"
               hidden
             />
             <span class="footer-brand-text">Lunervia</span>
           </a>
-          <p class="footer-tagline">
-            조용한 아이디어와 세심한 소프트웨어로 만들어갑니다.<br />
-            감정과 기술 사이에서, 오래 남는 제품을 만듭니다.
+          <p class="footer-tagline" data-i18n-html="footer.tagline">
+            조용한 아이디어와 세심한 소프트웨어로 만들어갑니다.<br />감정과 기술 사이에서, 오래 남는 제품을 만듭니다.
           </p>
         </div>
 
         <nav class="footer-nav" aria-label="푸터 메뉴">
           <div class="footer-col">
-            <h3 class="footer-col-title">Explore</h3>
-            <a href="#about">소개</a>
-            <a href="#products">제품</a>
-            <a href="#partners">협력</a>
-            <a href="#contact">문의</a>
-            <a href="why.html">Why Lunervia</a>
+            <h3 class="footer-col-title" data-i18n="footer.explore">Explore</h3>
+            <a href="#about" data-i18n="nav.about">About</a>
+            <a href="#products" data-i18n="nav.products">Products</a>
+            <a href="#partners" data-i18n="nav.partners">Partners</a>
+            <a href="#philosophy" data-i18n="nav.philosophy">Philosophy</a>
+            <a href="#contact" data-i18n="nav.contact">Contact</a>
+            <button type="button" class="footer-col-button" data-open-why data-i18n="nav.why">Why Lunervia</button>
           </div>
           <div class="footer-col">
-            <h3 class="footer-col-title">Connect</h3>
+            <h3 class="footer-col-title" data-i18n="footer.connect">Connect</h3>
             <a href="https://www.instagram.com/lunerviasoft/" target="_blank" rel="noopener noreferrer">Instagram · @lunerviasoft</a>
             <a href="https://www.instagram.com/dksrlqor/" target="_blank" rel="noopener noreferrer">Instagram · @dksrlqor</a>
-            <span class="footer-soon">Email · coming soon</span>
+            <span class="footer-soon" data-i18n="footer.emailSoon">Email · coming soon</span>
           </div>
         </nav>
       </div>
@@ -336,12 +387,99 @@
       <div class="footer-bottom">
         <div class="footer-bottom-inner">
           <p class="footer-copyright">© 2026 Lunervia. All rights reserved.</p>
-          <p class="footer-built">Built with quiet ideas and careful software.</p>
-          <a class="footer-top-link" href="#hero">맨 위로 ↑</a>
+          <p class="footer-built" data-i18n="footer.built">Built with warmth.</p>
+          <a class="footer-top-link" href="#hero" data-i18n="footer.top">맨 위로 ↑</a>
         </div>
       </div>
     </footer>
 
-    <script src="script.js?v=20260522c"></script>
+    <!-- ====================== WHY LUNERVIA · INTERNAL OVERLAY ======================
+         '루네르비아를 만든 이유' 는 새 탭/창이 아닌 사이트 내부 오버레이로 열립니다.
+         - 트리거: 상단 nav `Why Lunervia`, 푸터 같은 버튼, Philosophy 의 CTA
+         - 닫기: 우상단 X, '메인으로 돌아가기' 버튼, 배경 클릭, Esc 키
+         - 열려 있을 때 body 스크롤 잠금 + 포커스 트랩 + 포커스 가능한 첫 요소로 이동
+    ============================================================================ -->
+    <aside
+      class="why-overlay"
+      id="why-overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="why-title"
+    >
+      <div class="why-backdrop" data-close-why aria-hidden="true"></div>
+      <div class="why-panel" role="document">
+        <header class="why-panel-head">
+          <p class="why-panel-eyebrow" data-i18n="why.eyebrow">Why Lunervia</p>
+          <button class="why-close" type="button" data-close-why aria-label="닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6L18 18 M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="why-scroll">
+          <div class="why-content">
+            <h2 id="why-title" class="why-title" data-i18n="why.title">루네르비아를 만든 이유</h2>
+            <p class="why-intro" data-i18n="why.intro">
+              루네르비아는 거창한 기술보다, 사람에게 오래 남는 작은 경험을 믿습니다.
+            </p>
+
+            <div class="why-body">
+              <p data-i18n="why.body.p1">루네르비아는 단순히 웹사이트나 앱을 만드는 이름이 아닙니다.</p>
+              <p data-i18n="why.body.p2">사람이 하루를 살아가며 마주하는 감정, 외로움, 고민, 기대, 설렘 같은 것들을 기술로 더 따뜻하게 다루기 위해 시작한 브랜드입니다.</p>
+              <p data-i18n="why.body.p3">우리는 차가운 기능만 만드는 것이 아니라, 사용자가 오래 기억할 수 있는 경험을 만들고 싶습니다. 누군가에게는 작은 버튼 하나, 짧은 문장 하나, 부드러운 화면 전환 하나가 위로가 될 수 있다고 믿습니다.</p>
+            </div>
+
+            <blockquote class="why-emphasis" data-i18n="why.emphasis">
+              기술은 차가울 수 있지만, 그것을 설계하는 마음은 따뜻할 수 있다고 믿습니다.
+            </blockquote>
+
+            <div class="why-body">
+              <p data-i18n="why.body.p4">우리는 누군가의 하루를 아주 조금 더 가볍게 만들 수 있는 소프트웨어를 만들고 싶습니다.</p>
+              <p data-i18n="why.body.p5">루네르비아는 그런 작은 경험들을 모아, 사람에게 닿는 소프트웨어를 만들어가고자 합니다.</p>
+              <p class="why-en" data-i18n="why.body.en">Lunervia builds software that feels less like a machine, and more like a quiet hand on your shoulder.</p>
+            </div>
+
+            <section class="why-partners">
+              <h3 class="why-partners-title" data-i18n="why.partners.title">함께 만드는 사람들</h3>
+              <p class="why-partners-intro" data-i18n="why.partners.intro">
+                루네르비아는 작지만 진심을 담는 동료 브랜드와 함께 자라고 있습니다.
+              </p>
+
+              <article class="why-partner-card">
+                <div class="why-partner-media">
+                  <!-- 협업사 로고 자리 — assets/brand/partner-todak.png (이미지 없으면 placeholder) -->
+                  <img src="assets/brand/partner-todak.png" alt="Todak Aquarium Diary" />
+                </div>
+                <div class="why-partner-content">
+                  <p class="why-partner-kicker">Todak Aquarium Diary · 토닥 어항일기</p>
+                  <p class="why-partner-desc" data-i18n="why.partners.todak">
+                    토닥 어항일기는 사용자가 자신의 어항과 작은 일상을 기록할 수 있도록 돕는 따뜻한 다이어리 서비스입니다. 루네르비아는 이런 섬세한 기록의 가치를 존중하며, 서로의 서비스가 더 좋은 사용자 경험을 만들 수 있도록 함께 고민합니다.
+                  </p>
+                  <div class="why-partner-actions">
+                    <a href="https://www.instagram.com/todaklife/" target="_blank" rel="noopener noreferrer">
+                      Instagram · @todaklife <span aria-hidden="true">↗</span>
+                    </a>
+                    <a href="https://apps.apple.com/kr/app/todak-aquarium-diary/id6765705899?l=en-GB" target="_blank" rel="noopener noreferrer">
+                      App Store <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <div class="why-foot">
+              <button type="button" class="btn btn-primary btn-icon why-back" data-close-why>
+                <span class="btn-arrow btn-arrow-left" aria-hidden="true">←</span>
+                <span data-i18n="why.close">메인으로 돌아가기</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <script src="script.js?v=20260523a"></script>
   </body>
 </html>
