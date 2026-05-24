@@ -142,10 +142,10 @@
   /* -------- 5. Hero 터미널 타이핑 사이클 -------------------------- */
   const phrases = [
     "안녕하세요!",
-    "Lunervia builds emotional software.",
+    "Lunervia builds quiet software.",
     "작은 아이디어를 서비스로 만듭니다.",
     "We design warm digital experiences.",
-    "오늘의 감정을 기술로 연결합니다.",
+    "오늘의 작은 순간이 내일을 만듭니다.",
     "Somewhere, something meaningful begins.",
   ];
 
@@ -274,35 +274,35 @@
       "back.toMainLong": "메인으로 돌아가기",
 
       "hero.eyebrow": "Welcome to Lunervia",
-      "hero.title": "감정과 기술 사이에,<br />루네르비아가 있습니다.",
-      "hero.sub": "따뜻한 디지털 경험을 만드는 작은 소프트웨어 브랜드입니다.",
+      "hero.title": "오래 곁에 둘 수 있는,<br />작고 또렷한 소프트웨어.",
+      "hero.sub": "사람의 하루에 조용히 남는 디지털 도구를 만듭니다.",
       "hero.cta.products": "제품 보기",
       "hero.cta.contact": "문의하기",
 
       "about.label": "About",
       "about.title": "작지만 진지한 소프트웨어 브랜드",
       "about.lead":
-        "루네르비아는 사람의 감정과 고민을 기술로 더 따뜻하게 연결하는 작은 소프트웨어 브랜드입니다. 웹과 모바일을 가리지 않고, 사용자가 오래 기억할 수 있는 작은 경험을 차분히 쌓아갑니다.",
+        "루네르비아는 사람의 작은 순간을 소중히 다루는 소프트웨어 브랜드입니다. 웹과 모바일을 가리지 않고, 오래 기억에 남는 경험을 차분히 쌓아갑니다.",
       "about.focusLabel": "Focus",
-      "about.focusValue": "감성 소프트웨어 · 웹앱 · 모바일",
+      "about.focusValue": "조용한 소프트웨어 · 웹앱 · 모바일",
       "about.stageValue": "조용히 성장 중",
 
       "philosophy.label": "Philosophy",
       "philosophy.title": "Brand Manifesto",
       "philosophy.big":
-        "우리는 기술이 사람을 더 차갑게 만들지 않도록, 감정이 머물 수 있는 디지털 공간을 만듭니다.",
+        "우리는 화려한 기능보다, 사람의 하루 옆에 조용히 남는 소프트웨어를 만듭니다.",
       "philosophy.card1": "시끄러운 기능보다 오래 남는 따뜻함을 선택합니다.",
       "philosophy.card2": "작은 문장, 작은 버튼, 작은 경험도 누군가의 하루를 바꿀 수 있다고 믿습니다.",
-      "philosophy.card3": "사람의 감정이 느껴지는 소프트웨어를 만들고자 합니다.",
+      "philosophy.card3": "사람 결이 느껴지는 소프트웨어를 만들고자 합니다.",
       "philosophy.cta": "루네르비아를 만든 이유 자세히 읽기",
 
       "products.label": "Products",
       "products.title": "지금 만들고 있는 것",
       "products.lead":
-        "아직 출시 전이지만, 마음과 마음 사이를 잇는 작은 소프트웨어를 차분히 다듬고 있습니다.",
-      "product.tagline": "익명의 마음이 거리와 언어를 넘어 누군가에게 닿습니다.",
+        "아직 출시 전이지만, 사람과 사람 사이에 작은 위로가 되는 소프트웨어를 차분히 다듬고 있습니다.",
+      "product.tagline": "익명의 편지가 거리와 언어를 넘어 누군가에게 닿습니다.",
       "product.desc":
-        "Night Letter 는 익명의 감정과 고민이 편지처럼 흐르는 글로벌 감성 서비스입니다. 사용자는 자신의 마음을 조용히 남기고, 어딘가의 다른 사용자가 그 편지를 펼쳐 읽고 따뜻한 답장을 보냅니다. 말이 달라도 마음이 닿을 수 있다는 믿음에서 시작한 프로젝트입니다.",
+        "Night Letter 는 익명의 편지가 도시와 언어를 넘어 흐르는 글로벌 서비스입니다. 사용자는 자신의 이야기를 조용히 남기고, 어딘가의 다른 사용자가 그 편지를 펼쳐 읽고 따뜻한 답장을 보냅니다. 말이 달라도 마음이 닿을 수 있다는 믿음에서 시작한 프로젝트입니다.",
 
       "partners.label": "Partners",
       "partners.title": "함께하는 곳",
@@ -347,20 +347,20 @@
       "footer.emailSoon": "Email · coming soon",
       "footer.snsAll": "모든 SNS 모아보기 ↗",
       "footer.tagline":
-        "조용한 아이디어와 세심한 소프트웨어로 만들어갑니다.<br />감정과 기술 사이에서, 오래 남는 제품을 만듭니다.",
+        "조용한 아이디어와 세심한 소프트웨어로 만들어갑니다.<br />작은 순간들이 모여 오래 남는 제품이 됩니다.",
       "footer.built": "Built with warmth.",
       "footer.top": "맨 위로 ↑",
       "footer.toMain": "메인으로 ↑",
 
       "why.eyebrow": "Why Lunervia",
       "why.title": "루네르비아를 만든 이유",
-      "why.intro": "루네르비아는 거창한 기술보다, 사람에게 오래 남는 작은 경험을 믿습니다.",
+      "why.intro": "루네르비아는 거창한 기능보다, 사람에게 오래 남는 작은 경험을 믿습니다.",
       "why.body.p1": "루네르비아는 단순히 웹사이트나 앱을 만드는 이름이 아닙니다.",
       "why.body.p2":
-        "사람이 하루를 살아가며 마주하는 감정, 외로움, 고민, 기대, 설렘 같은 것들을 기술로 더 따뜻하게 다루기 위해 시작한 브랜드입니다.",
+        "사람이 하루를 살아가며 마주하는 외로움, 고민, 기대, 설렘 같은 것들을, 도구가 조금 더 부드럽게 다룰 수 있다고 믿어 시작한 브랜드입니다.",
       "why.body.p3":
         "우리는 차가운 기능만 만드는 것이 아니라, 사용자가 오래 기억할 수 있는 경험을 만들고 싶습니다. 누군가에게는 작은 버튼 하나, 짧은 문장 하나, 부드러운 화면 전환 하나가 위로가 될 수 있다고 믿습니다.",
-      "why.emphasis": "기술은 차가울 수 있지만, 그것을 설계하는 마음은 따뜻할 수 있다고 믿습니다.",
+      "why.emphasis": "도구는 무심해 보일 수 있지만, 그것을 설계하는 마음은 따뜻할 수 있다고 믿습니다.",
       "why.body.p4": "우리는 누군가의 하루를 아주 조금 더 가볍게 만들 수 있는 소프트웨어를 만들고 싶습니다.",
       "why.body.p5": "루네르비아는 그런 작은 경험들을 모아, 사람에게 닿는 소프트웨어를 만들어가고자 합니다.",
       "why.body.en": "Lunervia builds software that feels less like a machine, and more like a quiet hand on your shoulder.",
@@ -383,35 +383,35 @@
       "back.toMainLong": "Back to main page",
 
       "hero.eyebrow": "Welcome to Lunervia",
-      "hero.title": "Between emotion and technology,<br />Lunervia quietly stands.",
-      "hero.sub": "A small software brand crafting warm digital experiences.",
+      "hero.title": "Small, clear software<br />made to stay close.",
+      "hero.sub": "Quiet digital tools that linger beside someone's day.",
       "hero.cta.products": "See products",
       "hero.cta.contact": "Get in touch",
 
       "about.label": "About",
       "about.title": "A small, sincere software studio",
       "about.lead":
-        "Lunervia is a small software brand that connects people's emotions and concerns through technology — gently. Across web and mobile, we build small experiences worth remembering.",
+        "Lunervia is a small software brand that treats people's quiet daily moments with care. Across web and mobile, we build small experiences worth remembering.",
       "about.focusLabel": "Focus",
-      "about.focusValue": "Emotional software · Web · Mobile",
+      "about.focusValue": "Quiet software · Web · Mobile",
       "about.stageValue": "Quietly growing",
 
       "philosophy.label": "Philosophy",
       "philosophy.title": "Brand Manifesto",
       "philosophy.big":
-        "We design digital spaces where emotion can rest — so that technology never makes people feel colder.",
+        "Over louder features, we build software that stays quietly beside someone's day.",
       "philosophy.card1": "We choose lingering warmth over louder features.",
       "philosophy.card2": "A small sentence, a small button, a small moment can change someone's day.",
-      "philosophy.card3": "We build software that carries a human pulse.",
+      "philosophy.card3": "We build software that carries a quiet, human grain.",
       "philosophy.cta": "Read why we built Lunervia",
 
       "products.label": "Products",
       "products.title": "What we're building now",
       "products.lead":
-        "Not yet launched — we are quietly shaping software that connects one heart to another.",
-      "product.tagline": "Anonymous feelings, crossing distance and language to reach someone.",
+        "Not yet launched — we are quietly shaping software that becomes a small comfort between one person and another.",
+      "product.tagline": "An anonymous letter, crossing distance and language to reach someone.",
       "product.desc":
-        "Night Letter is a global emotional service where anonymous feelings flow like letters. People leave their quiet thoughts, and somewhere else, another person opens that letter and writes a warm reply. It is built on the belief that hearts can meet even when languages don't.",
+        "Night Letter is a global service where anonymous letters flow across cities and languages. People leave their quiet stories, and somewhere else, another person opens that letter and writes a warm reply. It is built on the belief that hearts can meet even when languages don't.",
 
       "partners.label": "Partners",
       "partners.title": "Brands we grow with",
@@ -456,20 +456,20 @@
       "footer.emailSoon": "Email · coming soon",
       "footer.snsAll": "See all socials ↗",
       "footer.tagline":
-        "Built from quiet ideas and careful software.<br />Between emotion and technology, we make things that last.",
+        "Built from quiet ideas and careful software.<br />Small moments add up to things worth keeping.",
       "footer.built": "Built with warmth.",
       "footer.top": "Back to top ↑",
       "footer.toMain": "Back to main ↑",
 
       "why.eyebrow": "Why Lunervia",
       "why.title": "Why we built Lunervia",
-      "why.intro": "Lunervia believes in small experiences that stay with people — more than in grand technology.",
+      "why.intro": "Lunervia believes in small experiences that stay with people — more than in grand statements.",
       "why.body.p1": "Lunervia is not just a name that builds websites or apps.",
       "why.body.p2":
-        "It is a brand we started so that the emotions, loneliness, worries, hopes and quiet excitements people meet each day can be handled by technology in a warmer way.",
+        "It is a brand we started so that the loneliness, worries, hopes, and quiet excitements people meet each day can be held by a tool with a little more gentleness.",
       "why.body.p3":
         "We don't just build cold features. We want to make experiences people remember — because for someone, a single button, a short sentence, or a gentle transition can become a small comfort.",
-      "why.emphasis": "Technology can feel cold, but the heart that designs it can be warm.",
+      "why.emphasis": "A tool can look indifferent, but the heart that designs it can stay warm.",
       "why.body.p4": "We want to build software that makes someone's day just a little lighter.",
       "why.body.p5": "Lunervia gathers those small experiences into software that quietly reaches people.",
       "why.body.en": "Lunervia builds software that feels less like a machine, and more like a quiet hand on your shoulder.",
