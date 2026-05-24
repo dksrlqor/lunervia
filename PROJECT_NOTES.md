@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 
-Lunervia(루네르비아)는 사람의 작은 순간을 소중히 다루며 조용하지만 필요한 소프트웨어를 만드는 작은 브랜드의 공식 홈페이지입니다.
+Lunervia(루네르비아)는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드의 공식 홈페이지입니다.
 크림/아이보리 베이스의 미니멀·따뜻한 톤이며, 포인트 컬러는 절제된 브라운/차콜입니다.
 
 로컬 서버는 `serve_no_cache.py` 로 실행합니다.
@@ -37,7 +37,7 @@ SNS 페이지 (sns.html)
 - 헤더/푸터/언어토글은 메인과 동일 마크업 — `script.js` 의 i18n / 메뉴 토글 등이 그대로 작동.
 
 Hero
-- 좌: eyebrow / 큰 타이틀 / 부 카피 / CTA 2개 / 브랜드 키워드 칩 (Quiet / Software / Letters / Warmth / Care / Translation)
+- 좌: eyebrow / 큰 타이틀 / 부 카피 / CTA 2개 / 브랜드 키워드 칩 (Software / UX / Web / Mobile / Letters / Translation)
 - 우: macOS 스타일의 진짜 같은 터미널 창 — 트래픽 라이트 정고증 컬러 (`#FF5F56` / `#FFBD2E` / `#27C93F`). 첫 줄에 `안녕하세요!` 가 미리 들어있고, JS 가 사이클로 다음 문구들로 교체합니다.
 
 Why Lunervia (내부 오버레이)
