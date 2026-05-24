@@ -1934,6 +1934,7 @@ body.why-open {
 }
 
 .sns-card-cta {
+  position: relative;
   margin-top: auto;
   padding-top: 14px;
   display: inline-flex;
@@ -1944,14 +1945,99 @@ body.why-open {
   font-weight: 600;
   color: #fff;
   border-top: 1px solid rgba(255, 255, 255, 0.22);
+  overflow: hidden;
 }
 
+/* CTA 텍스트 위로 천천히 지나가는 은은한 광택 — 약 5초 주기 */
+.sns-card-cta::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  bottom: 0;
+  left: -30%;
+  width: 60%;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 70%
+  );
+  pointer-events: none;
+  transform: translateX(-100%);
+  animation: ctaShimmer 5.4s ease-in-out infinite;
+}
+
+.sns-card-tiktok .sns-card-cta::after {
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(37, 244, 238, 0.55) 50%,
+    transparent 70%
+  );
+}
+
+@keyframes ctaShimmer {
+  0%   { transform: translateX(-50%); }
+  55%  { transform: translateX(280%); }
+  100% { transform: translateX(280%); }
+}
+
+/* 화살표 주변에 작은 반짝임 두 개 — 서로 어긋난 타이밍으로 깜박임 */
 .sns-card-arrow {
+  position: relative;
+  display: inline-block;
   transition: transform var(--t-fast) var(--ease-out);
+}
+
+.sns-card-arrow::before,
+.sns-card-arrow::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  opacity: 0;
+  pointer-events: none;
+  animation: cardSparkle 2.8s ease-in-out infinite;
+}
+
+.sns-card-arrow::before {
+  width: 3px;
+  height: 3px;
+  top: -6px;
+  right: -7px;
+  animation-delay: 0s;
+}
+
+.sns-card-arrow::after {
+  width: 2px;
+  height: 2px;
+  bottom: -2px;
+  left: -8px;
+  animation-delay: 1.4s;
+}
+
+@keyframes cardSparkle {
+  0%, 100%  { opacity: 0; transform: scale(0.4); }
+  35%, 55%  { opacity: 1; transform: scale(1.3); }
+}
+
+/* 틱톡 카드는 시안 반짝임 */
+.sns-card-tiktok .sns-card-arrow::before,
+.sns-card-tiktok .sns-card-arrow::after {
+  background: #25F4EE;
+  box-shadow: 0 0 6px #25F4EE;
 }
 
 .sns-card:hover .sns-card-arrow {
   transform: translate(2px, -2px);
+}
+
+/* 이메일 카드는 비활성 — 반짝임 / 광택 제거 */
+.sns-card-email-soon .sns-card-cta::after,
+.sns-card-email-soon .sns-card-arrow::before,
+.sns-card-email-soon .sns-card-arrow::after {
+  display: none;
 }
 
 /* ===== 인스타 카드 — 풀 그라데이션 ===== */
@@ -2261,5 +2347,12 @@ body.why-open {
 
   .sns-card-shine {
     display: none;
+  }
+
+  .sns-card-cta::after,
+  .sns-card-arrow::before,
+  .sns-card-arrow::after {
+    animation: none;
+    opacity: 0;
   }
 }
