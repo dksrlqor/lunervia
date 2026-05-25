@@ -2463,13 +2463,36 @@ body.why-open {
 }
 
 @media (max-width: 860px) {
+  /* 태블릿/모바일에서도 KO·EN 토글이 보이도록 살짝 컴팩트하게 */
   .nav-lang {
-    display: none;
+    padding: 3px 6px;
+  }
+  .nav-lang-btn {
+    padding: 3px 6px;
+    font-size: 0.72rem;
+  }
+  .nav-lang-sep {
+    font-size: 0.68rem;
   }
 }
 
 @media (max-width: 720px) {
+  /* 모바일 헤더 정돈: 브랜드 왼쪽 / 언어토글 + 햄버거 오른쪽 묶음 */
+  .nav-inner {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .nav-lang {
+    order: 1;
+  }
+
   .nav-toggle {
+    order: 2;
     display: inline-flex;
   }
 
