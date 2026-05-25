@@ -1308,6 +1308,7 @@ body.why-open {
 }
 
 .contact-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1320,6 +1321,80 @@ body.why-open {
     border-color var(--t-mid) var(--ease-out),
     background-color var(--t-mid) var(--ease-out),
     box-shadow var(--t-mid) var(--ease-out);
+}
+
+/* 플랫폼 아이콘 — 카드 우상단에 작게 자리잡음 */
+.contact-card-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 26px;
+  height: 26px;
+  color: var(--text-3);
+  pointer-events: none;
+  transition: color var(--t-mid) var(--ease-out);
+}
+
+/* === 인스타그램: 그라데이션 컬러가 부드럽게 순환 === */
+.contact-card-instagram .contact-card-icon {
+  color: #DD2A7B;
+  animation: contactIgCycle 7s ease-in-out infinite;
+}
+
+@keyframes contactIgCycle {
+  0%, 100% { color: #DD2A7B; }
+  25%      { color: #8134AF; }
+  50%      { color: #515BD4; }
+  75%      { color: #F58529; }
+}
+
+/* === 틱톡: 시안/마젠타 글리치가 잔잔히 호흡 === */
+.contact-card-tiktok .contact-card-icon {
+  color: #1a1a1a;
+  filter:
+    drop-shadow(-1px 0 0 rgba(254, 44, 85, 0.55))
+    drop-shadow( 1px 0 0 rgba(37, 244, 238, 0.55));
+  animation: contactTiktokGlitch 2.6s ease-in-out infinite;
+}
+
+@keyframes contactTiktokGlitch {
+  0%, 100% {
+    filter:
+      drop-shadow(-1px 0 0 rgba(254, 44, 85, 0.55))
+      drop-shadow( 1px 0 0 rgba(37, 244, 238, 0.55));
+  }
+  50% {
+    filter:
+      drop-shadow(-2.5px 0 0 rgba(254, 44, 85, 0.85))
+      drop-shadow( 2.5px 0 0 rgba(37, 244, 238, 0.85));
+  }
+}
+
+/* === 이메일: 봉투가 살짝 떠다님 + 봉인이 잠깐 깜박 === */
+.contact-card-soon .contact-card-icon {
+  color: var(--accent);
+  animation: contactEmailFloat 4.2s ease-in-out infinite;
+}
+
+@keyframes contactEmailFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-3px) rotate(-2deg); }
+}
+
+/* 호버 시 아이콘이 살짝 진해짐 (모션 충돌 피하려 color/opacity 만 건드림) */
+.contact-card:hover .contact-card-icon {
+  color: var(--text);
+}
+
+.contact-card-instagram:hover .contact-card-icon {
+  color: #8134AF;
+}
+
+.contact-card-tiktok:hover .contact-card-icon {
+  color: #010101;
+  filter:
+    drop-shadow(-3px 0 0 rgba(254, 44, 85, 0.95))
+    drop-shadow( 3px 0 0 rgba(37, 244, 238, 0.95));
 }
 
 .contact-card:hover {
@@ -2563,5 +2638,11 @@ body.why-open {
   .sns-card-instagram::before,
   .sns-card-tiktok::before {
     animation: none;
+  }
+
+  .contact-card-icon {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
