@@ -139,6 +139,87 @@
     a.addEventListener("click", () => closeMobileMenu());
   });
 
+  /* -------- 4b. 헤더 드롭다운 (소개 · 제품) ---------------------------
+     - 클릭 시 토글 (모바일·데스크탑 공통)
+     - 데스크탑은 hover 로도 열림
+     - 바깥 클릭 / Esc / 다른 드롭다운 열림 시 자동 닫힘
+  ------------------------------------------------------------------ */
+  const navDropdowns = $$(".nav-item-dropdown");
+  const isHoverCapable = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  function closeAllDropdowns(except) {
+    navDropdowns.forEach((item) => {
+      if (item === except) return;
+      const trigger = item.querySelector(".nav-link-dropdown");
+      const panel = item.querySelector(".nav-dropdown");
+      if (!trigger || !panel) return;
+      trigger.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
+    });
+  }
+
+  function openDropdown(item) {
+    const trigger = item.querySelector(".nav-link-dropdown");
+    const panel = item.querySelector(".nav-dropdown");
+    if (!trigger || !panel) return;
+    closeAllDropdowns(item);
+    trigger.setAttribute("aria-expanded", "true");
+    panel.hidden = false;
+  }
+
+  function closeDropdown(item) {
+    const trigger = item.querySelector(".nav-link-dropdown");
+    const panel = item.querySelector(".nav-dropdown");
+    if (!trigger || !panel) return;
+    trigger.setAttribute("aria-expanded", "false");
+    panel.hidden = true;
+  }
+
+  navDropdowns.forEach((item) => {
+    const trigger = item.querySelector(".nav-link-dropdown");
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      if (isOpen) closeDropdown(item);
+      else openDropdown(item);
+    });
+
+    // 데스크탑에서는 hover 로도 열림 (모바일 menu 가 열려 있을 때는 hover 무시)
+    if (isHoverCapable) {
+      let hoverTimer = null;
+      item.addEventListener("mouseenter", () => {
+        if (navMenu && navMenu.classList.contains("is-open")) return;
+        window.clearTimeout(hoverTimer);
+        openDropdown(item);
+      });
+      item.addEventListener("mouseleave", () => {
+        hoverTimer = window.setTimeout(() => closeDropdown(item), 160);
+      });
+    }
+
+    // 드롭다운 내부 항목 클릭하면 닫고 메인 메뉴(모바일)도 닫음
+    const panel = item.querySelector(".nav-dropdown");
+    if (panel) {
+      panel.querySelectorAll("a, button").forEach((el) => {
+        el.addEventListener("click", () => {
+          closeDropdown(item);
+          closeMobileMenu();
+        });
+      });
+    }
+  });
+
+  // 바깥 클릭 / Esc 로 모든 드롭다운 닫기
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(".nav-item-dropdown")) return;
+    closeAllDropdowns(null);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeAllDropdowns(null);
+  });
+
   /* -------- 5. Hero 터미널 타이핑 사이클 -------------------------- */
   const phrases = [
     "안녕하세요!",
@@ -270,6 +351,19 @@
       "nav.sns": "SNS",
       "nav.why": "루네르비아를 만든 이유",
 
+      "nav.intro.brand": "브랜드 소개",
+      "nav.intro.brand.meta": "루네르비아가 어떤 브랜드인지",
+      "nav.intro.philosophy": "철학",
+      "nav.intro.philosophy.meta": "제품 설계의 기준",
+      "nav.intro.why": "루네르비아를 만든 이유",
+      "nav.intro.why.meta": "브랜드의 출발점",
+      "nav.products.nightLetter": "익명 글 기반 글로벌 커뮤니케이션",
+      "nav.products.all": "전체 프로젝트 보기",
+      "nav.products.all.meta": "진행 중인 모든 프로젝트",
+
+      "products.pageTitle": "현재 진행 중인 프로젝트",
+      "products.pageLead": "Lunervia는 사용자가 안전하고 명확하게 소통할 수 있는 서비스를 설계하고 있습니다. 아래는 현재 개발 중인 프로젝트입니다.",
+
       "back.toMain": "메인으로",
       "back.toMainLong": "메인으로 돌아가기",
 
@@ -381,6 +475,19 @@
       "nav.contact": "Contact",
       "nav.sns": "SNS",
       "nav.why": "Why Lunervia",
+
+      "nav.intro.brand": "Brand overview",
+      "nav.intro.brand.meta": "What Lunervia is about",
+      "nav.intro.philosophy": "Philosophy",
+      "nav.intro.philosophy.meta": "How we design our products",
+      "nav.intro.why": "Why we built Lunervia",
+      "nav.intro.why.meta": "Where the brand starts",
+      "nav.products.nightLetter": "Anonymous global communication",
+      "nav.products.all": "View all projects",
+      "nav.products.all.meta": "Everything currently in development",
+
+      "products.pageTitle": "Currently in development",
+      "products.pageLead": "Lunervia designs services that let users communicate safely and clearly. The projects below are currently in development.",
 
       "back.toMain": "Back to main",
       "back.toMainLong": "Back to main page",

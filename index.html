@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260525f" />
+    <link rel="stylesheet" href="styles.css?v=20260525g" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -34,7 +34,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260525f"
+              src="assets/brand/lunervia-logo-text.png?v=20260525g"
               alt="LUNERVIA"
             />
           </span>
@@ -56,17 +56,65 @@
         </button>
 
         <nav class="nav-menu" id="nav-menu" aria-label="주 메뉴">
-          <a href="#about" data-i18n="nav.about">About</a>
-          <a href="#products" data-i18n="nav.products">Products</a>
-          <a href="#partners" data-i18n="nav.partners">Partners</a>
-          <a href="#philosophy" data-i18n="nav.philosophy">Philosophy</a>
-          <a href="#contact" data-i18n="nav.contact">Contact</a>
-          <a
-            class="nav-sns"
-            href="sns.html"
-            data-i18n="nav.sns"
-          >SNS</a>
-          <button type="button" class="nav-why" data-open-why data-i18n="nav.why">Why Lunervia</button>
+          <!-- 소개 드롭다운 -->
+          <div class="nav-item nav-item-dropdown" data-dropdown="intro">
+            <button
+              type="button"
+              class="nav-link nav-link-dropdown"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="nav-dropdown-intro"
+            >
+              <span data-i18n="nav.about">소개</span>
+              <svg class="nav-chevron" viewBox="0 0 12 8" aria-hidden="true">
+                <path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-dropdown" id="nav-dropdown-intro" role="menu" hidden>
+              <a href="index.html#about" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.brand">브랜드 소개</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.brand.meta">루네르비아가 어떤 브랜드인지</span>
+              </a>
+              <a href="index.html#philosophy" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.philosophy">철학</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.philosophy.meta">제품 설계의 기준</span>
+              </a>
+              <button type="button" role="menuitem" data-open-why>
+                <span class="nav-dropdown-name" data-i18n="nav.intro.why">루네르비아를 만든 이유</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.why.meta">브랜드의 출발점</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 제품 드롭다운 -->
+          <div class="nav-item nav-item-dropdown" data-dropdown="products">
+            <button
+              type="button"
+              class="nav-link nav-link-dropdown"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="nav-dropdown-products"
+            >
+              <span data-i18n="nav.products">제품</span>
+              <svg class="nav-chevron" viewBox="0 0 12 8" aria-hidden="true">
+                <path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-dropdown" id="nav-dropdown-products" role="menu" hidden>
+              <a href="products.html" role="menuitem">
+                <span class="nav-dropdown-name">Night Letter</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.products.nightLetter">익명 글 기반 글로벌 커뮤니케이션</span>
+              </a>
+              <a href="products.html" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.products.all">전체 프로젝트 보기</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.products.all.meta">진행 중인 모든 프로젝트</span>
+              </a>
+            </div>
+          </div>
+
+          <a class="nav-link" href="#partners" data-i18n="nav.partners">협력</a>
+          <a class="nav-link" href="#contact" data-i18n="nav.contact">문의</a>
+          <a class="nav-link nav-sns" href="sns.html" data-i18n="nav.sns">SNS</a>
         </nav>
 
         <div class="nav-lang" role="group" aria-label="Language">
@@ -88,7 +136,7 @@
               Lunervia는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary btn-icon" href="#products">
+              <a class="btn btn-primary btn-icon" href="products.html">
                 <span data-i18n="hero.cta.products">제품 살펴보기</span>
                 <span class="btn-arrow" aria-hidden="true">→</span>
               </a>
@@ -202,64 +250,13 @@
         </div>
       </section>
 
-      <!-- ============================== PRODUCTS ============================== -->
-      <section class="section section-products" id="products">
-        <div class="section-inner">
-          <p class="section-label reveal">
-            <span class="section-label-num">03</span>
-            <span class="section-label-sep" aria-hidden="true">/</span>
-            <span data-i18n="products.label">Products</span>
-          </p>
-          <h2 class="section-title reveal" data-i18n="products.title">현재 진행 중인 프로젝트</h2>
-          <p class="section-lead reveal" data-i18n="products.lead">
-            Lunervia는 Night Letter를 비롯해 사용자가 안전하고 명확하게 소통할 수 있는 서비스를 설계하고 있습니다.
-          </p>
-
-          <article class="product-card reveal" data-tilt>
-            <div class="product-media">
-              <!-- 제품 로고: 첨부한 편지 비주얼 — assets/brand/product-letter.png
-                   이미지가 없으면 placeholder 가 보입니다. -->
-              <img
-                class="product-img"
-                src="assets/brand/product-letter.png"
-                alt=""
-                hidden
-              />
-              <div class="media-placeholder" aria-hidden="true">
-                <span>Product visual</span>
-                <small>assets/brand/product-letter.png</small>
-              </div>
-            </div>
-
-            <div class="product-content">
-              <div class="product-badges">
-                <span class="badge badge-soon">Coming soon</span>
-                <span class="badge badge-mute">Global communication</span>
-              </div>
-              <h3 class="product-name">Night Letter</h3>
-              <p class="product-tagline" data-i18n="product.tagline">
-                익명의 글을 기반으로 한 글로벌 커뮤니케이션 서비스.
-              </p>
-              <p class="product-desc" data-i18n="product.desc">
-                Night Letter는 익명의 글을 기반으로 전 세계 사용자가 안전하게 소통할 수 있도록 설계된 글로벌 커뮤니케이션 서비스입니다. 사용자는 자신의 글을 등록하고, 다른 지역의 사용자가 이를 읽고 답장을 보낼 수 있으며, 번역 기능을 통해 언어와 지역의 차이를 줄이도록 설계되었습니다.
-              </p>
-              <ul class="feature-pills" role="list">
-                <li>Anonymous writing</li>
-                <li>Global delivery</li>
-                <li>Built-in translation</li>
-                <li>Safe conversation</li>
-                <li>Privacy-first</li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <!-- ============================== PARTNERS ============================== -->
+      <!-- 제품(Products) 섹션은 이제 별도 페이지(`products.html`)로 분리.
+           헤더 '제품 ⌄' 드롭다운에서 접근. -->
       <section class="section section-partners" id="partners">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">04</span>
+            <span class="section-label-num">03</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="partners.label">Partners</span>
           </p>
@@ -307,7 +304,7 @@
       <section class="section section-contact" id="contact">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">05</span>
+            <span class="section-label-num">04</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="contact.label">Contact</span>
           </p>
@@ -352,7 +349,7 @@
           <a class="footer-brand" href="#hero" aria-label="Lunervia 맨 위로">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260525f"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260525g"
               alt="LUNERVIA"
               hidden
             />
@@ -366,12 +363,12 @@
         <nav class="footer-nav" aria-label="푸터 메뉴">
           <div class="footer-col">
             <h3 class="footer-col-title" data-i18n="footer.explore">Explore</h3>
-            <a href="#about" data-i18n="nav.about">About</a>
-            <a href="#products" data-i18n="nav.products">Products</a>
-            <a href="#partners" data-i18n="nav.partners">Partners</a>
-            <a href="#philosophy" data-i18n="nav.philosophy">Philosophy</a>
-            <a href="#contact" data-i18n="nav.contact">Contact</a>
-            <button type="button" class="footer-col-button" data-open-why data-i18n="nav.why">Why Lunervia</button>
+            <a href="#about" data-i18n="nav.about">소개</a>
+            <a href="products.html" data-i18n="nav.products">제품</a>
+            <a href="#partners" data-i18n="nav.partners">협력</a>
+            <a href="#philosophy" data-i18n="nav.philosophy">철학</a>
+            <a href="#contact" data-i18n="nav.contact">문의</a>
+            <button type="button" class="footer-col-button" data-open-why data-i18n="nav.why">루네르비아를 만든 이유</button>
           </div>
           <div class="footer-col">
             <h3 class="footer-col-title" data-i18n="footer.connect">Connect</h3>
@@ -480,6 +477,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260525f"></script>
+    <script src="script.js?v=20260525g"></script>
   </body>
 </html>
