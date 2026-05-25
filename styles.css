@@ -213,10 +213,9 @@ body.why-open {
 /* 헤더 워드마크 — 첨부 로고에 투명 여백이 많아 box 로 잘라(crop) 표시 */
 .brand-logo {
   display: block;
-  width: clamp(120px, 22vw, 168px);
-  height: 24px;
+  width: clamp(148px, 28vw, 200px);
+  height: 28px;
   overflow: hidden;
-  /* 헤더 왼쪽에 살짝 더 붙도록 좌측 마진 음수 처리 (gutter 안쪽으로 살짝) */
   margin-left: -2px;
 }
 
