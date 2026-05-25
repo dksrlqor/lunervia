@@ -310,50 +310,6 @@
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }
 
-  /* -------- 6b. 헤더 스크롤 반응 (is-scrolled / scrolling-up/down) -----
-     - 사용자가 20px 이상 스크롤하면 .nav.is-scrolled → 헤더 압축 + 배경 불투명
-     - 위/아래 방향에 따라 .scrolling-up / .scrolling-down 추가
-     - requestAnimationFrame 으로 throttling
-  ------------------------------------------------------------------ */
-  const navEl = $(".nav");
-  if (navEl) {
-    const SCROLL_THRESHOLD = 20;
-    const DIR_DEADZONE = 4;
-    let lastScrollY = window.scrollY;
-    let navTicking = false;
-
-    const updateNavOnScroll = () => {
-      const y = window.scrollY;
-      navEl.classList.toggle("is-scrolled", y > SCROLL_THRESHOLD);
-
-      if (y <= SCROLL_THRESHOLD) {
-        // 맨 위에서는 방향 클래스 정리
-        navEl.classList.remove("scrolling-up", "scrolling-down");
-      } else if (y > lastScrollY + DIR_DEADZONE) {
-        navEl.classList.add("scrolling-down");
-        navEl.classList.remove("scrolling-up");
-      } else if (y < lastScrollY - DIR_DEADZONE) {
-        navEl.classList.add("scrolling-up");
-        navEl.classList.remove("scrolling-down");
-      }
-
-      lastScrollY = y;
-      navTicking = false;
-    };
-
-    updateNavOnScroll();
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!navTicking) {
-          window.requestAnimationFrame(updateNavOnScroll);
-          navTicking = true;
-        }
-      },
-      { passive: true }
-    );
-  }
-
   /* -------- 7. 스크롤 진행률 바 ----------------------------------- */
   const progressFill = $("#scroll-progress-fill");
   if (progressFill) {
