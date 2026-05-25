@@ -1945,41 +1945,6 @@ body.why-open {
   font-weight: 600;
   color: #fff;
   border-top: 1px solid rgba(255, 255, 255, 0.22);
-  overflow: hidden;
-}
-
-/* CTA 텍스트 위로 천천히 지나가는 은은한 광택 — 약 5초 주기 */
-.sns-card-cta::after {
-  content: "";
-  position: absolute;
-  top: 14px;
-  bottom: 0;
-  left: -30%;
-  width: 60%;
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.42) 50%,
-    transparent 70%
-  );
-  pointer-events: none;
-  transform: translateX(-100%);
-  animation: ctaShimmer 5.4s ease-in-out infinite;
-}
-
-.sns-card-tiktok .sns-card-cta::after {
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(37, 244, 238, 0.55) 50%,
-    transparent 70%
-  );
-}
-
-@keyframes ctaShimmer {
-  0%   { transform: translateX(-50%); }
-  55%  { transform: translateX(280%); }
-  100% { transform: translateX(280%); }
 }
 
 /* 화살표 주변에 작은 반짝임 두 개 — 서로 어긋난 타이밍으로 깜박임 */
@@ -2033,11 +1998,65 @@ body.why-open {
   transform: translate(2px, -2px);
 }
 
-/* 이메일 카드는 비활성 — 반짝임 / 광택 제거 */
-.sns-card-email-soon .sns-card-cta::after,
+/* 이메일 카드는 비활성 — 화살표 반짝임 제거 */
 .sns-card-email-soon .sns-card-arrow::before,
 .sns-card-email-soon .sns-card-arrow::after {
   display: none;
+}
+
+/* ===== 카드 테두리를 따라 도는 빛 ============================
+   conic-gradient 의 from 각도를 --sns-angle 로 잡고 키프레임이
+   그 각도를 0 → 360deg 로 돌리면, 광원 한 조각이 카드 테두리를
+   따라 한 바퀴 도는 효과가 된다. mask-composite 로 안쪽은 비우고
+   2px 두께 링만 보이게 잘라낸다.
+=============================================================== */
+@property --sns-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.sns-card-instagram::before,
+.sns-card-tiktok::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--sns-angle, 0deg),
+    transparent 0deg,
+    rgba(255, 255, 255, 0.95) 28deg,
+    transparent 80deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+          mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: snsBorderTravel 3.8s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* 틱톡은 시안 → 마젠타 두 컬러로 도는 빛 */
+.sns-card-tiktok::before {
+  background: conic-gradient(
+    from var(--sns-angle, 0deg),
+    transparent 0deg,
+    rgba(37, 244, 238, 0.98) 18deg,
+    rgba(254, 44, 85, 0.92) 48deg,
+    transparent 78deg,
+    transparent 360deg
+  );
+}
+
+@keyframes snsBorderTravel {
+  to { --sns-angle: 360deg; }
 }
 
 /* ===== 인스타 카드 — 풀 그라데이션 ===== */
@@ -2120,41 +2139,43 @@ body.why-open {
      2.5px 0 0 rgba(37, 244, 238, 0.75);
 }
 
-/* 두 가지 색의 흐릿한 글로우를 양쪽에 배치 — hover 시 더 강해짐 */
+/* 두 가지 색의 흐릿한 글로우 — 카드 안쪽으로 살짝 깊게 들어가게 두어
+   둥근 모서리가 자연스럽게 드러나도록 함 (이전에는 모서리를 가득 채워
+   각진 인상을 줬음) */
 .sns-card-glow {
   position: absolute;
-  width: 260px;
-  height: 260px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
+  filter: blur(58px);
+  opacity: 0.5;
   pointer-events: none;
   transition: opacity var(--t-mid) var(--ease-out), transform var(--t-mid) var(--ease-out);
   z-index: 0;
 }
 
 .sns-card-glow-cyan {
-  top: -80px;
-  right: -80px;
+  top: -10px;
+  right: -10px;
   background: #25F4EE;
 }
 
 .sns-card-glow-magenta {
-  bottom: -90px;
-  left: -90px;
+  bottom: -20px;
+  left: -20px;
   background: #FE2C55;
 }
 
 .sns-card-tiktok:hover .sns-card-glow {
-  opacity: 0.85;
+  opacity: 0.78;
 }
 
 .sns-card-tiktok:hover .sns-card-glow-cyan {
-  transform: translate(-10px, 10px);
+  transform: translate(-8px, 8px);
 }
 
 .sns-card-tiktok:hover .sns-card-glow-magenta {
-  transform: translate(10px, -10px);
+  transform: translate(8px, -8px);
 }
 
 /* ===== 이메일 (조용한 카드) ===== */
@@ -2349,10 +2370,14 @@ body.why-open {
     display: none;
   }
 
-  .sns-card-cta::after,
   .sns-card-arrow::before,
   .sns-card-arrow::after {
     animation: none;
     opacity: 0;
+  }
+
+  .sns-card-instagram::before,
+  .sns-card-tiktok::before {
+    animation: none;
   }
 }
