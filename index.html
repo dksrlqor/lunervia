@@ -6,9 +6,9 @@
     <title>Lunervia · 루네르비아 — 사용자 경험 중심의 소프트웨어 브랜드</title>
     <meta
       name="description"
-      content="Lunervia(루네르비아)는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다. Night Letter를 비롯한 글로벌 커뮤니케이션 서비스를 만들고 있습니다."
+      content="Lunervia(루네르비아)는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다."
     />
-    <meta name="keywords" content="Lunervia, 루네르비아, 루네르 비아, 루네르비아 소프트웨어, Night Letter, 나이트레터, UX 디자인, 웹 서비스, 모바일 앱, 글로벌 커뮤니케이션, 소프트웨어 브랜드" />
+    <meta name="keywords" content="Lunervia, 루네르비아, 루네르 비아, 루네르비아 소프트웨어, UX 디자인, 웹 서비스, 모바일 앱, 소프트웨어 브랜드" />
     <meta name="author" content="Lunervia" />
     <link rel="canonical" href="https://lunervia.xyz/" />
     <meta name="theme-color" content="#F7F3EA" />
@@ -78,7 +78,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260525l" />
+    <link rel="stylesheet" href="styles.css?v=20260530a" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -93,7 +93,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260525l"
+              src="assets/brand/lunervia-logo-text.png?v=20260530a"
               alt="LUNERVIA"
             />
           </span>
@@ -145,32 +145,6 @@
             </div>
           </div>
 
-          <!-- 제품 드롭다운 -->
-          <div class="nav-item nav-item-dropdown" data-dropdown="products">
-            <button
-              type="button"
-              class="nav-link nav-link-dropdown"
-              aria-expanded="false"
-              aria-haspopup="true"
-              aria-controls="nav-dropdown-products"
-            >
-              <span data-i18n="nav.products">제품</span>
-              <svg class="nav-chevron" viewBox="0 0 12 8" aria-hidden="true">
-                <path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="nav-dropdown" id="nav-dropdown-products" role="menu" hidden>
-              <a href="products.html" role="menuitem">
-                <span class="nav-dropdown-name">Night Letter</span>
-                <span class="nav-dropdown-meta" data-i18n="nav.products.nightLetter">익명 글 기반 글로벌 커뮤니케이션</span>
-              </a>
-              <a href="products.html" role="menuitem">
-                <span class="nav-dropdown-name" data-i18n="nav.products.all">전체 프로젝트 보기</span>
-                <span class="nav-dropdown-meta" data-i18n="nav.products.all.meta">진행 중인 모든 프로젝트</span>
-              </a>
-            </div>
-          </div>
-
           <a class="nav-link" href="#partners" data-i18n="nav.partners">협력</a>
           <a class="nav-link" href="#contact" data-i18n="nav.contact">문의</a>
           <a class="nav-link nav-sns" href="sns.html" data-i18n="nav.sns">SNS</a>
@@ -195,8 +169,8 @@
               Lunervia는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary btn-icon" href="products.html">
-                <span data-i18n="hero.cta.products">제품 살펴보기</span>
+              <a class="btn btn-primary btn-icon" href="#about">
+                <span data-i18n="hero.cta.brand">브랜드 살펴보기</span>
                 <span class="btn-arrow" aria-hidden="true">→</span>
               </a>
               <a class="btn btn-secondary" href="#contact" data-i18n="hero.cta.contact">문의하기</a>
@@ -310,8 +284,6 @@
       </section>
 
       <!-- ============================== PARTNERS ============================== -->
-      <!-- 제품(Products) 섹션은 이제 별도 페이지(`products.html`)로 분리.
-           헤더 '제품 ⌄' 드롭다운에서 접근. -->
       <section class="section section-partners" id="partners">
         <div class="section-inner">
           <p class="section-label reveal">
@@ -425,7 +397,7 @@
           <a class="footer-brand" href="#hero" aria-label="Lunervia 맨 위로">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260525l"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260530a"
               alt="LUNERVIA"
               hidden
             />
@@ -440,7 +412,6 @@
           <div class="footer-col">
             <h3 class="footer-col-title" data-i18n="footer.explore">Explore</h3>
             <a href="#about" data-i18n="nav.about">소개</a>
-            <a href="products.html" data-i18n="nav.products">제품</a>
             <a href="#partners" data-i18n="nav.partners">협력</a>
             <a href="#philosophy" data-i18n="nav.philosophy">철학</a>
             <a href="#contact" data-i18n="nav.contact">문의</a>
@@ -553,6 +524,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260525l"></script>
+    <script src="script.js?v=20260530a"></script>
   </body>
 </html>

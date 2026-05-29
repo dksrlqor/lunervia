@@ -12,6 +12,17 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-05-30 — Products 페이지·Night Letter 제거
+
+Night Letter 프로젝트를 더 이상 진행하지 않게 되어, 관련 콘텐츠와 흔적을 사이트에서 통째로 정리했습니다.
+
+- `products.html` 페이지와 사용하지 않게 된 `assets/brand/product-letter.png` 자산 삭제.
+- 상단 네비 '제품' 드롭다운, 푸터 Explore '제품' 링크, `sitemap.xml` 의 products URL 제거.
+- `script.js` 의 `nav.products*` / `products.*` / `product.*` / `hero.cta.products` i18n 키와 `.product-card` 폴백 코드 정리.
+- `styles.css` 의 `.product-card` / `.product-media` / `.products-page` / `.badge*` / `.feature-pills` 블록과 모바일 반응형 규칙 제거. partner 에서도 쓰는 `.media-placeholder`, `.partner-img` 만 남김.
+- Hero 좌측 첫 CTA 를 `제품 살펴보기 → products.html` 에서 `브랜드 살펴보기 → #about` 로 변경.
+- 메인 메타 description / keywords 에서 Night Letter 표현 제거.
+
 ## 2026-05-24 — 정식 소프트웨어 브랜드 사이트 업그레이드
 
 이전 단일 섹션 구성에서 정식 브랜드 사이트 수준으로 확장했습니다. 모든 작업은 순수 HTML / CSS / JS 만 사용했으며 외부 프레임워크 의존성이 없습니다.
@@ -20,15 +31,14 @@ http://127.0.0.1:5173/
 
 상단 네비게이션
 1. `Lunervia` 워드마크 (헤더 좌측) — 클릭 시 부드럽게 맨 위로
-2. 메뉴: 소개 · 제품 · 협력 · 철학 · 문의 · `SNS`(새 탭으로 `sns.html`) · `Why Lunervia` (오버레이 트리거)
+2. 메뉴: 소개 · 협력 · 문의 · `SNS`(새 탭으로 `sns.html`) · `Why Lunervia` (오버레이 트리거)
 3. 우측에 KO / EN 언어 토글
 
 본문 섹션 — 모두 `01 / About` 형태의 번호 라벨 + 큰 타이틀
 - `01 / About` — 브랜드 한 단락 + 4개 메타 (Founded / Based in / Focus / Stage)
 - `02 / Philosophy` — Brand Manifesto 블록인용구 + 3개 매니페스토 카드 + `루네르비아를 만든 이유` 자세히 읽기 CTA
-- `03 / Products` — Night Letter (실제 코드네임은 노출하지 않음)
-- `04 / Partners` — Todak Aquarium Diary (Instagram, App Store)
-- `05 / Contact` — 공식 Instagram / 개인 Instagram / TikTok / Email coming soon (4 카드)
+- `03 / Partners` — Todak Aquarium Diary (Instagram, App Store)
+- `04 / Contact` — 공식 Instagram / 개인 Instagram / TikTok / Email coming soon (4 카드)
 
 SNS 페이지 (sns.html)
 - 상단 네비 `SNS` 또는 푸터 `모든 SNS 모아보기` 링크로 새 탭 열림.
@@ -71,7 +81,6 @@ Why Lunervia (내부 오버레이)
 |---|---|---|
 | `assets/brand/lunervia-logo-text.png` | 텍스트형 LUNERVIA 워드마크 (흰색) | 상단 네비 좌측 (CSS 로 어둡게 처리) |
 | `assets/brand/lunervia-logo-symbol.png` | 심볼 + 텍스트 일체형 (흰색) | 푸터 워드마크 |
-| `assets/brand/product-letter.png` | 편지/봉투 비주얼 | 제품 섹션 카드 (Night Letter) |
 | `assets/brand/partner-todak.png` | 어항 아이콘 | 파트너 섹션 카드 + Why 오버레이 안 협업사 카드 |
 
 이미지가 없으면 텍스트 워드마크 또는 placeholder 가 보이고, 이미지가 있으면 `script.js` 의 `wireImageFallback` 이 자동으로 띄웁니다.
@@ -86,10 +95,6 @@ Why Lunervia (내부 오버레이)
 모션    : --ease-out / --ease-spring / --t-fast .18s / --t-mid .32s / --t-slow .56s
 글꼴    : Space Grotesk (display) + Plus Jakarta Sans (sans) + system mono
 ```
-
-### 절대 화면에 노출하지 않을 것
-
-- 실제 프로젝트 이름 `WorldLetter` / `월드레터` (Night Letter 만 표기)
 
 ### 외부 링크 (모두 새 탭, `rel="noopener noreferrer"`)
 
@@ -122,7 +127,7 @@ Why Lunervia (내부 오버레이)
 - `why.html` — Why Lunervia 본문의 정적 fallback 페이지 (메인 UI 에선 직접 링크하지 않음 — 검색엔진/딥링크용)
 - `sns.html` — 인스타·틱톡·이메일을 모아 보여주는 SNS 페이지. 카드별 플랫폼 풀 브랜딩 + 모션. 상단 `SNS` 네비에서 새 탭으로 연결됨.
 - `serve_no_cache.py` — 로컬 무캐시 개발 서버 (포트 5173)
-- `assets/brand/` — 4장의 브랜드/제품/협업사 이미지
+- `assets/brand/` — 3장의 브랜드/협업사 이미지
 - `.env.example` — 환경변수 형식 예시 (실제 키는 절대 넣지 않음)
 - `.gitignore` — `.env`, `__pycache__`, OS 임시 파일 등 제외
 

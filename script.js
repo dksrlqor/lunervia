@@ -3,7 +3,7 @@
    ------------------------------------------------------------
    기능 모듈
    1. 브랜드 로고 클릭 → 부드럽게 상단으로
-   2. 이미지 폴백 (로고/제품/파트너) — 로드 성공 시 표시
+   2. 이미지 폴백 (로고/파트너) — 로드 성공 시 표시
    3. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
    4. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
    5. Hero 터미널 창 안 타이핑 사이클 (첫 문구 = '안녕하세요!')
@@ -81,17 +81,6 @@
     () => { if (footerBrandText) footerBrandText.hidden = true; },
     () => { if (footerBrandText) footerBrandText.hidden = false; }
   );
-
-  // 제품 이미지
-  $$(".product-card").forEach((card) => {
-    const img = card.querySelector(".product-img");
-    const placeholder = card.querySelector(".media-placeholder");
-    wireImageFallback(
-      img,
-      () => { if (placeholder) placeholder.style.display = "none"; },
-      () => { if (placeholder) placeholder.style.display = ""; }
-    );
-  });
 
   // 파트너 이미지
   $$(".partner-card").forEach((card) => {
@@ -344,7 +333,6 @@
   const I18N = {
     ko: {
       "nav.about": "소개",
-      "nav.products": "제품",
       "nav.partners": "협력",
       "nav.philosophy": "철학",
       "nav.contact": "문의",
@@ -357,12 +345,6 @@
       "nav.intro.philosophy.meta": "제품 설계의 기준",
       "nav.intro.why": "루네르비아를 만든 이유",
       "nav.intro.why.meta": "브랜드의 출발점",
-      "nav.products.nightLetter": "익명 글 기반 글로벌 커뮤니케이션",
-      "nav.products.all": "전체 프로젝트 보기",
-      "nav.products.all.meta": "진행 중인 모든 프로젝트",
-
-      "products.pageTitle": "현재 진행 중인 프로젝트",
-      "products.pageLead": "Lunervia는 사용자가 안전하고 명확하게 소통할 수 있는 서비스를 설계하고 있습니다. 아래는 현재 개발 중인 프로젝트입니다.",
 
       "back.toMain": "메인으로",
       "back.toMainLong": "메인으로 돌아가기",
@@ -370,7 +352,7 @@
       "hero.eyebrow": "Welcome to Lunervia",
       "hero.title": "루네르비아에 오신 것을 환영합니다",
       "hero.sub": "Lunervia는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다.",
-      "hero.cta.products": "제품 살펴보기",
+      "hero.cta.brand": "브랜드 살펴보기",
       "hero.cta.contact": "문의하기",
 
       "about.label": "About",
@@ -392,14 +374,6 @@
       "philosophy.card3.name": "Clear & practical",
       "philosophy.card3": "복잡한 구조 대신 사용자가 바로 이해할 수 있는 설계를 지향합니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
-
-      "products.label": "Products",
-      "products.title": "현재 진행 중인 프로젝트",
-      "products.lead":
-        "Lunervia는 Night Letter를 비롯해 사용자가 안전하고 명확하게 소통할 수 있는 서비스를 설계하고 있습니다.",
-      "product.tagline": "익명의 글을 기반으로 한 글로벌 커뮤니케이션 서비스.",
-      "product.desc":
-        "Night Letter는 익명의 글을 기반으로 전 세계 사용자가 안전하게 소통할 수 있도록 설계된 글로벌 커뮤니케이션 서비스입니다. 사용자는 자신의 글을 등록하고, 다른 지역의 사용자가 이를 읽고 답장을 보낼 수 있으며, 번역 기능을 통해 언어와 지역의 차이를 줄이도록 설계되었습니다.",
 
       "partners.label": "Partners",
       "partners.title": "협력 파트너",
@@ -469,7 +443,6 @@
     },
     en: {
       "nav.about": "About",
-      "nav.products": "Products",
       "nav.partners": "Partners",
       "nav.philosophy": "Philosophy",
       "nav.contact": "Contact",
@@ -482,12 +455,6 @@
       "nav.intro.philosophy.meta": "How we design our products",
       "nav.intro.why": "Why we built Lunervia",
       "nav.intro.why.meta": "Where the brand starts",
-      "nav.products.nightLetter": "Anonymous global communication",
-      "nav.products.all": "View all projects",
-      "nav.products.all.meta": "Everything currently in development",
-
-      "products.pageTitle": "Currently in development",
-      "products.pageLead": "Lunervia designs services that let users communicate safely and clearly. The projects below are currently in development.",
 
       "back.toMain": "Back to main",
       "back.toMainLong": "Back to main page",
@@ -495,7 +462,7 @@
       "hero.eyebrow": "Welcome to Lunervia",
       "hero.title": "Welcome to Lunervia.",
       "hero.sub": "Lunervia is a software brand designing web and mobile services around user experience.",
-      "hero.cta.products": "View products",
+      "hero.cta.brand": "Explore the brand",
       "hero.cta.contact": "Contact us",
 
       "about.label": "About",
@@ -517,14 +484,6 @@
       "philosophy.card3.name": "Clear & practical",
       "philosophy.card3": "We design for immediate understanding rather than complex structures.",
       "philosophy.cta": "Read more about Lunervia",
-
-      "products.label": "Products",
-      "products.title": "Currently in development",
-      "products.lead":
-        "Including Night Letter, we are designing services that let users communicate safely and clearly.",
-      "product.tagline": "A global communication service based on anonymous writing.",
-      "product.desc":
-        "Night Letter is a global communication service that allows users to exchange anonymous writings across regions and languages. Users post their messages, receive replies from people elsewhere, and rely on built-in translation to reduce language and regional barriers.",
 
       "partners.label": "Partners",
       "partners.title": "Partners",
