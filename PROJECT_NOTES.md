@@ -102,7 +102,6 @@ Why Lunervia (내부 오버레이)
 - Instagram `@dksrlqor`     → https://www.instagram.com/dksrlqor/
 - TikTok    `@dksrlqor`     → https://www.tiktok.com/@dksrlqor
 - Instagram `@todaklife`    → https://www.instagram.com/todaklife/
-- App Store 토닥어항일기   → https://apps.apple.com/kr/app/todak-aquarium-diary/id6765705899?l=en-GB
 
 ### 보안 / 시크릿 정책 (중요)
 
