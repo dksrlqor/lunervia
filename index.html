@@ -78,7 +78,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260530b" />
+    <link rel="stylesheet" href="styles.css?v=20260530c" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -93,7 +93,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260530b"
+              src="assets/brand/lunervia-logo-text.png?v=20260530c"
               alt="LUNERVIA"
             />
           </span>
@@ -283,47 +283,25 @@
         </div>
       </section>
 
-      <!-- ============================== PARTNERS ============================== -->
-      <section class="section section-partners" id="partners">
+      <!-- ============================== SHOWCASE ============================== -->
+      <!-- 주요 고객 · 루네르비아 작품 · 파트너 — 오른쪽에서 왼쪽으로 흐르는 marquee.
+           카드 데이터는 script.js 의 SHOWCASE 배열에서 옵니다. -->
+      <section class="section section-showcase" id="partners">
         <div class="section-inner">
           <p class="section-label reveal">
             <span class="section-label-num">03</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
-            <span data-i18n="partners.label">Partners</span>
+            <span data-i18n="showcase.label">Showcase</span>
           </p>
-          <h2 class="section-title reveal" data-i18n="partners.title">협력 파트너</h2>
-          <p class="section-lead reveal" data-i18n="partners.lead">
-            Lunervia는 서비스 경험 개선과 브랜드 협력에 관심 있는 파트너 브랜드와 함께 협업하고 있습니다.
+          <h2 class="section-title reveal" data-i18n="showcase.title">주요 고객 · 작품 · 파트너</h2>
+          <p class="section-subtitle-en reveal" data-i18n="showcase.subtitle">Clients, Lunervia Works &amp; Partners</p>
+          <p class="section-lead reveal" data-i18n="showcase.lead">
+            루네르비아가 함께 만들고, 직접 제작하고, 연결해가는 브랜드와 프로젝트들입니다.
           </p>
+        </div>
 
-          <article class="partner-card reveal float">
-            <div class="partner-media">
-              <img
-                class="partner-img"
-                src="assets/brand/partner-todak.png"
-                alt="Todak Aquarium Diary"
-                hidden
-              />
-              <div class="media-placeholder" aria-hidden="true">
-                <span>Partner visual</span>
-                <small>assets/brand/partner-todak.png</small>
-              </div>
-            </div>
-
-            <div class="partner-content">
-              <p class="partner-kicker">Todak Aquarium Diary · 토닥 어항일기</p>
-              <h3 class="partner-name" data-i18n="partners.name">어항 관리와 일상 기록을 돕는 다이어리 서비스</h3>
-              <p class="partner-desc" data-i18n="partners.desc">
-                토닥 어항일기는 어항 관리와 사용자의 일상 기록을 돕는 다이어리 서비스입니다. Lunervia는 토닥 어항일기와 서비스 경험 개선 및 브랜드 협력을 함께 논의하고 있습니다.
-              </p>
-              <div class="partner-actions">
-                <a class="btn btn-secondary btn-icon" href="https://www.instagram.com/todaklife/" target="_blank" rel="noopener noreferrer">
-                  <span>Instagram · @todaklife</span>
-                  <span class="btn-arrow" aria-hidden="true">↗</span>
-                </a>
-              </div>
-            </div>
-          </article>
+        <div class="showcase-marquee reveal" role="region" aria-label="Lunervia 주요 고객 · 작품 · 파트너">
+          <ul class="showcase-track" id="showcase-track" role="list"></ul>
         </div>
       </section>
 
@@ -393,7 +371,7 @@
           <a class="footer-brand" href="#hero" aria-label="Lunervia 맨 위로">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260530b"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260530c"
               alt="LUNERVIA"
               hidden
             />
@@ -517,6 +495,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260530b"></script>
+    <script src="script.js?v=20260530c"></script>
   </body>
 </html>

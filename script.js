@@ -3,7 +3,7 @@
    ------------------------------------------------------------
    기능 모듈
    1. 브랜드 로고 클릭 → 부드럽게 상단으로
-   2. 이미지 폴백 (로고/파트너) — 로드 성공 시 표시
+   2. 이미지 폴백 (로고 / showcase 카드) — 로드 성공 시 표시
    3. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
    4. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
    5. Hero 터미널 창 안 타이핑 사이클 (첫 문구 = '안녕하세요!')
@@ -81,17 +81,6 @@
     () => { if (footerBrandText) footerBrandText.hidden = true; },
     () => { if (footerBrandText) footerBrandText.hidden = false; }
   );
-
-  // 파트너 이미지
-  $$(".partner-card").forEach((card) => {
-    const img = card.querySelector(".partner-img");
-    const placeholder = card.querySelector(".media-placeholder");
-    wireImageFallback(
-      img,
-      () => { if (placeholder) placeholder.style.display = "none"; },
-      () => { if (placeholder) placeholder.style.display = ""; }
-    );
-  });
 
   /* -------- 3. 모바일 메뉴 토글 ----------------------------------- */
   const navToggle = $(".nav-toggle");
@@ -375,13 +364,24 @@
       "philosophy.card3": "복잡한 구조 대신 사용자가 바로 이해할 수 있는 설계를 지향합니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
 
-      "partners.label": "Partners",
-      "partners.title": "협력 파트너",
-      "partners.lead":
-        "Lunervia는 서비스 경험 개선과 브랜드 협력에 관심 있는 파트너 브랜드와 함께 협업하고 있습니다.",
-      "partners.name": "어항 관리와 일상 기록을 돕는 다이어리 서비스",
-      "partners.desc":
-        "토닥 어항일기는 어항 관리와 사용자의 일상 기록을 돕는 다이어리 서비스입니다. Lunervia는 토닥 어항일기와 서비스 경험 개선 및 브랜드 협력을 함께 논의하고 있습니다.",
+      "showcase.label": "Showcase",
+      "showcase.title": "주요 고객 · 작품 · 파트너",
+      "showcase.subtitle": "Clients, Lunervia Works & Partners",
+      "showcase.lead":
+        "루네르비아가 함께 만들고, 직접 제작하고, 연결해가는 브랜드와 프로젝트들입니다.",
+      "showcase.comingSoon": "Coming soon",
+      "showcase.label.client": "주요 고객",
+      "showcase.label.work": "루네르비아 작품",
+      "showcase.label.partner": "협력 파트너",
+      "showcase.type.client": "Client · Company",
+      "showcase.type.work": "Lunervia Work · 자체 작품",
+      "showcase.type.partner": "Partner · Creator",
+      "showcase.smbest.desc":
+        "루네르비아가 함께할 예정인 주요 기업 파트너입니다.",
+      "showcase.badajwo.desc":
+        "손편지의 감성을 웹으로 옮긴 루네르비아의 자체 디지털 편지 서비스입니다.",
+      "showcase.todak.desc":
+        "앱 제작 과정과 기록을 영상으로 공유하는 크리에이터 채널입니다.",
 
       "contact.label": "Contact",
       "contact.title": "문의하기",
@@ -485,13 +485,24 @@
       "philosophy.card3": "We design for immediate understanding rather than complex structures.",
       "philosophy.cta": "Read more about Lunervia",
 
-      "partners.label": "Partners",
-      "partners.title": "Partners",
-      "partners.lead":
-        "Lunervia collaborates with partner brands interested in improving service experience and exploring brand partnerships.",
-      "partners.name": "A diary service for aquarium care and daily records",
-      "partners.desc":
-        "Todak Aquarium Diary helps users manage their aquariums and record daily moments. Lunervia is in ongoing discussion with Todak on service experience and brand collaboration.",
+      "showcase.label": "Showcase",
+      "showcase.title": "Clients, Lunervia Works & Partners",
+      "showcase.subtitle": "주요 고객 · 작품 · 파트너",
+      "showcase.lead":
+        "Brands and projects Lunervia builds with, crafts directly, and stays connected to.",
+      "showcase.comingSoon": "Coming soon",
+      "showcase.label.client": "Client",
+      "showcase.label.work": "Lunervia Work",
+      "showcase.label.partner": "Partner",
+      "showcase.type.client": "Client / Company",
+      "showcase.type.work": "Lunervia Work / Original Web Service",
+      "showcase.type.partner": "Partner / Creator",
+      "showcase.smbest.desc":
+        "A major corporate partner we are preparing to work with.",
+      "showcase.badajwo.desc":
+        "Badajwo — Lunervia's own digital letter service that carries the warmth of handwritten letters into the web.",
+      "showcase.todak.desc":
+        "A creator channel sharing the process and journey of building apps through video.",
 
       "contact.label": "Contact",
       "contact.title": "Contact",
@@ -583,6 +594,128 @@
       btn.setAttribute("aria-pressed", String(isActive));
     });
   }
+
+  /* -------- 8b. Showcase marquee — 데이터 + 동적 렌더 + 이미지 폴백 ----
+     SHOWCASE 배열의 카드를 한 번 그린 뒤, 끊김 없는 marquee 를 위해
+     동일한 세트를 한 번 더 복제(aria-hidden + data-clone="true").
+     카드 안 라벨/타입/설명은 data-i18n 으로 채워지므로 이어지는
+     applyI18n 호출이 자동으로 텍스트를 매핑합니다.
+     새 항목을 추가하고 싶으면 SHOWCASE 배열에 푸시하고, i18n 사전에
+     showcase.* 키만 더해주면 됩니다.
+  -------------------------------------------------------------------- */
+  const SHOWCASE = [
+    {
+      id: "smbest",
+      name: "SMBEST",
+      typeKey: "showcase.type.client",
+      labelKey: "showcase.label.client",
+      descKey: "showcase.smbest.desc",
+      image: "assets/brand/client-smbest.png",
+      imageAlt: "SMBEST",
+      imageStyle: "logo",
+      href: null,
+      comingSoon: true,
+    },
+    {
+      id: "badajwo",
+      name: "받아줘",
+      typeKey: "showcase.type.work",
+      labelKey: "showcase.label.work",
+      descKey: "showcase.badajwo.desc",
+      image: "assets/brand/work-badajwo.png",
+      imageAlt: "받아줘 — Lunervia Work",
+      imageStyle: "icon-rounded",
+      href: "https://takemyletter.site",
+    },
+    {
+      id: "todak",
+      name: "Todak Life",
+      typeKey: "showcase.type.partner",
+      labelKey: "showcase.label.partner",
+      descKey: "showcase.todak.desc",
+      avatarType: "default-profile",
+      imageAlt: "Todak Life",
+      href: "https://www.youtube.com/@Todak_Life",
+      instagram: "@todaklife",
+    },
+  ];
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+    );
+  }
+
+  function showcaseCardInner(item) {
+    let mediaHtml = "";
+    if (item.image) {
+      const cls = [
+        "showcase-card-media",
+        item.imageStyle === "icon-rounded" ? "is-icon-rounded" : "",
+        item.imageStyle === "logo" ? "is-logo" : "",
+      ].filter(Boolean).join(" ");
+      mediaHtml = `<div class="${cls}">` +
+        `<img class="showcase-card-img" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.imageAlt || item.name)}" loading="lazy" />` +
+        `<div class="showcase-card-fallback" aria-hidden="true">${escapeHtml(item.name)}</div>` +
+        `</div>`;
+    } else if (item.avatarType === "default-profile") {
+      mediaHtml = `<div class="showcase-card-media is-avatar" role="img" aria-label="${escapeHtml(item.imageAlt || item.name)}">` +
+        `<svg class="showcase-avatar-svg" viewBox="0 0 80 80" aria-hidden="true">` +
+          `<circle cx="40" cy="40" r="40" fill="#E8DFCE" />` +
+          `<circle cx="40" cy="32" r="11" fill="#8A8378" opacity="0.55" />` +
+          `<path d="M16 70 C16 56 26 48 40 48 C54 48 64 56 64 70 Z" fill="#8A8378" opacity="0.55" />` +
+        `</svg>` +
+        `</div>`;
+    }
+
+    let metaHtml = "";
+    if (item.comingSoon) {
+      metaHtml = `<p class="showcase-card-meta"><span data-i18n="showcase.comingSoon">Coming soon</span></p>`;
+    } else if (item.instagram) {
+      metaHtml = `<p class="showcase-card-meta">Instagram · ${escapeHtml(item.instagram)}</p>`;
+    }
+
+    const arrowHtml = item.href ? '<span class="showcase-card-arrow" aria-hidden="true">↗</span>' : "";
+
+    const body =
+      mediaHtml +
+      `<div class="showcase-card-body">` +
+        `<span class="showcase-card-label" data-i18n="${escapeHtml(item.labelKey)}"></span>` +
+        `<h3 class="showcase-card-name">${escapeHtml(item.name)}</h3>` +
+        `<p class="showcase-card-type" data-i18n="${escapeHtml(item.typeKey)}"></p>` +
+        `<p class="showcase-card-desc" data-i18n="${escapeHtml(item.descKey)}"></p>` +
+        metaHtml +
+      `</div>` +
+      arrowHtml;
+
+    if (item.href) {
+      return `<a class="showcase-card-link" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">${body}</a>`;
+    }
+    return `<div class="showcase-card-link is-static" aria-disabled="true">${body}</div>`;
+  }
+
+  function renderShowcase() {
+    const track = document.getElementById("showcase-track");
+    if (!track) return;
+    const setHtml = (isClone) =>
+      SHOWCASE.map((item) => {
+        const cloneAttr = isClone ? ' aria-hidden="true" data-clone="true"' : "";
+        return `<li class="showcase-card"${cloneAttr}>${showcaseCardInner(item)}</li>`;
+      }).join("");
+    track.innerHTML = setHtml(false) + setHtml(true);
+
+    // 이미지 폴백 — 파일이 없으면 카드 안 fallback 텍스트가 자연스럽게 대체
+    $$(".showcase-card-media .showcase-card-img").forEach((img) => {
+      const media = img.closest(".showcase-card-media");
+      wireImageFallback(
+        img,
+        () => { if (media) media.classList.remove("is-fallback"); },
+        () => { if (media) media.classList.add("is-fallback"); }
+      );
+    });
+  }
+
+  renderShowcase();
 
   // 초기 언어 결정 — 저장된 값 > <html lang> > ko
   const storedLang = (() => {
