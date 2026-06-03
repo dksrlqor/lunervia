@@ -1855,106 +1855,6 @@ body.why-open {
   max-width: 60ch;
 }
 
-/* Why 안에 들어간 협업사 카드 */
-.why-partners {
-  margin-top: clamp(28px, 4vw, 40px);
-  padding-top: clamp(24px, 3vw, 32px);
-  border-top: 1px dashed var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.why-partners-title {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  margin: 0;
-}
-
-.why-partners-intro {
-  font-size: 0.98rem;
-  color: var(--text-3);
-  margin: 0 0 8px;
-  max-width: 56ch;
-}
-
-.why-partner-card {
-  display: grid;
-  grid-template-columns: 92px 1fr;
-  gap: 18px;
-  padding: 18px;
-  background: var(--bg-paper);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-lg);
-  align-items: start;
-}
-
-.why-partner-media {
-  width: 92px;
-  height: 92px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-card);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-
-.why-partner-media img {
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
-}
-
-.why-partner-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.why-partner-kicker {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0;
-}
-
-.why-partner-desc {
-  font-size: 0.96rem;
-  line-height: 1.7;
-  color: var(--text-2);
-  margin: 0;
-  max-width: 52ch;
-}
-
-.why-partner-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 14px;
-  margin-top: 4px;
-}
-
-.why-partner-actions a {
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-2);
-  border-bottom: 1px solid transparent;
-  transition: color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
-}
-
-.why-partner-actions a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
 .why-foot {
   margin-top: clamp(28px, 4vw, 40px);
 }
@@ -1970,17 +1870,6 @@ body.why-open {
 @media (max-width: 720px) {
   .why-panel {
     width: 100%;
-  }
-
-  .why-partner-card {
-    grid-template-columns: 64px 1fr;
-    gap: 14px;
-    padding: 14px;
-  }
-
-  .why-partner-media {
-    width: 64px;
-    height: 64px;
   }
 }
 

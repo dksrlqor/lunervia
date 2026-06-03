@@ -12,6 +12,16 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-03 — Why 오버레이 협력 파트너 블록 제거 + partner-todak.png 삭제
+
+메인 03 섹션이 Showcase 마키로 바뀌면서 Todak Life 가 이미 거기에 들어갔고, Why Lunervia 오버레이 안에 따로 있던 협업사 카드(구 Todak Aquarium Diary)는 중복이 되어 정리.
+
+- `index.html` 의 `<section class="why-partners">` 블록 통째 제거. Why 본문은 브랜드 이야기에만 집중.
+- `styles.css` 의 `.why-partners` / `.why-partners-title` / `.why-partners-intro` / `.why-partner-card` / `.why-partner-media` / `.why-partner-media img` / `.why-partner-content` / `.why-partner-kicker` / `.why-partner-desc` / `.why-partner-actions` / `.why-partner-actions a` (hover 포함) + 720px 모바일 반응형 제거.
+- `script.js` 의 `why.partners.title` / `why.partners.intro` / `why.partners.todak` i18n 키 KO/EN 양쪽 제거.
+- 자산 정리: `assets/brand/partner-todak.png` (구 Todak 어항일기 어항 아이콘) 삭제. 이제 사이트 어디에서도 참조하지 않음.
+- 캐시 버스팅 `?v=20260603a`.
+
 ## 2026-05-30 — Showcase 마키 섹션 (주요 고객 · 작품 · 파트너)
 
 메인 03 섹션을 단일 협력사 카드(Todak Aquarium Diary)에서 **주요 고객 / 루네르비아 작품 / 파트너** 세 가지 성격을 함께 보여주는 marquee 쇼케이스로 교체했습니다. 받아줘는 협력사가 아니라 루네르비아가 직접 만든 자체 웹 서비스로 명확히 구분해 표기.
@@ -72,7 +82,7 @@ Why Lunervia (내부 오버레이)
 - 트리거: 상단 네비 `Why Lunervia`, 푸터 같은 버튼, Philosophy 섹션의 CTA — 모두 `data-open-why`
 - 닫기: 우상단 X, 본문 하단 `메인으로 돌아가기`, 배경 클릭, Esc 키
 - 열려 있을 때 `body.why-open` 으로 스크롤 잠금 + 포커스 트랩 + 첫 포커스는 close 버튼
-- 본문: 인트로 / 본문 5단락 / 강조 인용구 / 영문 한 문장 / 협업사 카드(Todak)
+- 본문: 인트로 / 본문 5단락 / 강조 인용구 / 영문 한 문장
 
 푸터
 - 좌: 워드마크 + 태그라인
@@ -100,7 +110,6 @@ Why Lunervia (내부 오버레이)
 | `assets/brand/lunervia-logo-symbol.png` | 심볼 + 텍스트 일체형 (흰색) | 푸터 워드마크 |
 | `assets/brand/client-smbest.png` | SMBEST 기업 로고 (흰 배경) | Showcase 마키 — Client 카드 |
 | `assets/brand/work-badajwo.png` | `받아줘` 앱 아이콘 (손이 편지 든 일러스트) | Showcase 마키 — Lunervia Work 카드 |
-| `assets/brand/partner-todak.png` | 어항 아이콘 (구버전, Todak 어항일기) | Why 오버레이 안 협업사 카드만 사용 (메인 03 섹션에서는 더 이상 안 쓰임) |
 
 > Showcase 카드 이미지가 없으면 카드 미디어 영역에 카드 이름이 mono 폰트로 placeholder 처리됨 (`script.js` 의 `wireImageFallback` + `.showcase-card-fallback`). Todak Life 카드는 CSS/SVG 기본 프로필 아바타라 이미지 파일이 필요 없음.
 
@@ -147,7 +156,7 @@ Why Lunervia (내부 오버레이)
 - `why.html` — Why Lunervia 본문의 정적 fallback 페이지 (메인 UI 에선 직접 링크하지 않음 — 검색엔진/딥링크용)
 - `sns.html` — 인스타·틱톡·이메일을 모아 보여주는 SNS 페이지. 카드별 플랫폼 풀 브랜딩 + 모션. 상단 `SNS` 네비에서 새 탭으로 연결됨.
 - `serve_no_cache.py` — 로컬 무캐시 개발 서버 (포트 5173)
-- `assets/brand/` — 브랜드 워드마크 2장 + showcase 이미지(SMBEST, 받아줘) + 협업사 이미지(partner-todak, Why 오버레이 전용)
+- `assets/brand/` — 브랜드 워드마크 2장 + showcase 이미지 2장 (SMBEST, 받아줘)
 - `.env.example` — 환경변수 형식 예시 (실제 키는 절대 넣지 않음)
 - `.gitignore` — `.env`, `__pycache__`, OS 임시 파일 등 제외
 

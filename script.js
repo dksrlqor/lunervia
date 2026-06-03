@@ -435,10 +435,6 @@
       "why.body.p4": "사용자는 단순한 기능 이상의 경험을 기대합니다. Lunervia는 그 경험을 구성하는 작은 결정들을 진지하게 다룹니다.",
       "why.body.p5": "아직 성장 단계의 브랜드이지만, 실험과 기록을 통해 디지털 제품의 기준을 한 걸음씩 만들어가고 있습니다.",
       "why.body.en": "Lunervia is a software brand designing web and mobile services with a focus on clear and reliable user experience.",
-      "why.partners.title": "협력 파트너",
-      "why.partners.intro": "Lunervia는 서비스 경험 개선과 브랜드 협력에 관심 있는 파트너 브랜드와 함께 협업하고 있습니다.",
-      "why.partners.todak":
-        "토닥 어항일기는 어항 관리와 사용자의 일상 기록을 돕는 다이어리 서비스입니다. Lunervia는 토닥 어항일기와 서비스 경험 개선 및 브랜드 협력을 함께 논의하고 있습니다.",
       "why.close": "메인으로 돌아가기",
     },
     en: {
@@ -556,10 +552,6 @@
       "why.body.p4": "Users expect more than features. We treat the small decisions that shape that experience with care.",
       "why.body.p5": "Lunervia is still a growing brand. Through experiments and records, we are defining our standard for digital products one step at a time.",
       "why.body.en": "Lunervia is a software brand designing web and mobile services with a focus on clear and reliable user experience.",
-      "why.partners.title": "Partners",
-      "why.partners.intro": "Lunervia collaborates with partner brands interested in improving service experience and exploring brand partnerships.",
-      "why.partners.todak":
-        "Todak Aquarium Diary helps users manage their aquariums and record daily moments. Lunervia is in ongoing discussion with Todak on service experience and brand collaboration.",
       "why.close": "Back to main",
     },
   };
