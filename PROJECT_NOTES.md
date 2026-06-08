@@ -12,6 +12,16 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-03 — 로고 클릭 강제 reload + 새로고침 시 메인 hero 진입
+
+브라우저 새로고침과 브랜드 로고 클릭 동작을 사용자 의도대로 통일.
+
+- 어떤 페이지에서 새로고침해도 항상 메인의 hero 부터 보이도록 `script.js` IIFE 진입 즉시 navigation type 검사. `performance.getEntriesByType("navigation")[0].type === "reload"` 이면:
+  - 서브 페이지(sns / why / partners …) 였으면 `location.replace("index.html")` 으로 메인으로 이동.
+  - 메인 페이지였으면 `history.scrollRestoration = "manual"` 로 두고 `window.scrollTo(0,0)` 즉시 + `load` 이벤트에서 한 번 더, URL 해시도 `history.replaceState` 로 제거.
+- 헤더·푸터 브랜드 로고 클릭 → "무조건 새로고침". `index.html` 의 헤더 brand `href="#hero" id="brand-link"` → `href="index.html"` 로, 푸터 brand 도 동일하게 `href="index.html"`. `script.js` 에 `.brand, .footer-brand` 통합 핸들러 — 메인이면 `location.reload()`, 다른 페이지면 `location.assign("index.html")`. 기존 `#brand-link` 부드러운 스크롤 모듈은 제거.
+- 캐시 버스팅 `?v=20260603c`.
+
 ## 2026-06-03 — Showcase 마키를 별도 페이지 `partners.html` 로 분리
 
 메인 03 섹션에 있던 Showcase 마키(주요 고객 · 작품 · 파트너)를 별도 페이지로 옮기고, 상단 네비/푸터의 `협력 / Partners` 링크가 새 탭으로 열도록 변경. 메인은 잠시 더 단순한 1·2·3 (About / Philosophy / Contact) 흐름으로 운영.

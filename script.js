@@ -2,7 +2,9 @@
    LUNERVIA — quiet software brand site
    ------------------------------------------------------------
    기능 모듈
-   1. 브랜드 로고 클릭 → 부드럽게 상단으로
+   0. 새로고침 동작 — 어디서 새로고침해도 메인 hero, 메인은 맨 위 +
+      브랜드 로고 (헤더 / 푸터) 클릭 → 메인으로 강제 reload
+   1. (제거됨 — #0 이 처리)
    2. 이미지 폴백 (로고 / showcase 카드) — 로드 성공 시 표시
    3. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
    4. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
@@ -16,25 +18,70 @@
    ============================================================ */
 
 (() => {
+  /* -------- 0. 새로고침 동작 통일 ------------------------------------
+     - 서브 페이지(sns / why / partners …)에서 새로고침하면 메인으로
+       이동 (히스토리에는 안 남도록 location.replace 사용)
+     - 메인 페이지에서 새로고침 시에는 마지막 스크롤 위치 복원 끄고
+       맨 위(hero) 로 보냄 + URL 의 해시도 제거
+     - 브라우저가 자동 스크롤 복원하기 전에 history.scrollRestoration
+       을 manual 로 두기 위해 IIFE 진입 즉시 실행 (DOM 대기 X)
+  -------------------------------------------------------------------- */
+  const pagePath = location.pathname;
+  const isMainPage =
+    pagePath === "" || pagePath === "/" ||
+    pagePath.endsWith("/") || pagePath.endsWith("/index.html");
+
+  const navEntry =
+    (performance.getEntriesByType && performance.getEntriesByType("navigation")[0]) || null;
+  const isReload = navEntry
+    ? navEntry.type === "reload"
+    : (performance.navigation && performance.navigation.type === 1);
+
+  if (isReload && !isMainPage) {
+    // 서브 페이지 새로고침 → 메인으로
+    window.location.replace("index.html");
+    return; // 새 페이지 로드되니 이후 초기화는 의미 없음
+  }
+
+  if (isMainPage && "scrollRestoration" in history) {
+    // 메인 페이지는 항상 hero 부터 시작하도록 자동 복원 꺼두기
+    history.scrollRestoration = "manual";
+  }
+
+  if (isReload && isMainPage) {
+    // 즉시 + load 이후에도 한 번 더 (브라우저 복원이 늦게 일어나는 경우 대비)
+    window.scrollTo(0, 0);
+    window.addEventListener("load", () => window.scrollTo(0, 0), { once: true });
+    if (location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
   const prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* -------- 1. 브랜드 로고 클릭 → 맨 위로 ----------------------------- */
-  const brandLink = $("#brand-link");
-  if (brandLink) {
-    brandLink.addEventListener("click", (event) => {
+  /* -------- 1. 브랜드 로고(헤더·푸터) 클릭 → 메인으로 강제 reload -------
+     href 가 이미 index.html 이라 그냥 두면 일반 navigate 라 캐시
+     사용 가능. 사용자 요청은 "무조건 새로고침" 이므로 명시적으로
+     처리: 메인이면 hash 제거 + location.reload(), 다른 페이지면
+     location.assign('index.html').
+  -------------------------------------------------------------------- */
+  $$(".brand, .footer-brand").forEach((logo) => {
+    logo.addEventListener("click", (event) => {
       event.preventDefault();
-      closeWhyOverlay();
-      closeMobileMenu();
-      window.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-      });
+      if (isMainPage) {
+        if (location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        location.reload();
+      } else {
+        location.assign("index.html");
+      }
     });
-  }
+  });
 
   /* -------- 2. 이미지 폴백 ----------------------------------------- */
   const wireImageFallback = (img, onSuccess, onFail) => {
