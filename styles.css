@@ -1874,6 +1874,61 @@ body.why-open {
 }
 
 /* ============================================================
+   PARTNERS PAGE — partners.html 전용
+   - 메인 03 Showcase 마키를 별도 페이지로 분리
+   - 헤더는 sns 페이지 패턴, 마키 자체는 페이지 풀폭으로 흘러
+     좌우 fade mask 가 양쪽 끝까지 잘 보이도록 함
+   ============================================================ */
+.partners-page {
+  background: var(--bg);
+  padding-bottom: clamp(56px, 8vw, 104px);
+}
+
+.partners-page-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.partners-page-inner:first-of-type {
+  padding-top: clamp(40px, 6vw, 72px);
+}
+
+.partners-hero {
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 680px;
+}
+
+.partners-hero-title {
+  margin: 0;
+  font-size: clamp(2rem, 4.4vw, 2.85rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.12;
+}
+
+.partners-hero-sub {
+  margin: 2px 0 0;
+}
+
+.partners-hero-lead {
+  margin: 8px 0 0;
+  font-size: 1.04rem;
+  line-height: 1.78;
+  color: var(--text-3);
+  max-width: 56ch;
+}
+
+.partners-page .showcase-marquee {
+  margin-top: clamp(40px, 5vw, 64px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+/* ============================================================
    SNS PAGE — sns.html 전용
    - 페이지 골격(헤더/푸터/배경)은 크림 톤 그대로
    - 카드는 플랫폼 풀 브랜딩 (인스타 그라데이션 / 틱톡 블랙+글리치 글로우)

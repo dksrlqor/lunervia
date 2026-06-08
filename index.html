@@ -78,7 +78,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260603a" />
+    <link rel="stylesheet" href="styles.css?v=20260603b" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -93,7 +93,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260603a"
+              src="assets/brand/lunervia-logo-text.png?v=20260603b"
               alt="LUNERVIA"
             />
           </span>
@@ -145,7 +145,7 @@
             </div>
           </div>
 
-          <a class="nav-link" href="#partners" data-i18n="nav.partners">협력</a>
+          <a class="nav-link" href="partners.html" target="_blank" rel="noopener noreferrer" data-i18n="nav.partners">협력</a>
           <a class="nav-link" href="#contact" data-i18n="nav.contact">문의</a>
           <a class="nav-link nav-sns" href="sns.html" data-i18n="nav.sns">SNS</a>
         </nav>
@@ -283,33 +283,13 @@
         </div>
       </section>
 
-      <!-- ============================== SHOWCASE ============================== -->
-      <!-- 주요 고객 · 루네르비아 작품 · 파트너 — 오른쪽에서 왼쪽으로 흐르는 marquee.
-           카드 데이터는 script.js 의 SHOWCASE 배열에서 옵니다. -->
-      <section class="section section-showcase" id="partners">
-        <div class="section-inner">
-          <p class="section-label reveal">
-            <span class="section-label-num">03</span>
-            <span class="section-label-sep" aria-hidden="true">/</span>
-            <span data-i18n="showcase.label">Showcase</span>
-          </p>
-          <h2 class="section-title reveal" data-i18n="showcase.title">주요 고객 · 작품 · 파트너</h2>
-          <p class="section-subtitle-en reveal" data-i18n="showcase.subtitle">Clients, Lunervia Works &amp; Partners</p>
-          <p class="section-lead reveal" data-i18n="showcase.lead">
-            루네르비아가 함께 만들고, 직접 제작하고, 연결해가는 브랜드와 프로젝트들입니다.
-          </p>
-        </div>
-
-        <div class="showcase-marquee reveal" role="region" aria-label="Lunervia 주요 고객 · 작품 · 파트너">
-          <ul class="showcase-track" id="showcase-track" role="list"></ul>
-        </div>
-      </section>
+      <!-- 03 / Showcase 섹션은 별도 페이지(`partners.html`)로 분리됨 — 상단 네비 '협력' 클릭 시 새 탭으로 열림 -->
 
       <!-- ============================== CONTACT ============================== -->
       <section class="section section-contact" id="contact">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">04</span>
+            <span class="section-label-num">03</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="contact.label">Contact</span>
           </p>
@@ -371,7 +351,7 @@
           <a class="footer-brand" href="#hero" aria-label="Lunervia 맨 위로">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260603a"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260603b"
               alt="LUNERVIA"
               hidden
             />
@@ -386,7 +366,7 @@
           <div class="footer-col">
             <h3 class="footer-col-title" data-i18n="footer.explore">Explore</h3>
             <a href="#about" data-i18n="nav.about">소개</a>
-            <a href="#partners" data-i18n="nav.partners">협력</a>
+            <a href="partners.html" target="_blank" rel="noopener noreferrer" data-i18n="nav.partners">협력</a>
             <a href="#philosophy" data-i18n="nav.philosophy">철학</a>
             <a href="#contact" data-i18n="nav.contact">문의</a>
             <button type="button" class="footer-col-button" data-open-why data-i18n="nav.why">루네르비아를 만든 이유</button>
@@ -470,6 +450,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260603a"></script>
+    <script src="script.js?v=20260603b"></script>
   </body>
 </html>
