@@ -12,6 +12,17 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-12 (2) — 주요 프로젝트 섹션을 메인에서 분리, 상단/푸터 '프로젝트' 링크로
+
+사용자 요청: 주요 프로젝트는 메인이 아니라 별도 페이지에 두고, 상단 네비와 푸터에서 연결.
+
+- 메인 `01 / Projects` 마키 섹션 제거 → 섹션 번호 원복 (About 01 / Philosophy 02 / Contact 03). TRUST 밴드는 히어로 바로 아래 유지.
+- `partners.html` 을 `주요 프로젝트 및 협력` 페이지로 격상: head title/og/description, hero(eyebrow `Projects` · 제목 `주요 프로젝트 및 협력` · 보조 `Projects & Works` · 신규 리드), 마키 region aria-label 갱신. i18n `showcase.label/title/subtitle/lead` 값 교체 (KO/EN).
+- 상단 네비/푸터 링크 라벨 `협력` → `프로젝트` (`nav.partners` 키 KO `프로젝트` / EN `Projects` — index/partners/sns 정적 기본 텍스트도 동기화). href 는 그대로 `partners.html` 새 탭.
+- 히어로 CTA `프로젝트 보기` → `partners.html` 새 탭 (`#projects` 앵커 제거됨).
+- `projects.*` i18n 키 제거(미사용), `.section-projects` CSS 제거. `is-pixel`(Lab 플라스크)·`showcase-card-role` 은 partners 마키에서 계속 사용.
+- 캐시 버스팅 `?v=20260612b`.
+
 ## 2026-06-12 — 포트폴리오형 브랜드 사이트 개편 (히어로 대시보드 + Projects 마키 복귀)
 
 고객 신뢰·포트폴리오 설득력·문의 전환을 높이는 방향으로 메인 페이지 전면 개편. 8비트 고양이/픽셀 캐릭터는 이번 작업에서 제외 (나중에 별도 작업으로 추가 예정).

@@ -1661,26 +1661,7 @@ body.why-open {
   to   { transform: translate3d(-50%, 0, 0); }
 }
 
-/* -------- 10b. 메인 Projects 섹션 (히어로 바로 아래 marquee) -------- */
-.section-projects .section-inner {
-  padding-bottom: 0;
-}
-
-.section-projects .section-subtitle-en {
-  margin-top: -8px;
-  margin-bottom: 16px;
-}
-
-.section-projects .section-lead {
-  margin-bottom: 0;
-}
-
-.section-projects .showcase-marquee {
-  margin-top: clamp(28px, 4vw, 44px);
-  margin-bottom: clamp(64px, 9vw, 110px);
-}
-
-/* Lunervia Lab — 픽셀 플라스크 미디어 */
+/* Lunervia Lab — 픽셀 플라스크 미디어 (partners.html 마키 카드) */
 .showcase-card-media.is-pixel {
   aspect-ratio: 1 / 1;
   max-width: 148px;

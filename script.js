@@ -304,7 +304,7 @@
   const I18N = {
     ko: {
       "nav.about": "소개",
-      "nav.partners": "협력",
+      "nav.partners": "프로젝트",
       "nav.philosophy": "철학",
       "nav.contact": "문의",
       "nav.sns": "SNS",
@@ -325,12 +325,6 @@
       "hero.sub": "Lunervia는 작은 아이디어를 실제 서비스로 구현하고, 사용자가 이해하기 쉬운 흐름과 안정적인 인터페이스를 설계하는 소프트웨어 브랜드입니다.",
       "hero.cta.projects": "프로젝트 보기",
       "hero.cta.contact": "문의하기",
-
-      "projects.label": "Projects",
-      "projects.title": "주요 프로젝트 및 협력",
-      "projects.subtitle": "Projects & Works",
-      "projects.lead":
-        "작은 아이디어를 실제로 작동하는 서비스로 만들고 있습니다. Lunervia가 직접 만들고, 함께하고, 실험하는 프로젝트들입니다.",
 
       "trust.title": "Lunervia가 중요하게 보는 것",
       "trust.lead":
@@ -372,11 +366,11 @@
       "philosophy.card4": "나중에 수정하고 확장하기 쉬운 구조를 고려합니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
 
-      "showcase.label": "Showcase",
-      "showcase.title": "주요 고객 · 작품 · 파트너",
-      "showcase.subtitle": "Clients, Lunervia Works & Partners",
+      "showcase.label": "Projects",
+      "showcase.title": "주요 프로젝트 및 협력",
+      "showcase.subtitle": "Projects & Works",
       "showcase.lead":
-        "루네르비아가 함께 만들고, 직접 제작하고, 연결해가는 브랜드와 프로젝트들입니다.",
+        "작은 아이디어를 실제로 작동하는 서비스로 만들고 있습니다. Lunervia가 직접 만들고, 함께하고, 실험하는 프로젝트들입니다.",
       "showcase.comingSoon": "Coming soon",
       "showcase.label.client": "주요 고객",
       "showcase.label.work": "루네르비아 작품",
@@ -457,7 +451,7 @@
     },
     en: {
       "nav.about": "About",
-      "nav.partners": "Partners",
+      "nav.partners": "Projects",
       "nav.philosophy": "Philosophy",
       "nav.contact": "Contact",
       "nav.sns": "SNS",
@@ -478,12 +472,6 @@
       "hero.sub": "Lunervia is a software brand that turns small ideas into working services — designing clear flows and reliable interfaces people can actually use.",
       "hero.cta.projects": "View projects",
       "hero.cta.contact": "Contact us",
-
-      "projects.label": "Projects",
-      "projects.title": "Projects & Works",
-      "projects.subtitle": "주요 프로젝트 및 협력",
-      "projects.lead":
-        "We turn small ideas into services that actually work — projects Lunervia builds, partners with, and experiments on.",
 
       "trust.title": "What Lunervia cares about",
       "trust.lead":
@@ -525,11 +513,11 @@
       "philosophy.card4": "We consider structures that stay easy to modify and extend later.",
       "philosophy.cta": "Read more about Lunervia",
 
-      "showcase.label": "Showcase",
-      "showcase.title": "Clients, Lunervia Works & Partners",
-      "showcase.subtitle": "주요 고객 · 작품 · 파트너",
+      "showcase.label": "Projects",
+      "showcase.title": "Projects & Works",
+      "showcase.subtitle": "주요 프로젝트 및 협력",
       "showcase.lead":
-        "Brands and projects Lunervia builds with, crafts directly, and stays connected to.",
+        "We turn small ideas into services that actually work — projects Lunervia builds, partners with, and experiments on.",
       "showcase.comingSoon": "Coming soon",
       "showcase.label.client": "Client",
       "showcase.label.work": "Lunervia Work",
