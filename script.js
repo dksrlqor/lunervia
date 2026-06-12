@@ -8,7 +8,8 @@
    2. 이미지 폴백 (로고 / showcase 카드) — 로드 성공 시 표시
    3. 모바일 네비게이션 토글 + 외부 클릭/ESC 로 닫힘
    4. 앵커 클릭 시 부드럽게 스크롤 + 메뉴 닫힘
-   5. Hero 터미널 창 안 타이핑 사이클 (첫 문구 = '안녕하세요!')
+   5. (제거됨 — Hero 터미널 타이핑. 히어로 우측이 서비스 제작
+      대시보드 비주얼로 교체되면서 모든 모션은 CSS keyframes 로 처리)
    6. IntersectionObserver 기반 reveal (스태거 포함)
    7. 스크롤 진행률 바 갱신
    8. KO / EN 언어 토글 + localStorage 영속화 (data-i18n / data-i18n-html)
@@ -245,72 +246,6 @@
     if (event.key === "Escape") closeAllDropdowns(null);
   });
 
-  /* -------- 5. Hero 터미널 타이핑 사이클 -------------------------- */
-  const phrases = [
-    "안녕하세요!",
-    "Lunervia designs user-focused software.",
-    "사용자 경험 중심의 웹·모바일 서비스를 설계합니다.",
-    "Web · Mobile · UX — built with care.",
-    "디지털 제품의 완성도를 한 걸음씩 다듬어갑니다.",
-    "Software brand for everyday digital experience.",
-  ];
-
-  const typedEl = document.getElementById("typed");
-
-  const TYPE_SPEED = 70;
-  const DELETE_SPEED = 34;
-  const PAUSE_AFTER_TYPE = 1700;
-  const PAUSE_BEFORE_NEXT = 360;
-
-  function startTypingLoop() {
-    if (!typedEl) return;
-
-    if (prefersReducedMotion) {
-      // 모션 줄이기 환경에서는 첫 문구만 정적으로 표시
-      typedEl.textContent = phrases[0];
-      return;
-    }
-
-    let phraseIdx = 0;
-    let charIdx = phrases[0].length; // HTML 안에 첫 문구가 미리 들어 있음
-    let isDeleting = false;
-    let initialHold = 1400;
-
-    const tick = () => {
-      const phrase = phrases[phraseIdx];
-
-      if (!isDeleting && charIdx < phrase.length) {
-        charIdx += 1;
-        typedEl.textContent = phrase.slice(0, charIdx);
-        window.setTimeout(tick, TYPE_SPEED);
-        return;
-      }
-
-      if (!isDeleting && charIdx === phrase.length) {
-        isDeleting = true;
-        window.setTimeout(tick, initialHold || PAUSE_AFTER_TYPE);
-        initialHold = 0;
-        return;
-      }
-
-      if (isDeleting && charIdx > 0) {
-        charIdx -= 1;
-        typedEl.textContent = phrase.slice(0, charIdx);
-        window.setTimeout(tick, DELETE_SPEED);
-        return;
-      }
-
-      // 다음 문구로
-      isDeleting = false;
-      phraseIdx = (phraseIdx + 1) % phrases.length;
-      window.setTimeout(tick, PAUSE_BEFORE_NEXT);
-    };
-
-    tick();
-  }
-
-  startTypingLoop();
-
   /* -------- 6. IntersectionObserver reveal ------------------------ */
   const revealItems = $$(".reveal");
 
@@ -385,30 +320,56 @@
       "back.toMain": "메인으로",
       "back.toMainLong": "메인으로 돌아가기",
 
-      "hero.eyebrow": "Welcome to Lunervia",
-      "hero.title": "루네르비아에 오신 것을 환영합니다",
-      "hero.sub": "Lunervia는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다.",
-      "hero.cta.brand": "브랜드 살펴보기",
+      "hero.eyebrow": "Lunervia Software Studio",
+      "hero.title": "사용자 경험을 설계하고,<br />작동하는 웹서비스를 만듭니다.",
+      "hero.sub": "Lunervia는 작은 아이디어를 실제 서비스로 구현하고, 사용자가 이해하기 쉬운 흐름과 안정적인 인터페이스를 설계하는 소프트웨어 브랜드입니다.",
+      "hero.cta.projects": "프로젝트 보기",
       "hero.cta.contact": "문의하기",
 
+      "projects.label": "Projects",
+      "projects.title": "주요 프로젝트 및 협력",
+      "projects.subtitle": "Projects & Works",
+      "projects.lead":
+        "작은 아이디어를 실제로 작동하는 서비스로 만들고 있습니다. Lunervia가 직접 만들고, 함께하고, 실험하는 프로젝트들입니다.",
+
+      "trust.title": "Lunervia가 중요하게 보는 것",
+      "trust.lead":
+        "좋은 사이트는 보기 좋은 화면에서 끝나지 않습니다. 사용자가 이해하고, 실제로 작동하며, 오래 다듬을 수 있어야 합니다.",
+      "trust.card1.name": "이해하기 쉬운 흐름",
+      "trust.card1.desc": "사용자가 길을 잃지 않도록 화면 구조와 동선을 먼저 설계합니다.",
+      "trust.card2.name": "실제로 작동하는 구현",
+      "trust.card2.desc": "보기 좋은 화면에서 끝나지 않고, 배포 가능한 형태의 웹서비스를 만듭니다.",
+      "trust.card3.name": "오래 다듬을 수 있는 구조",
+      "trust.card3.desc": "기능을 추가하고 수정하기 쉬운 구조를 고려해 제작합니다.",
+
       "about.label": "About",
-      "about.title": "사용자 경험 중심의 소프트웨어 브랜드",
+      "about.title": "아이디어를 실제 서비스로 만드는 작은 소프트웨어 스튜디오",
       "about.lead":
-        "Lunervia는 사용자가 매일 마주하는 웹과 모바일 환경에서, 명확하고 안정적인 디지털 제품을 설계합니다. 작은 실험과 개선을 반복하며 완성도 있는 서비스를 만들어가고 있습니다.",
+        "기획, 화면 설계, 프론트엔드 구현, 사용자 흐름 개선까지 — 하나의 서비스가 실제로 작동하도록 만드는 과정을 중요하게 생각합니다.",
       "about.focusLabel": "Focus",
       "about.focusValue": "웹 서비스 · 모바일 앱 · UX 설계",
       "about.stageValue": "성장 단계",
+      "about.step1.name": "기획",
+      "about.step1.desc": "아이디어를 서비스 구조로 정리합니다.",
+      "about.step2.name": "UX 설계",
+      "about.step2.desc": "사용자가 헷갈리지 않는 흐름을 구성합니다.",
+      "about.step3.name": "UI 개발",
+      "about.step3.desc": "브랜드에 맞는 화면과 인터랙션을 구현합니다.",
+      "about.step4.name": "개선",
+      "about.step4.desc": "실제 사용성을 기준으로 계속 다듬습니다.",
 
       "philosophy.label": "Philosophy",
       "philosophy.title": "Design Principles",
       "philosophy.big":
-        "Lunervia는 화려한 기능보다, 사용자가 명확하게 이해하고 안정적으로 사용할 수 있는 제품을 우선합니다.",
+        "Lunervia는 감각적인 화면보다 오래 쓰이는 경험을 먼저 설계합니다.",
       "philosophy.card1.name": "User-centered design",
-      "philosophy.card1": "사용자가 실제 마주하는 맥락에서 의사결정을 시작합니다.",
+      "philosophy.card1": "사용자가 이해하기 쉬운 흐름을 먼저 설계합니다.",
       "philosophy.card2.name": "Reliable services",
-      "philosophy.card2": "기능의 화려함보다 안정성과 일관된 사용 경험을 우선합니다.",
+      "philosophy.card2": "보기 좋은 화면뿐 아니라 실제로 안정적으로 작동하는 서비스를 만듭니다.",
       "philosophy.card3.name": "Clear & practical",
-      "philosophy.card3": "복잡한 구조 대신 사용자가 바로 이해할 수 있는 설계를 지향합니다.",
+      "philosophy.card3": "복잡한 기능보다 명확하고 필요한 경험을 우선합니다.",
+      "philosophy.card4.name": "Maintainable structure",
+      "philosophy.card4": "나중에 수정하고 확장하기 쉬운 구조를 고려합니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
 
       "showcase.label": "Showcase",
@@ -423,17 +384,27 @@
       "showcase.type.client": "Client · Company",
       "showcase.type.work": "Lunervia Work · 자체 작품",
       "showcase.type.partner": "Partner · Creator",
+      "showcase.label.lab": "실험 공간",
+      "showcase.type.lab": "Lunervia Lab · 작은 실험들",
       "showcase.smbest.desc":
         "루네르비아가 함께할 예정인 주요 기업 파트너입니다.",
       "showcase.badajwo.desc":
-        "손편지의 감성을 웹으로 옮긴 루네르비아의 자체 디지털 편지 서비스입니다.",
+        "익명 또는 이름으로 마음을 전할 수 있는 루네르비아의 자체 디지털 편지 서비스입니다.",
+      "showcase.badajwo.status": "운영 중",
+      "showcase.badajwo.role": "기획 · UX 구조 · UI 방향 · 프론트엔드",
       "showcase.todak.desc":
         "앱 제작 과정과 기록을 영상으로 공유하는 크리에이터 채널입니다.",
+      "showcase.lab.desc":
+        "작은 웹서비스 아이디어를 실험하고 정리하는 공간입니다.",
+      "showcase.lab.status": "준비 중",
+      "showcase.lab.role": "서비스 실험 · UI 연구 · 프로토타입",
 
       "contact.label": "Contact",
       "contact.title": "문의하기",
       "contact.lead":
-        "협업, 문의, 제안이 있다면 아래 채널을 통해 연락해 주세요. Instagram DM을 가장 빠르게 확인합니다.",
+        "프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작, 랜딩페이지 개선, 브랜드 사이트 구성, UI/UX 정리에 관한 문의를 편하게 보내주세요.",
+      "contact.cta.instagram": "Instagram으로 문의하기",
+      "contact.cta.propose": "프로젝트 제안하기",
       "contact.official.label": "Official Instagram",
       "contact.official.meta": "브랜드 소식 및 협업 문의",
       "contact.personal.label": "Personal Instagram",
@@ -502,30 +473,56 @@
       "back.toMain": "Back to main",
       "back.toMainLong": "Back to main page",
 
-      "hero.eyebrow": "Welcome to Lunervia",
-      "hero.title": "Welcome to Lunervia.",
-      "hero.sub": "Lunervia is a software brand designing web and mobile services around user experience.",
-      "hero.cta.brand": "Explore the brand",
+      "hero.eyebrow": "Lunervia Software Studio",
+      "hero.title": "We design user experience<br />and build web services that work.",
+      "hero.sub": "Lunervia is a software brand that turns small ideas into working services — designing clear flows and reliable interfaces people can actually use.",
+      "hero.cta.projects": "View projects",
       "hero.cta.contact": "Contact us",
 
+      "projects.label": "Projects",
+      "projects.title": "Projects & Works",
+      "projects.subtitle": "주요 프로젝트 및 협력",
+      "projects.lead":
+        "We turn small ideas into services that actually work — projects Lunervia builds, partners with, and experiments on.",
+
+      "trust.title": "What Lunervia cares about",
+      "trust.lead":
+        "A good site doesn't end at a good-looking screen. It should be easy to understand, actually work, and stay easy to refine over time.",
+      "trust.card1.name": "Flows that make sense",
+      "trust.card1.desc": "We design the structure and paths first, so users never get lost.",
+      "trust.card2.name": "Implementation that works",
+      "trust.card2.desc": "Not just mockups — we build web services ready to ship.",
+      "trust.card3.name": "Structure built to last",
+      "trust.card3.desc": "We build with a structure that stays easy to extend and adjust.",
+
       "about.label": "About",
-      "about.title": "A software brand built around user experience",
+      "about.title": "A small software studio turning ideas into real services",
       "about.lead":
-        "Lunervia designs clear and reliable digital products across the web and mobile environments people use every day. We build through small experiments and steady improvements.",
+        "From planning and interface design to front-end development and flow refinement — we care about the whole process that makes a service actually work.",
       "about.focusLabel": "Focus",
       "about.focusValue": "Web · Mobile · UX design",
       "about.stageValue": "Growing",
+      "about.step1.name": "Plan",
+      "about.step1.desc": "We shape ideas into a service structure.",
+      "about.step2.name": "UX design",
+      "about.step2.desc": "We design flows that never confuse the user.",
+      "about.step3.name": "UI build",
+      "about.step3.desc": "We build screens and interactions that fit the brand.",
+      "about.step4.name": "Refine",
+      "about.step4.desc": "We keep polishing based on real usability.",
 
       "philosophy.label": "Philosophy",
       "philosophy.title": "Design Principles",
       "philosophy.big":
-        "Lunervia prioritises products that users can understand clearly and rely on consistently — over flashy features.",
+        "Lunervia designs experiences that last, before screens that merely impress.",
       "philosophy.card1.name": "User-centered design",
-      "philosophy.card1": "Decisions start from the real context a user is facing.",
+      "philosophy.card1": "We design flows users can understand first.",
       "philosophy.card2.name": "Reliable services",
-      "philosophy.card2": "We prioritise stability and a consistent experience over flashy features.",
+      "philosophy.card2": "Not just good-looking screens — services that actually run reliably.",
       "philosophy.card3.name": "Clear & practical",
-      "philosophy.card3": "We design for immediate understanding rather than complex structures.",
+      "philosophy.card3": "Clear, necessary experiences over complex features.",
+      "philosophy.card4.name": "Maintainable structure",
+      "philosophy.card4": "We consider structures that stay easy to modify and extend later.",
       "philosophy.cta": "Read more about Lunervia",
 
       "showcase.label": "Showcase",
@@ -540,17 +537,27 @@
       "showcase.type.client": "Client / Company",
       "showcase.type.work": "Lunervia Work / Original Web Service",
       "showcase.type.partner": "Partner / Creator",
+      "showcase.label.lab": "Lab",
+      "showcase.type.lab": "Lunervia Lab · Small experiments",
       "showcase.smbest.desc":
         "A major corporate partner we are preparing to work with.",
       "showcase.badajwo.desc":
-        "Badajwo — Lunervia's own digital letter service that carries the warmth of handwritten letters into the web.",
+        "Badajwo — Lunervia's own digital letter service for sending your heart, anonymously or by name.",
+      "showcase.badajwo.status": "Live",
+      "showcase.badajwo.role": "Planning · UX structure · UI direction · Front-end",
       "showcase.todak.desc":
         "A creator channel sharing the process and journey of building apps through video.",
+      "showcase.lab.desc":
+        "A space for experimenting with and shaping small web service ideas.",
+      "showcase.lab.status": "In preparation",
+      "showcase.lab.role": "Service experiments · UI research · Prototypes",
 
       "contact.label": "Contact",
       "contact.title": "Contact",
       "contact.lead":
-        "For collaboration, enquiries, or proposals, please reach out through the channels below. Instagram DM is the fastest way to reach us.",
+        "Project enquiries are checked fastest through Instagram DM. Feel free to reach out about building a web service, improving a landing page, structuring a brand site, or refining UI/UX.",
+      "contact.cta.instagram": "Contact via Instagram",
+      "contact.cta.propose": "Propose a project",
       "contact.official.label": "Official Instagram",
       "contact.official.meta": "Brand news and collaboration enquiries.",
       "contact.personal.label": "Personal Instagram",
@@ -665,6 +672,9 @@
       imageAlt: "받아줘 — Lunervia Work",
       imageStyle: "icon-rounded",
       href: "https://takemyletter.site",
+      statusKey: "showcase.badajwo.status",
+      statusSuffix: "takemyletter.site",
+      roleKey: "showcase.badajwo.role",
     },
     {
       id: "todak",
@@ -676,6 +686,18 @@
       imageAlt: "Todak Life",
       href: "https://www.youtube.com/@Todak_Life",
       instagram: "@todaklife",
+    },
+    {
+      id: "lab",
+      name: "Lunervia Lab",
+      typeKey: "showcase.type.lab",
+      labelKey: "showcase.label.lab",
+      descKey: "showcase.lab.desc",
+      avatarType: "pixel-lab",
+      imageAlt: "Lunervia Lab",
+      href: null,
+      statusKey: "showcase.lab.status",
+      roleKey: "showcase.lab.role",
     },
   ];
 
@@ -705,16 +727,40 @@
           `<path d="M16 70 C16 56 26 48 40 48 C54 48 64 56 64 70 Z" fill="#8A8378" opacity="0.55" />` +
         `</svg>` +
         `</div>`;
+    } else if (item.avatarType === "pixel-lab") {
+      // 픽셀 플라스크 — 히어로 픽셀 개발실과 같은 톤의 미니 일러스트
+      mediaHtml = `<div class="showcase-card-media is-pixel" role="img" aria-label="${escapeHtml(item.imageAlt || item.name)}">` +
+        `<svg viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">` +
+          `<rect x="4" y="0" width="4" height="1" fill="#D8CFC0" />` +
+          `<rect x="5" y="1" width="2" height="3" fill="#E5DCC8" />` +
+          `<rect x="4" y="4" width="4" height="1" fill="#E5DCC8" />` +
+          `<rect x="3" y="5" width="6" height="1" fill="#E5DCC8" />` +
+          `<rect x="2" y="6" width="8" height="5" fill="#E5DCC8" />` +
+          `<rect x="3" y="7" width="6" height="3" fill="#F2A9C4" />` +
+          `<rect x="5" y="8" width="1" height="1" fill="#F9D9E5" />` +
+          `<rect x="7" y="7" width="1" height="1" fill="#F9D9E5" />` +
+          `<rect x="10" y="2" width="1" height="1" fill="#E8B07B" />` +
+          `<rect x="1" y="3" width="1" height="1" fill="#F2A9C4" />` +
+        `</svg>` +
+        `</div>`;
     }
 
     let metaHtml = "";
-    if (item.comingSoon) {
+    if (item.statusKey) {
+      const suffix = item.statusSuffix ? ` · ${escapeHtml(item.statusSuffix)}` : "";
+      metaHtml = `<p class="showcase-card-meta"><span data-i18n="${escapeHtml(item.statusKey)}"></span>${suffix}</p>`;
+    } else if (item.comingSoon) {
       metaHtml = `<p class="showcase-card-meta"><span data-i18n="showcase.comingSoon">Coming soon</span></p>`;
     } else if (item.instagram) {
       metaHtml = `<p class="showcase-card-meta">Instagram · ${escapeHtml(item.instagram)}</p>`;
     }
 
     const arrowHtml = item.href ? '<span class="showcase-card-arrow" aria-hidden="true">↗</span>' : "";
+
+    // 담당 역할 — 포트폴리오 카드의 신뢰 정보 (있는 항목만)
+    const roleHtml = item.roleKey
+      ? `<p class="showcase-card-role" data-i18n="${escapeHtml(item.roleKey)}"></p>`
+      : "";
 
     const body =
       mediaHtml +
@@ -723,6 +769,7 @@
         `<h3 class="showcase-card-name">${escapeHtml(item.name)}</h3>` +
         `<p class="showcase-card-type" data-i18n="${escapeHtml(item.typeKey)}"></p>` +
         `<p class="showcase-card-desc" data-i18n="${escapeHtml(item.descKey)}"></p>` +
+        roleHtml +
         metaHtml +
       `</div>` +
       arrowHtml;

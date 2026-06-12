@@ -12,6 +12,25 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-12 — 포트폴리오형 브랜드 사이트 개편 (히어로 대시보드 + Projects 마키 복귀)
+
+고객 신뢰·포트폴리오 설득력·문의 전환을 높이는 방향으로 메인 페이지 전면 개편. 8비트 고양이/픽셀 캐릭터는 이번 작업에서 제외 (나중에 별도 작업으로 추가 예정).
+
+- **Hero 좌측 카피 교체**: eyebrow `Lunervia Software Studio`, h1 `사용자 경험을 설계하고,<br/>작동하는 웹서비스를 만듭니다.` (data-i18n-html, keep-all 줄바꿈), 서브 카피·CTA 2개(`프로젝트 보기` → `#projects` / `문의하기` → `#contact`), 신뢰 태그 칩 5개 (UX Design / Web Service / Frontend / Product Planning / Brand Experience).
+- **Hero 우측 — 터미널 창 제거 → 서비스 제작 대시보드** (`.dashboard-preview`, aria-hidden 장식): 브라우저 바(`lunervia.studio — service build`) + Build Process 5단계 (Plan/UX Flow/UI Design/Frontend/Launch, Done·In progress·Next·Ready 상태 + 진행률 바) + Checklist/Focus 카드 + `Ready to build` 상태 배지(세이지 그린 펄스 도트). 장식 텍스트라 i18n 비대상. 기존 터미널 타이핑 JS 모듈(#5) 통째 제거.
+- **TRUST 섹션 신설** (히어로 바로 아래, 번호 없음): `Lunervia가 중요하게 보는 것` + 카드 3개 (이해하기 쉬운 흐름 / 실제로 작동하는 구현 / 오래 다듬을 수 있는 구조). `--bg-soft` 배경 밴드.
+- **01 / Projects 섹션 신설**: Showcase 마키를 메인에도 복귀 (`#projects`, partners.html 은 그대로 유지 — 같은 `renderShowcase()` 가 `#showcase-track` 만 있으면 채움). 섹션 번호 재조정: Projects 01 / About 02 / Philosophy 03 / Contact 04.
+- **SHOWCASE 배열 확장**: `Lunervia Lab` 카드 추가 (픽셀 플라스크 SVG 미디어 `is-pixel`, 상태 `준비 중`, 역할 `서비스 실험 · UI 연구 · 프로토타입`). 받아줘 카드에 상태(`운영 중 · takemyletter.site`)+역할(`기획 · UX 구조 · UI 방향 · 프론트엔드`) 추가. 렌더러에 `statusKey`/`statusSuffix`/`roleKey` 지원 + `.showcase-card-role` 스타일.
+- **About 개선**: 타이틀 `아이디어를 실제 서비스로 만드는 작은 소프트웨어 스튜디오`, 4단계 카드 (`.about-steps` — 기획/UX 설계/UI 개발/개선, 미니 픽셀 아이콘, 데스크톱 4열·태블릿 2열·모바일 1열).
+- **Philosophy**: 빅 인용구 `감각적인 화면보다 오래 쓰이는 경험을 먼저 설계합니다.` + 카드 4개로 확장 (Maintainable structure 추가, 2x2 그리드). 카드 설명 전부 새 문구.
+- **Contact**: 리드 `프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작/랜딩페이지 개선/브랜드 사이트 구성/UI/UX 정리…` + CTA 버튼 2개 (`Instagram으로 문의하기` → @lunerviasoft / `프로젝트 제안하기` → @dksrlqor).
+- **토큰 추가**: `--px-*` 픽셀 팔레트(크림/브라운/핑크/오렌지 — about 아이콘·향후 픽셀 작업용), `--ok/--ok-soft/--ok-line` (세이지 그린), `--cream-shadow`.
+- **가독성/반응형**: `.hero-title/.section-title/.section-lead` `word-break: keep-all`, hero 타이틀 클램프 2.05–3.3rem. 360px 가로 스크롤 없음 확인. ≤960 히어로 스택(텍스트 먼저) + 대시보드 max-width 560 중앙. ≤480 대시보드 1열 + 사이드 카드 가로 랩.
+- **접근성**: 대시보드 전체 aria-hidden, h1 1개 유지, 마키 클론 `aria-hidden + data-clone` 그대로, reduced-motion 에서 `statusPulse` 등 전부 정지 (전역 규칙).
+- i18n 신규/갱신 키: `hero.*`(title 은 html 키), `projects.*`, `trust.*`, `about.step1~4.*`, `philosophy.card4*`, `contact.cta.instagram/propose`, `showcase.lab.*`, `showcase.badajwo.status/role` — KO/EN 양쪽. `hero.cta.brand` 제거.
+- sitemap lastmod 갱신 (/ 와 partners.html → 2026-06-12). 캐시 버스팅 `?v=20260612a` (index/partners/sns/why 일괄).
+- 검증: 로컬 서버 + 360px/744px 뷰포트, 콘솔 에러 0, KO/EN 토글, CTA 앵커, 마키 클론 8장(원본4+클론4), partners.html Lab 카드 포함 정상.
+
 ## 2026-06-03 — 로고 클릭 강제 reload + 새로고침 시 메인 hero 진입
 
 브라우저 새로고침과 브랜드 로고 클릭 동작을 사용자 의도대로 통일.

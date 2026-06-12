@@ -78,7 +78,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260603c" />
+    <link rel="stylesheet" href="styles.css?v=20260612a" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -93,7 +93,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260603c"
+              src="assets/brand/lunervia-logo-text.png?v=20260612a"
               alt="LUNERVIA"
             />
           </span>
@@ -163,14 +163,14 @@
       <section class="hero" id="hero">
         <div class="hero-inner">
           <div class="hero-copy reveal">
-            <p class="eyebrow" data-i18n="hero.eyebrow">Welcome to Lunervia</p>
-            <h1 class="hero-title" data-i18n="hero.title">루네르비아에 오신 것을 환영합니다</h1>
+            <p class="eyebrow" data-i18n="hero.eyebrow">Lunervia Software Studio</p>
+            <h1 class="hero-title" data-i18n-html="hero.title">사용자 경험을 설계하고,<br />작동하는 웹서비스를 만듭니다.</h1>
             <p class="hero-sub" data-i18n="hero.sub">
-              Lunervia는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드입니다.
+              Lunervia는 작은 아이디어를 실제 서비스로 구현하고, 사용자가 이해하기 쉬운 흐름과 안정적인 인터페이스를 설계하는 소프트웨어 브랜드입니다.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary btn-icon" href="#about">
-                <span data-i18n="hero.cta.brand">브랜드 살펴보기</span>
+              <a class="btn btn-primary btn-icon" href="#projects">
+                <span data-i18n="hero.cta.projects">프로젝트 보기</span>
                 <span class="btn-arrow" aria-hidden="true">→</span>
               </a>
               <a class="btn btn-secondary" href="#contact" data-i18n="hero.cta.contact">문의하기</a>
@@ -178,33 +178,141 @@
 
             <!-- 브랜드 키워드 칩 -->
             <ul class="brand-chips" aria-label="brand keywords" role="list">
-              <li>Software</li>
-              <li>UX</li>
-              <li>Web</li>
-              <li>Mobile</li>
-              <li>Letters</li>
-              <li>Translation</li>
+              <li>UX Design</li>
+              <li>Web Service</li>
+              <li>Frontend</li>
+              <li>Product Planning</li>
+              <li>Brand Experience</li>
             </ul>
           </div>
 
-          <!-- Hero 터미널 창 (코딩 스튜디오 분위기) -->
-          <div class="hero-code reveal" aria-hidden="true">
-            <div class="codewin">
-              <div class="codewin-bar">
-                <span class="codewin-dot codewin-dot-red"></span>
-                <span class="codewin-dot codewin-dot-yellow"></span>
-                <span class="codewin-dot codewin-dot-green"></span>
-                <span class="codewin-title">lunervia — zsh</span>
+          <!-- Hero 우측 — 서비스 제작 대시보드 (장식 비주얼, 전부 aria-hidden) -->
+          <div class="hero-visual reveal" aria-hidden="true">
+            <div class="dashboard-preview">
+              <div class="dash-bar">
+                <span class="dash-dot"></span>
+                <span class="dash-dot"></span>
+                <span class="dash-dot"></span>
+                <span class="dash-url">lunervia.studio — service build</span>
               </div>
-              <div class="codewin-body">
-                <p class="codewin-line">
-                  <span class="term-prompt">➜</span>
-                  <span class="term-dir">~</span>
-                  <span class="typed-text" id="typed">안녕하세요!</span><span class="caret" aria-hidden="true"></span>
-                </p>
+
+              <div class="dash-body">
+                <!-- 좌측: 제작 프로세스 -->
+                <div class="dash-main">
+                  <p class="dash-label">Build Process</p>
+                  <ul class="dash-steps">
+                    <li class="dash-step is-done">
+                      <span class="dash-step-check">✓</span>
+                      <span class="dash-step-text">
+                        <span class="dash-step-name">Plan</span>
+                        <span class="dash-step-meta">서비스 구조 정리</span>
+                      </span>
+                      <span class="dash-step-state">Done</span>
+                    </li>
+                    <li class="dash-step is-done">
+                      <span class="dash-step-check">✓</span>
+                      <span class="dash-step-text">
+                        <span class="dash-step-name">UX Flow</span>
+                        <span class="dash-step-meta">사용자 동선 설계</span>
+                      </span>
+                      <span class="dash-step-state">Done</span>
+                    </li>
+                    <li class="dash-step is-active">
+                      <span class="dash-step-check"></span>
+                      <span class="dash-step-text">
+                        <span class="dash-step-name">UI Design</span>
+                        <span class="dash-step-meta">화면 · 인터랙션</span>
+                        <span class="dash-progress"><span class="dash-progress-fill"></span></span>
+                      </span>
+                      <span class="dash-step-state">In&nbsp;progress</span>
+                    </li>
+                    <li class="dash-step">
+                      <span class="dash-step-check"></span>
+                      <span class="dash-step-text">
+                        <span class="dash-step-name">Frontend</span>
+                        <span class="dash-step-meta">구현 · 반응형</span>
+                      </span>
+                      <span class="dash-step-state">Next</span>
+                    </li>
+                    <li class="dash-step">
+                      <span class="dash-step-check"></span>
+                      <span class="dash-step-text">
+                        <span class="dash-step-name">Launch</span>
+                        <span class="dash-step-meta">배포 · 개선</span>
+                      </span>
+                      <span class="dash-step-state">Ready</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- 우측: 체크리스트 + 상태 배지 -->
+                <div class="dash-side">
+                  <div class="dash-card">
+                    <p class="dash-label">Checklist</p>
+                    <ul class="dash-check">
+                      <li>Clear user flow</li>
+                      <li>Responsive UI</li>
+                      <li>Stable build</li>
+                    </ul>
+                  </div>
+                  <div class="dash-card">
+                    <p class="dash-label">Focus</p>
+                    <ul class="dash-check dash-check-plain">
+                      <li>UX first</li>
+                      <li>Long-term quality</li>
+                    </ul>
+                  </div>
+                  <p class="dash-status">
+                    <span class="dash-status-dot"></span>
+                    Ready to build
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- ====================== TRUST — Lunervia가 중요하게 보는 것 ====================== -->
+      <section class="section section-trust" aria-labelledby="trust-title">
+        <div class="section-inner">
+          <h2 class="trust-title reveal" id="trust-title" data-i18n="trust.title">Lunervia가 중요하게 보는 것</h2>
+          <p class="trust-lead reveal" data-i18n="trust.lead">
+            좋은 사이트는 보기 좋은 화면에서 끝나지 않습니다. 사용자가 이해하고, 실제로 작동하며, 오래 다듬을 수 있어야 합니다.
+          </p>
+          <ul class="trust-grid reveal" role="list">
+            <li class="trust-card">
+              <h3 class="trust-card-name" data-i18n="trust.card1.name">이해하기 쉬운 흐름</h3>
+              <p class="trust-card-desc" data-i18n="trust.card1.desc">사용자가 길을 잃지 않도록 화면 구조와 동선을 먼저 설계합니다.</p>
+            </li>
+            <li class="trust-card">
+              <h3 class="trust-card-name" data-i18n="trust.card2.name">실제로 작동하는 구현</h3>
+              <p class="trust-card-desc" data-i18n="trust.card2.desc">보기 좋은 화면에서 끝나지 않고, 배포 가능한 형태의 웹서비스를 만듭니다.</p>
+            </li>
+            <li class="trust-card">
+              <h3 class="trust-card-name" data-i18n="trust.card3.name">오래 다듬을 수 있는 구조</h3>
+              <p class="trust-card-desc" data-i18n="trust.card3.desc">기능을 추가하고 수정하기 쉬운 구조를 고려해 제작합니다.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ====================== 01 / PROJECTS — 주요 프로젝트 및 협력 ====================== -->
+      <section class="section section-showcase section-projects" id="projects">
+        <div class="section-inner">
+          <p class="section-label reveal">
+            <span class="section-label-num">01</span>
+            <span class="section-label-sep" aria-hidden="true">/</span>
+            <span data-i18n="projects.label">Projects</span>
+          </p>
+          <h2 class="section-title reveal" data-i18n="projects.title">주요 프로젝트 및 협력</h2>
+          <p class="section-subtitle-en reveal" data-i18n="projects.subtitle">Projects &amp; Works</p>
+          <p class="section-lead reveal" data-i18n="projects.lead">
+            작은 아이디어를 실제로 작동하는 서비스로 만듭니다. Lunervia가 직접 만들고, 함께하고, 실험하는 프로젝트들입니다.
+          </p>
+        </div>
+        <div class="showcase-marquee reveal" role="region" aria-label="Lunervia 주요 프로젝트 및 협력">
+          <ul class="showcase-track" id="showcase-track" role="list"></ul>
         </div>
       </section>
 
@@ -212,13 +320,13 @@
       <section class="section section-about" id="about">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">01</span>
+            <span class="section-label-num">02</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="about.label">About</span>
           </p>
-          <h2 class="section-title reveal" data-i18n="about.title">사용자 경험 중심의 소프트웨어 브랜드</h2>
+          <h2 class="section-title reveal" data-i18n="about.title">아이디어를 실제 서비스로 만드는 작은 소프트웨어 스튜디오</h2>
           <p class="section-lead reveal" data-i18n="about.lead">
-            Lunervia는 사용자가 매일 마주하는 웹과 모바일 환경에서, 명확하고 안정적인 디지털 제품을 설계합니다. 작은 실험과 개선을 반복하며 완성도 있는 서비스를 만들어가고 있습니다.
+            기획, 화면 설계, 프론트엔드 구현, 사용자 흐름 개선까지 — 하나의 서비스가 실제로 작동하도록 만드는 과정을 중요하게 생각합니다.
           </p>
 
           <ul class="about-meta reveal" role="list">
@@ -239,6 +347,63 @@
               <p class="about-meta-value" data-i18n="about.stageValue">성장 단계</p>
             </li>
           </ul>
+
+          <!-- Lunervia가 하는 일 — 4단계 카드 -->
+          <ul class="about-steps reveal" role="list">
+            <li class="about-step">
+              <span class="about-step-icon" aria-hidden="true">
+                <svg viewBox="0 0 12 12" shape-rendering="crispEdges" focusable="false">
+                  <rect x="2" y="1" width="8" height="10" fill="var(--px-paper)" />
+                  <rect x="4" y="3" width="4" height="1" fill="var(--accent)" />
+                  <rect x="4" y="5" width="4" height="1" fill="var(--px-pink)" />
+                  <rect x="4" y="7" width="3" height="1" fill="var(--accent)" />
+                </svg>
+              </span>
+              <p class="about-step-num">01</p>
+              <h3 class="about-step-name" data-i18n="about.step1.name">기획</h3>
+              <p class="about-step-desc" data-i18n="about.step1.desc">아이디어를 서비스 구조로 정리합니다.</p>
+            </li>
+            <li class="about-step">
+              <span class="about-step-icon" aria-hidden="true">
+                <svg viewBox="0 0 12 12" shape-rendering="crispEdges" focusable="false">
+                  <rect x="1" y="2" width="4" height="3" fill="var(--px-orange)" />
+                  <rect x="5" y="3" width="4" height="1" fill="var(--px-brown)" />
+                  <rect x="8" y="4" width="1" height="3" fill="var(--px-brown)" />
+                  <rect x="7" y="7" width="4" height="3" fill="var(--px-pink)" />
+                </svg>
+              </span>
+              <p class="about-step-num">02</p>
+              <h3 class="about-step-name" data-i18n="about.step2.name">UX 설계</h3>
+              <p class="about-step-desc" data-i18n="about.step2.desc">사용자가 헷갈리지 않는 흐름을 구성합니다.</p>
+            </li>
+            <li class="about-step">
+              <span class="about-step-icon" aria-hidden="true">
+                <svg viewBox="0 0 12 12" shape-rendering="crispEdges" focusable="false">
+                  <rect x="1" y="2" width="10" height="7" fill="var(--px-screen)" />
+                  <rect x="2" y="4" width="5" height="1" fill="var(--px-green)" />
+                  <rect x="2" y="6" width="4" height="1" fill="var(--px-pink)" />
+                  <rect x="5" y="9" width="2" height="1" fill="var(--px-brown)" />
+                  <rect x="4" y="10" width="4" height="1" fill="var(--px-brown)" />
+                </svg>
+              </span>
+              <p class="about-step-num">03</p>
+              <h3 class="about-step-name" data-i18n="about.step3.name">UI 개발</h3>
+              <p class="about-step-desc" data-i18n="about.step3.desc">브랜드에 맞는 화면과 인터랙션을 구현합니다.</p>
+            </li>
+            <li class="about-step">
+              <span class="about-step-icon" aria-hidden="true">
+                <svg viewBox="0 0 12 12" shape-rendering="crispEdges" focusable="false">
+                  <rect x="2" y="8" width="2" height="3" fill="var(--px-orange)" />
+                  <rect x="5" y="6" width="2" height="5" fill="var(--px-pink)" />
+                  <rect x="8" y="3" width="2" height="8" fill="var(--accent)" />
+                  <rect x="10" y="1" width="1" height="1" fill="var(--px-pink)" />
+                </svg>
+              </span>
+              <p class="about-step-num">04</p>
+              <h3 class="about-step-name" data-i18n="about.step4.name">개선</h3>
+              <p class="about-step-desc" data-i18n="about.step4.desc">실제 사용성을 기준으로 계속 다듬습니다.</p>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -246,31 +411,36 @@
       <section class="section section-philosophy" id="philosophy">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">02</span>
+            <span class="section-label-num">03</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="philosophy.label">Philosophy</span>
           </p>
           <h2 class="section-title reveal" data-i18n="philosophy.title">Design Principles</h2>
 
           <blockquote class="philosophy-big reveal" data-i18n="philosophy.big">
-            Lunervia는 화려한 기능보다, 사용자가 명확하게 이해하고 안정적으로 사용할 수 있는 제품을 우선합니다.
+            Lunervia는 감각적인 화면보다 오래 쓰이는 경험을 먼저 설계합니다.
           </blockquote>
 
           <ul class="manifesto-grid reveal" role="list">
             <li class="manifesto-card">
               <p class="manifesto-num">01</p>
               <h3 class="manifesto-name" data-i18n="philosophy.card1.name">User-centered design</h3>
-              <p class="manifesto-desc" data-i18n="philosophy.card1">사용자가 실제 마주하는 맥락에서 의사결정을 시작합니다.</p>
+              <p class="manifesto-desc" data-i18n="philosophy.card1">사용자가 이해하기 쉬운 흐름을 먼저 설계합니다.</p>
             </li>
             <li class="manifesto-card">
               <p class="manifesto-num">02</p>
               <h3 class="manifesto-name" data-i18n="philosophy.card2.name">Reliable services</h3>
-              <p class="manifesto-desc" data-i18n="philosophy.card2">기능의 화려함보다 안정성과 일관된 사용 경험을 우선합니다.</p>
+              <p class="manifesto-desc" data-i18n="philosophy.card2">보기 좋은 화면뿐 아니라 실제로 안정적으로 작동하는 서비스를 만듭니다.</p>
             </li>
             <li class="manifesto-card">
               <p class="manifesto-num">03</p>
               <h3 class="manifesto-name" data-i18n="philosophy.card3.name">Clear & practical</h3>
-              <p class="manifesto-desc" data-i18n="philosophy.card3">복잡한 구조 대신 사용자가 바로 이해할 수 있는 설계를 지향합니다.</p>
+              <p class="manifesto-desc" data-i18n="philosophy.card3">복잡한 기능보다 명확하고 필요한 경험을 우선합니다.</p>
+            </li>
+            <li class="manifesto-card">
+              <p class="manifesto-num">04</p>
+              <h3 class="manifesto-name" data-i18n="philosophy.card4.name">Maintainable structure</h3>
+              <p class="manifesto-desc" data-i18n="philosophy.card4">나중에 수정하고 확장하기 쉬운 구조를 고려합니다.</p>
             </li>
           </ul>
 
@@ -283,20 +453,31 @@
         </div>
       </section>
 
-      <!-- 03 / Showcase 섹션은 별도 페이지(`partners.html`)로 분리됨 — 상단 네비 '협력' 클릭 시 새 탭으로 열림 -->
+      <!-- 전체 Showcase 마키 페이지(`partners.html`)는 상단 네비 '협력'에서 새 탭으로 열림 -->
 
       <!-- ============================== CONTACT ============================== -->
       <section class="section section-contact" id="contact">
         <div class="section-inner">
           <p class="section-label reveal">
-            <span class="section-label-num">03</span>
+            <span class="section-label-num">04</span>
             <span class="section-label-sep" aria-hidden="true">/</span>
             <span data-i18n="contact.label">Contact</span>
           </p>
           <h2 class="section-title reveal" data-i18n="contact.title">문의하기</h2>
           <p class="section-lead reveal" data-i18n="contact.lead">
-            협업, 문의, 제안이 있다면 아래 채널을 통해 연락해 주세요. Instagram DM을 가장 빠르게 확인합니다.
+            프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작, 랜딩페이지 개선, 브랜드 사이트 구성, UI/UX 정리에 관한 문의를 편하게 보내주세요.
           </p>
+
+          <div class="contact-actions reveal">
+            <a class="btn btn-primary btn-icon" href="https://www.instagram.com/lunerviasoft/" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="contact.cta.instagram">Instagram으로 문의하기</span>
+              <span class="btn-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="btn btn-secondary btn-icon" href="https://www.instagram.com/dksrlqor/" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="contact.cta.propose">프로젝트 제안하기</span>
+              <span class="btn-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
 
           <div class="contact-grid contact-grid-4 reveal">
             <a class="contact-card contact-card-instagram" href="https://www.instagram.com/lunerviasoft/" target="_blank" rel="noopener noreferrer">
@@ -351,7 +532,7 @@
           <a class="footer-brand" href="index.html" aria-label="Lunervia 메인으로 (새로고침)">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260603c"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260612a"
               alt="LUNERVIA"
               hidden
             />
@@ -450,6 +631,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260603c"></script>
+    <script src="script.js?v=20260612a"></script>
   </body>
 </html>
