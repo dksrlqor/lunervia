@@ -78,7 +78,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260612c" />
+    <link rel="stylesheet" href="styles.css?v=20260612d" />
   </head>
   <body>
     <!-- 스크롤 진행률 (상단 얇은 바) -->
@@ -93,7 +93,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260612c"
+              src="assets/brand/lunervia-logo-text.png?v=20260612d"
               alt="LUNERVIA"
             />
           </span>
@@ -448,22 +448,151 @@
             rel="noopener noreferrer"
             aria-label="Take My Letter (받아줘) 편지 서비스 새 탭으로 열기"
           >
-            <span class="tml-decor" aria-hidden="true">
+            <!-- 8비트 픽셀 풍경 — 하늘 · 해 · 구름 · 땅 · 나무 · 편지 (장식) -->
+            <span class="tml-scene" aria-hidden="true">
+              <!-- 해 -->
+              <svg class="tml-sun" viewBox="0 0 20 20" shape-rendering="crispEdges" focusable="false">
+                <rect x="9" y="0" width="2" height="2" fill="#F6C453"/>
+                <rect x="0" y="9" width="2" height="2" fill="#F6C453"/>
+                <rect x="18" y="9" width="2" height="2" fill="#F6C453"/>
+                <rect x="9" y="18" width="2" height="2" fill="#F6C453"/>
+                <rect x="7" y="3" width="6" height="2" fill="#F6C453"/>
+                <rect x="5" y="5" width="10" height="2" fill="#F6C453"/>
+                <rect x="3" y="7" width="14" height="6" fill="#F6C453"/>
+                <rect x="5" y="13" width="10" height="2" fill="#F6C453"/>
+                <rect x="7" y="15" width="6" height="2" fill="#F6C453"/>
+                <rect x="7" y="6" width="5" height="5" fill="#FBD888"/>
+              </svg>
+
+              <!-- 구름 -->
+              <svg class="tml-cloud tml-cloud-1" viewBox="0 0 24 12" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="2" width="8" height="4" fill="#FFFDF8"/>
+                <rect x="11" y="0" width="9" height="4" fill="#FFFDF8"/>
+                <rect x="2" y="5" width="20" height="5" fill="#FFFDF8"/>
+                <rect x="2" y="9" width="20" height="1" fill="#F1E4D7"/>
+              </svg>
+              <svg class="tml-cloud tml-cloud-2" viewBox="0 0 24 12" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="2" width="8" height="4" fill="#FFFDF8"/>
+                <rect x="11" y="0" width="9" height="4" fill="#FFFDF8"/>
+                <rect x="2" y="5" width="20" height="5" fill="#FFFDF8"/>
+                <rect x="2" y="9" width="20" height="1" fill="#F1E4D7"/>
+              </svg>
+
+              <!-- 떠다니는 픽셀 하트 -->
               <span class="tml-heart tml-heart-1">♥</span>
               <span class="tml-heart tml-heart-2">♥</span>
-              <span class="tml-heart tml-heart-3">♥</span>
-            </span>
 
-            <span class="tml-media" aria-hidden="true">
-              <img
-                class="tml-media-img"
-                src="assets/brand/work-badajwo.png?v=20260612c"
-                alt=""
-                width="160"
-                height="160"
-                loading="lazy"
-                decoding="async"
-              />
+              <!-- 날아가는 편지 봉투 -->
+              <svg class="tml-envelope" viewBox="0 0 18 13" shape-rendering="crispEdges" focusable="false">
+                <rect x="1" y="2" width="16" height="10" fill="#FFFDF6"/>
+                <rect x="1" y="11" width="16" height="1" fill="#E3CDB8"/>
+                <rect x="1" y="2" width="16" height="2" fill="#F6CFDD"/>
+                <rect x="1" y="4" width="8" height="1" fill="#DC9DB6"/>
+                <rect x="9" y="4" width="8" height="1" fill="#DC9DB6"/>
+                <rect x="7" y="7" width="1" height="1" fill="#EE6F97"/>
+                <rect x="10" y="7" width="1" height="1" fill="#EE6F97"/>
+                <rect x="7" y="8" width="4" height="1" fill="#EE6F97"/>
+                <rect x="8" y="9" width="2" height="1" fill="#EE6F97"/>
+              </svg>
+
+              <!-- 땅 (잔디) -->
+              <span class="tml-ground"></span>
+
+              <!-- 원경 나무 (멀리, 흐릿 — 깊이감) -->
+              <svg class="tml-tree tml-tree-far tml-tree-far-1" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="2" y="7" width="12" height="8" fill="#7FBE6A"/>
+                <rect x="4" y="3" width="8" height="6" fill="#7FBE6A"/>
+                <rect x="3" y="7" width="4" height="4" fill="#93CE7D"/>
+              </svg>
+              <svg class="tml-tree tml-tree-far tml-tree-far-2" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="2" y="7" width="12" height="8" fill="#7FBE6A"/>
+                <rect x="4" y="3" width="8" height="6" fill="#7FBE6A"/>
+                <rect x="3" y="7" width="4" height="4" fill="#93CE7D"/>
+              </svg>
+              <svg class="tml-tree tml-tree-far tml-tree-far-3" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="2" y="7" width="12" height="8" fill="#7FBE6A"/>
+                <rect x="4" y="3" width="8" height="6" fill="#7FBE6A"/>
+                <rect x="3" y="7" width="4" height="4" fill="#93CE7D"/>
+              </svg>
+
+              <!-- 나무 · 덤불 (지면 위) -->
+              <svg class="tml-tree tml-tree-1" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="9" y="15" width="1" height="7" fill="#855C40"/>
+                <rect x="2" y="7" width="12" height="8" fill="#6FB45C"/>
+                <rect x="4" y="3" width="8" height="6" fill="#6FB45C"/>
+                <rect x="3" y="7" width="4" height="4" fill="#84C56E"/>
+                <rect x="5" y="4" width="3" height="3" fill="#84C56E"/>
+                <rect x="10" y="9" width="4" height="6" fill="#5A9E4C"/>
+              </svg>
+              <svg class="tml-tree tml-tree-2" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="9" y="15" width="1" height="7" fill="#855C40"/>
+                <rect x="2" y="7" width="12" height="8" fill="#6FB45C"/>
+                <rect x="4" y="3" width="8" height="6" fill="#6FB45C"/>
+                <rect x="3" y="7" width="4" height="4" fill="#84C56E"/>
+                <rect x="5" y="4" width="3" height="3" fill="#84C56E"/>
+                <rect x="10" y="9" width="4" height="6" fill="#5A9E4C"/>
+              </svg>
+              <svg class="tml-tree tml-tree-3" viewBox="0 0 16 22" shape-rendering="crispEdges" focusable="false">
+                <rect x="6" y="15" width="4" height="7" fill="#9E7250"/>
+                <rect x="9" y="15" width="1" height="7" fill="#855C40"/>
+                <rect x="2" y="7" width="12" height="8" fill="#6FB45C"/>
+                <rect x="4" y="3" width="8" height="6" fill="#6FB45C"/>
+                <rect x="3" y="7" width="4" height="4" fill="#84C56E"/>
+                <rect x="5" y="4" width="3" height="3" fill="#84C56E"/>
+                <rect x="10" y="9" width="4" height="6" fill="#5A9E4C"/>
+              </svg>
+              <svg class="tml-bush tml-bush-1" viewBox="0 0 16 10" shape-rendering="crispEdges" focusable="false">
+                <rect x="1" y="3" width="14" height="7" fill="#6FB45C"/>
+                <rect x="2" y="3" width="5" height="3" fill="#84C56E"/>
+                <rect x="11" y="5" width="4" height="5" fill="#5A9E4C"/>
+              </svg>
+
+              <!-- 작은 새 -->
+              <svg class="tml-bird tml-bird-1" viewBox="0 0 10 5" shape-rendering="crispEdges" focusable="false">
+                <rect x="0" y="2" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="1" y="1" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="2" y="2" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="3" y="1" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="4" y="2" width="1" height="1" fill="#8C7C6E"/>
+              </svg>
+              <svg class="tml-bird tml-bird-2" viewBox="0 0 10 5" shape-rendering="crispEdges" focusable="false">
+                <rect x="0" y="2" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="1" y="1" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="2" y="2" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="3" y="1" width="1" height="1" fill="#8C7C6E"/>
+                <rect x="4" y="2" width="1" height="1" fill="#8C7C6E"/>
+              </svg>
+
+              <!-- 작은 꽃 -->
+              <svg class="tml-flower tml-flower-1" viewBox="0 0 5 6" shape-rendering="crispEdges" focusable="false">
+                <rect x="2" y="4" width="1" height="2" fill="#5A9E4C"/>
+                <rect x="2" y="0" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="1" y="1" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="3" y="1" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="2" y="2" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="2" y="1" width="1" height="1" fill="#FBD888"/>
+              </svg>
+              <svg class="tml-flower tml-flower-2" viewBox="0 0 5 6" shape-rendering="crispEdges" focusable="false">
+                <rect x="2" y="4" width="1" height="2" fill="#5A9E4C"/>
+                <rect x="2" y="0" width="1" height="1" fill="#FBE0EA"/>
+                <rect x="1" y="1" width="1" height="1" fill="#FBE0EA"/>
+                <rect x="3" y="1" width="1" height="1" fill="#FBE0EA"/>
+                <rect x="2" y="2" width="1" height="1" fill="#FBE0EA"/>
+                <rect x="2" y="1" width="1" height="1" fill="#F6C453"/>
+              </svg>
+              <svg class="tml-flower tml-flower-3" viewBox="0 0 5 6" shape-rendering="crispEdges" focusable="false">
+                <rect x="2" y="4" width="1" height="2" fill="#5A9E4C"/>
+                <rect x="2" y="0" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="1" y="1" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="3" y="1" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="2" y="2" width="1" height="1" fill="#F2A9C4"/>
+                <rect x="2" y="1" width="1" height="1" fill="#FBD888"/>
+              </svg>
             </span>
 
             <span class="tml-body">
@@ -561,7 +690,7 @@
           <a class="footer-brand" href="index.html" aria-label="Lunervia 메인으로 (새로고침)">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260612c"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260612d"
               alt="LUNERVIA"
               hidden
             />
@@ -660,6 +789,6 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260612c"></script>
+    <script src="script.js?v=20260612d"></script>
   </body>
 </html>
