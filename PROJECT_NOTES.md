@@ -12,6 +12,17 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-12 (3) — 메인에 Take My Letter(받아줘) '하러가기' 피처 배너 추가
+
+사용자 요청: 메인 아래에 자체 작품 takemyletter.site 로 가는 탭(배너)을 받아줘 감성으로 추가.
+
+- 위치: Philosophy(02) 와 Contact(03) 사이, 번호 없는 풀 배너 섹션 `.section-tml`. 카드 전체가 `https://takemyletter.site` 새 탭 링크.
+- 비주얼: 실제 받아줘 앱 아이콘 `assets/brand/work-badajwo.png` 사용(둥근 사각, lazy + width/height 로 CLS 방지, 1.3MB 라 below-the-fold lazy 로딩). 좌측 아이콘 + 우측 라벨/제목/설명/CTA. 떠다니는 작은 하트 3개(CSS, aria-hidden).
+- 톤: Lunervia 크림 베이스에 받아줘의 따뜻한 핑크/편지 감성. 신규 토큰 `--tml-rose #A85878`(CTA, 흰 글씨 AA 4.8:1), `--tml-rose-hover`, `--tml-pink-soft`, `--tml-pink-line`. 배경은 cream→#FCEAF0 그라데이션 + 우상단 핑크 글로우.
+- 접근성: 배너 `a` 에 aria-label, 아이콘 `alt=""` + `aria-hidden`(장식), 하트 장식 aria-hidden, CTA 텍스트는 i18n. hover 시 살짝 부상 + CTA 진한 로즈.
+- i18n 신규 키 `tml.label/title(html)/desc/cta` (KO/EN). 반응형 ≤720 1열 스택, 360px 가로 스크롤 없음 확인.
+- 캐시 버스팅 `?v=20260612c`.
+
 ## 2026-06-12 (2) — 주요 프로젝트 섹션을 메인에서 분리, 상단/푸터 '프로젝트' 링크로
 
 사용자 요청: 주요 프로젝트는 메인이 아니라 별도 페이지에 두고, 상단 네비와 푸터에서 연결.

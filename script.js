@@ -366,6 +366,12 @@
       "philosophy.card4": "나중에 수정하고 확장하기 쉬운 구조를 고려합니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
 
+      "tml.label": "Lunervia Work · 받아줘",
+      "tml.title": "편지로 마음을 전하는<br />Take My Letter",
+      "tml.desc":
+        "익명 또는 이름으로 마음을 전할 수 있는 디지털 편지 서비스입니다. Lunervia가 직접 기획하고 만든 자체 웹서비스예요.",
+      "tml.cta": "편지 보내러 가기",
+
       "showcase.label": "Projects",
       "showcase.title": "주요 프로젝트 및 협력",
       "showcase.subtitle": "Projects & Works",
@@ -512,6 +518,12 @@
       "philosophy.card4.name": "Maintainable structure",
       "philosophy.card4": "We consider structures that stay easy to modify and extend later.",
       "philosophy.cta": "Read more about Lunervia",
+
+      "tml.label": "Lunervia Work · Badajwo",
+      "tml.title": "Send your heart in a letter<br />Take My Letter",
+      "tml.desc":
+        "A digital letter service for sending your heart — anonymously or by name. It's Lunervia's own web service, planned and built in-house.",
+      "tml.cta": "Open Take My Letter",
 
       "showcase.label": "Projects",
       "showcase.title": "Projects & Works",
