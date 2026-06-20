@@ -12,6 +12,13 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-20 (2) — 개인 SNS 핸들 변경 (@dksrlqor → @_dksrlqor)
+
+개인 Instagram·TikTok 핸들을 `_dksrlqor` 로 변경. 공식 `@lunerviasoft` 와 GitHub 저장소(dksrlqor/lunervia)는 그대로 유지.
+
+- personal IG URL `instagram.com/dksrlqor/ → instagram.com/_dksrlqor/`, TikTok URL·핸들 표기 `@dksrlqor → @_dksrlqor` 일괄. 위치: index(JSON-LD sameAs · Contact 카드 · Footer) · partners(Footer) · sns(개인 IG/TikTok 카드 + Footer) · module-service-builder(Footer). why.html 은 해당 링크 없음.
+- 캐시 버스팅 `?v=20260620a → ?v=20260620b` 전 HTML 일괄.
+
 ## 2026-06-20 — Service Builder Module 판매 페이지 추가 (Lunervia Module 시리즈 01)
 
 디지털 상품(문서형 AI 모듈) 상품 상세/판매 랜딩을 새 서브페이지로 추가. 기존 디자인 시스템(크림 톤·공유 nav/footer·i18n) 그대로 재사용.
@@ -81,7 +88,7 @@ http://127.0.0.1:5173/
 - **SHOWCASE 배열 확장**: `Lunervia Lab` 카드 추가 (픽셀 플라스크 SVG 미디어 `is-pixel`, 상태 `준비 중`, 역할 `서비스 실험 · UI 연구 · 프로토타입`). 받아줘 카드에 상태(`운영 중 · takemyletter.site`)+역할(`기획 · UX 구조 · UI 방향 · 프론트엔드`) 추가. 렌더러에 `statusKey`/`statusSuffix`/`roleKey` 지원 + `.showcase-card-role` 스타일.
 - **About 개선**: 타이틀 `아이디어를 실제 서비스로 만드는 작은 소프트웨어 스튜디오`, 4단계 카드 (`.about-steps` — 기획/UX 설계/UI 개발/개선, 미니 픽셀 아이콘, 데스크톱 4열·태블릿 2열·모바일 1열).
 - **Philosophy**: 빅 인용구 `감각적인 화면보다 오래 쓰이는 경험을 먼저 설계합니다.` + 카드 4개로 확장 (Maintainable structure 추가, 2x2 그리드). 카드 설명 전부 새 문구.
-- **Contact**: 리드 `프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작/랜딩페이지 개선/브랜드 사이트 구성/UI/UX 정리…` + CTA 버튼 2개 (`Instagram으로 문의하기` → @lunerviasoft / `프로젝트 제안하기` → @dksrlqor).
+- **Contact**: 리드 `프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작/랜딩페이지 개선/브랜드 사이트 구성/UI/UX 정리…` + CTA 버튼 2개 (`Instagram으로 문의하기` → @lunerviasoft / `프로젝트 제안하기` → @_dksrlqor).
 - **토큰 추가**: `--px-*` 픽셀 팔레트(크림/브라운/핑크/오렌지 — about 아이콘·향후 픽셀 작업용), `--ok/--ok-soft/--ok-line` (세이지 그린), `--cream-shadow`.
 - **가독성/반응형**: `.hero-title/.section-title/.section-lead` `word-break: keep-all`, hero 타이틀 클램프 2.05–3.3rem. 360px 가로 스크롤 없음 확인. ≤960 히어로 스택(텍스트 먼저) + 대시보드 max-width 560 중앙. ≤480 대시보드 1열 + 사이드 카드 가로 랩.
 - **접근성**: 대시보드 전체 aria-hidden, h1 1개 유지, 마키 클론 `aria-hidden + data-clone` 그대로, reduced-motion 에서 `statusPulse` 등 전부 정지 (전역 규칙).
@@ -228,8 +235,8 @@ Why Lunervia (내부 오버레이)
 ### 외부 링크 (모두 새 탭, `rel="noopener noreferrer"`)
 
 - Instagram `@lunerviasoft` → https://www.instagram.com/lunerviasoft/
-- Instagram `@dksrlqor`     → https://www.instagram.com/dksrlqor/
-- TikTok    `@dksrlqor`     → https://www.tiktok.com/@dksrlqor
+- Instagram `@_dksrlqor`     → https://www.instagram.com/_dksrlqor/
+- TikTok    `@_dksrlqor`     → https://www.tiktok.com/@_dksrlqor
 - Instagram `@todaklife`    → https://www.instagram.com/todaklife/
 
 ### 보안 / 시크릿 정책 (중요)
