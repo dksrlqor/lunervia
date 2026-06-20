@@ -12,6 +12,20 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-20 — Service Builder Module 판매 페이지 추가 (Lunervia Module 시리즈 01)
+
+디지털 상품(문서형 AI 모듈) 상품 상세/판매 랜딩을 새 서브페이지로 추가. 기존 디자인 시스템(크림 톤·공유 nav/footer·i18n) 그대로 재사용.
+
+- 신규 `module-service-builder.html` — sns.html 골격(head/nav/footer) 복제 + `<main class="module-page">` 10섹션: 히어로 · 문제 제기 · 해결 방식(분석→판단→출력→검수 4단계) · 구성품(8 아이콘 카드) · 누구에게 · 무료 프롬프트 비교표 · 가격(Starter 14,900원 / **Pro 39,000원 추천** / Custom 별도 문의) · 구매 전 안내 · FAQ(`<details>`) · 최종 CTA. 경량 모달 2종(예시 진단 결과 / 구매 안내).
+- 포지셔닝: "프롬프트 모음"이 아니라 "범용 AI(ChatGPT·Claude·Gemini·Cursor) 전문화 레이어·작업 시스템". 과장 표현("100% 보장"·"전문가 완전 대체" 등) 금지 준수, 차분한 브랜드 톤.
+- **구매 흐름(결제 미연동):** 자동 다운로드 막고 가격만 노출 + 먼저 써보려면 Instagram DM(@lunerviasoft) 문의 → 계좌이체로 패키지(zip·노션) 수동 전달. 히어로/최종 "받기"는 `#pricing` 스크롤, 가격 카드 CTA는 구매 안내 모달(선택 플랜 주입).
+- `styles.css` 끝에 `MODULE PAGE` 섹션 추가(토큰·프리미티브 재사용, 반응형 ≤920/≤560, 센터 모달). `.visually-hidden` · `body.modal-open` 스크롤 잠금 추가.
+- `script.js`: i18n `mod.*`(146키)·`nav.module` KO/EN 일괄 추가. 모듈 페이지는 **새로고침 시 메인으로 안 보내고 그 자리 유지**(맨 위 스크롤)하도록 #0 예외 처리. 가드형 `initModulePage()`(포커스트랩 경량 모달 + 플랜 주입). FAQ는 `<details>`라 JS 불필요.
+- 상단 nav(프로젝트↔문의 사이) + 푸터 Explore 에 `모듈` 링크 추가 — index/partners/sns + 신규 페이지. why.html은 구형 nav/footer(미사용 SEO fallback)라 캐시 버전만 갱신하고 링크는 생략.
+- `sitemap.xml` 에 module-service-builder.html(priority 0.8, lastmod 2026-06-20) 추가, `/` lastmod 갱신.
+- 캐시 버스팅 `?v=20260612e → ?v=20260620a` (index/partners/sns/why/신규 일괄).
+- 검증(로컬 :8095): 콘솔 에러 0, KO/EN 토글 전체 전환, 375px 가로 스크롤 없음, 가격 3카드 Pro 추천 강조, 두 모달 열기/닫기·포커스트랩·스크롤 잠금·플랜 주입, 모듈 페이지 새로고침 유지 + sns는 기존대로 메인 바운스(회귀 없음) 확인.
+
 ## 2026-06-12 (5) — Take My Letter 픽셀 풍경 디테일 강화 (섬세하게)
 
 사용자 요청: 더 섬세하게.
