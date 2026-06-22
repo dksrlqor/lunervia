@@ -300,6 +300,115 @@
     updateProgress();
   }
 
+  /* -------- 7b. 스크롤 스파이 — 현재 섹션에 맞춰 nav active 표시 ----
+     상단 sticky 헤더 바로 아래 얇은 밴드에 섹션 상단이 들어오면
+     해당 nav 링크에 aria-current="page" 를 부여 (CSS 밑줄 강조).
+  ------------------------------------------------------------------ */
+  const spyLinks = $$('.nav-menu a[href^="#"]');
+  if (spyLinks.length && "IntersectionObserver" in window) {
+    const spySections = spyLinks
+      .map((a) => document.getElementById(a.getAttribute("href").slice(1)))
+      .filter(Boolean);
+
+    let spyActive = null;
+    const setSpyActive = (id) => {
+      if (id === spyActive) return;
+      spyActive = id;
+      spyLinks.forEach((a) => {
+        if (a.getAttribute("href") === `#${id}`) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+    };
+
+    const spyObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length) setSpyActive(visible[0].target.id);
+      },
+      { rootMargin: "-16% 0px -76% 0px", threshold: 0 }
+    );
+    spySections.forEach((s) => spyObserver.observe(s));
+  }
+
+  /* -------- 7c. 히어로 지구본 — 실제 대륙 직교투영 자전 -------------
+     히어로 우측 비주얼. 외부 라이브러리 없이, 인라인 JSON(#globe-land-data)
+     의 실제 해안선 좌표를 직교투영해 매 프레임 다시 그리며 자전.
+     화면 밖이거나 탭이 백그라운드면 멈춰서 성능을 아낀다.
+  ------------------------------------------------------------------ */
+  (function initHeroGlobe() {
+    const dataEl = document.getElementById("globe-land-data");
+    const landEl = document.getElementById("hero-globe-land");
+    const gratEl = document.getElementById("hero-globe-grat");
+    if (!dataEl || !landEl) return;
+    let L = [];
+    try { L = JSON.parse(dataEl.textContent || "[]"); } catch (e) {}
+    if (!L.length) return;
+
+    const R = 74, CX = 100, CY = 100, D2R = Math.PI / 180;
+    const tilt = 20 * D2R, sinP = Math.sin(tilt), cosP = Math.cos(tilt);
+
+    const GR = (() => {
+      const g = [];
+      for (let lon = -150; lon <= 180; lon += 30) { const line = []; for (let lat = -80; lat <= 80; lat += 4) line.push(lon, lat); g.push(line); }
+      for (let lat = -60; lat <= 60; lat += 30) { const line = []; for (let lon = -180; lon <= 180; lon += 4) line.push(lon, lat); g.push(line); }
+      return g;
+    })();
+
+    function pathFor(rings, lam) {
+      let d = "";
+      for (let k = 0; k < rings.length; k++) {
+        const arr = rings[k];
+        let pen = false;
+        for (let i = 0; i < arr.length; i += 2) {
+          const lon = arr[i] * D2R, lat = arr[i + 1] * D2R, dl = lon - lam;
+          const cosc = sinP * Math.sin(lat) + cosP * Math.cos(lat) * Math.cos(dl);
+          if (cosc >= -0.02) {
+            const x = CX + R * Math.cos(lat) * Math.sin(dl);
+            const y = CY - R * (cosP * Math.sin(lat) - sinP * Math.cos(lat) * Math.cos(dl));
+            d += (pen ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+            pen = true;
+          } else pen = false;
+        }
+      }
+      return d;
+    }
+
+    function draw(lam) {
+      if (gratEl) gratEl.setAttribute("d", pathFor(GR, lam));
+      landEl.setAttribute("d", pathFor(L, lam));
+    }
+
+    draw(0); // 초기 정적 프레임 — 화면 밖이어도 대륙은 항상 보이게
+    if (prefersReducedMotion) return;
+
+    let raf = null, last = 0, lam = 0, inView = true;
+    function frame(now) {
+      if (last) lam += (now - last) * 0.0002;
+      last = now;
+      draw(lam);
+      raf = inView ? window.requestAnimationFrame(frame) : null;
+    }
+    function start() { if (!raf) { last = 0; raf = window.requestAnimationFrame(frame); } }
+    function stop() { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
+
+    const host = landEl.closest(".hero-globe") || landEl;
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        inView = entries[0].isIntersecting;
+        if (inView) start(); else stop();
+      }, { threshold: 0 });
+      io.observe(host);
+    } else {
+      start();
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else if (inView) start();
+    });
+  })();
+
   /* -------- 8. KO / EN 언어 토글 ---------------------------------- */
   /*
      UI 문구는 모두 data-i18n / data-i18n-html 로 표시.
@@ -309,6 +418,9 @@
   const I18N = {
     ko: {
       "nav.about": "소개",
+      "nav.services": "서비스",
+      "nav.work": "작업",
+      "nav.process": "프로세스",
       "nav.partners": "프로젝트",
       "nav.module": "모듈",
       "nav.philosophy": "철학",
@@ -317,20 +429,72 @@
       "nav.why": "루네르비아를 만든 이유",
 
       "nav.intro.brand": "브랜드 소개",
-      "nav.intro.brand.meta": "루네르비아가 어떤 브랜드인지",
+      "nav.intro.brand.meta": "루네르비아가 어떤 스튜디오인지",
       "nav.intro.philosophy": "철학",
       "nav.intro.philosophy.meta": "제품 설계의 기준",
+      "nav.intro.projects": "전체 프로젝트",
+      "nav.intro.projects.meta": "주요 프로젝트 및 협력",
       "nav.intro.why": "루네르비아를 만든 이유",
       "nav.intro.why.meta": "브랜드의 출발점",
 
       "back.toMain": "메인으로",
       "back.toMainLong": "메인으로 돌아가기",
 
-      "hero.eyebrow": "Lunervia Software Studio",
-      "hero.title": "사용자 경험을 설계하고,<br />작동하는 웹서비스를 만듭니다.",
-      "hero.sub": "Lunervia는 작은 아이디어를 실제 서비스로 구현하고, 사용자가 이해하기 쉬운 흐름과 안정적인 인터페이스를 설계하는 소프트웨어 브랜드입니다.",
-      "hero.cta.projects": "프로젝트 보기",
-      "hero.cta.contact": "문의하기",
+      "hero.eyebrow": "Lunervia — Software Studio",
+      "hero.title": "사용자가 쓰기 쉬운 웹서비스를 설계하고,<br />실제로 작동하는 제품으로 만듭니다.",
+      "hero.sub": "복잡한 아이디어를 단순한 구조로 정리하고, 화면부터 작동까지 직접 만드는 작은 소프트웨어 스튜디오입니다.",
+      "hero.cta.contact": "프로젝트 문의하기",
+      "hero.cta.work": "작업 보기",
+
+      "services.label": "Services",
+      "services.title": "Lunervia가 하는 일",
+      "services.lead": "기획, 화면 설계, 프론트엔드 구현, 그리고 AI를 활용한 작업까지. 서비스 하나가 끝까지 작동하도록 만듭니다.",
+      "services.s1.name": "Web Service Development",
+      "services.s1.desc": "아이디어를 배포 가능한 웹서비스로 구현합니다. 화면뿐 아니라 실제로 작동하는 흐름까지.",
+      "services.s2.name": "Frontend System Design",
+      "services.s2.desc": "재사용 가능한 컴포넌트와 디자인 토큰으로, 오래 다듬을 수 있는 프론트엔드 구조를 설계합니다.",
+      "services.s3.name": "UI/UX Redesign",
+      "services.s3.desc": "복잡하게 얽힌 화면을 사용자가 길을 잃지 않는 명확한 흐름으로 다시 정리합니다.",
+      "services.s4.name": "Landing Page Optimization",
+      "services.s4.desc": "로딩 속도, 메시지, 전환 흐름까지 점검해 방문이 실제 문의로 이어지도록 다듬습니다.",
+      "services.s5.name": "Brand Experience",
+      "services.s5.desc": "로고와 색을 넘어, 사이트 전체에서 일관되게 느껴지는 브랜드 경험을 설계합니다.",
+      "services.s6.name": "AI Workflow Integration",
+      "services.s6.desc": "AI를 제작 과정에 끼워 넣어, 더 빠르게 만들고 더 일정한 품질을 유지하도록 돕습니다.",
+
+      "process.label": "Process",
+      "process.title": "이런 순서로 만듭니다",
+      "process.lead": "화면을 꾸미기 전에, 사용자가 헤매지 않을 흐름부터 잡습니다. 보통 다섯 단계로 진행합니다.",
+      "process.s1.name": "Discovery",
+      "process.s1.desc": "목표와 사용자를 먼저 이해하고, 만들 것의 범위를 정합니다.",
+      "process.s1.state": "정리 완료",
+      "process.s2.name": "UX Flow",
+      "process.s2.desc": "사용자가 헷갈리지 않도록 화면 구조와 동선을 설계합니다.",
+      "process.s2.state": "정리 완료",
+      "process.s3.name": "Interface System",
+      "process.s3.desc": "디자인 토큰과 컴포넌트로 일관된 인터페이스를 구성합니다.",
+      "process.s3.state": "진행 중",
+      "process.s4.name": "Frontend Build",
+      "process.s4.desc": "반응형과 접근성을 고려해 실제로 작동하는 화면으로 구현합니다.",
+      "process.s4.state": "다음 단계",
+      "process.s5.name": "Launch & Improve",
+      "process.s5.desc": "배포 후에도 실제 사용성을 기준으로 계속 다듬어 갑니다.",
+      "process.s5.state": "대기",
+
+      "work.label": "Work",
+      "work.title": "직접 만들고, 실험하는 프로젝트",
+      "work.lead": "Lunervia가 직접 기획하고 만든 작업들입니다. 잘 작동하고, 고치기 쉽고, 오래 쓸 수 있게 만들려고 합니다.",
+      "work.status.live": "운영 중",
+      "work.lab.status": "실험 중",
+      "work.lab.desc": "작은 웹서비스 아이디어를 실험하고 정리하는 내부 공간입니다.",
+      "work.lab.role": "서비스 실험 · UI 연구 · 프로토타입",
+      "work.lab.foot": "INTERNAL_EXPERIMENT",
+      "work.smbest.status": "준비 중",
+      "work.smbest.desc": "함께할 예정인 기업 파트너의 웹 경험을 준비하고 있습니다.",
+      "work.smbest.role": "Client · 웹서비스 · 브랜드 경험",
+      "work.more.name": "더 많은 프로젝트",
+      "work.more.desc": "주요 프로젝트와 협력 사례를 전체 목록에서 살펴볼 수 있습니다.",
+      "work.more.cta": "전체 프로젝트 보기",
 
       "trust.title": "Lunervia가 중요하게 보는 것",
       "trust.lead":
@@ -347,7 +511,7 @@
       "about.lead":
         "기획, 화면 설계, 프론트엔드 구현, 사용자 흐름 개선까지 — 하나의 서비스가 실제로 작동하도록 만드는 과정을 중요하게 생각합니다.",
       "about.focusLabel": "Focus",
-      "about.focusValue": "웹 서비스 · 모바일 앱 · UX 설계",
+      "about.focusValue": "웹 서비스 · 프론트엔드 · UX 설계",
       "about.stageValue": "성장 단계",
       "about.step1.name": "기획",
       "about.step1.desc": "아이디어를 서비스 구조로 정리합니다.",
@@ -361,21 +525,22 @@
       "philosophy.label": "Philosophy",
       "philosophy.title": "Design Principles",
       "philosophy.big":
-        "Lunervia는 감각적인 화면보다 오래 쓰이는 경험을 먼저 설계합니다.",
-      "philosophy.card1.name": "User-centered design",
-      "philosophy.card1": "사용자가 이해하기 쉬운 흐름을 먼저 설계합니다.",
-      "philosophy.card2.name": "Reliable services",
-      "philosophy.card2": "보기 좋은 화면뿐 아니라 실제로 안정적으로 작동하는 서비스를 만듭니다.",
-      "philosophy.card3.name": "Clear & practical",
-      "philosophy.card3": "복잡한 기능보다 명확하고 필요한 경험을 우선합니다.",
-      "philosophy.card4.name": "Maintainable structure",
-      "philosophy.card4": "나중에 수정하고 확장하기 쉬운 구조를 고려합니다.",
+        "감각적인 화면보다, 오래 쓰이는 경험을 먼저 설계합니다.",
+      "philosophy.card1.kr": "복잡함보다 명확함",
+      "philosophy.card1": "복잡한 기능을 더하기 전에, 사용자가 이해하기 쉬운 흐름을 먼저 설계합니다.",
+      "philosophy.card2.kr": "신뢰할 수 있는 인터페이스",
+      "philosophy.card2": "보기 좋은 화면뿐 아니라, 실제로 안정적으로 작동하는 인터페이스를 만듭니다.",
+      "philosophy.card3.kr": "확장 가능한 구조",
+      "philosophy.card3": "나중에 수정하고 확장하기 쉬운 구조를 고려해 설계합니다.",
+      "philosophy.card4.kr": "작은 결정까지 신중하게",
+      "philosophy.card4": "경험을 구성하는 작은 결정 하나하나를 진지하게 다룹니다.",
       "philosophy.cta": "브랜드 소개 자세히 보기",
 
-      "tml.label": "Lunervia Work · 받아줘",
+      "tml.label": "Featured · Lunervia Work",
       "tml.title": "편지로 마음을 전하는<br />Take My Letter",
       "tml.desc":
         "익명 또는 이름으로 마음을 전할 수 있는 디지털 편지 서비스입니다. Lunervia가 직접 기획하고 만든 자체 웹서비스예요.",
+      "tml.role": "Planning · UX · Frontend · Brand",
       "tml.cta": "편지 보내러 가기",
 
       "showcase.label": "Projects",
@@ -406,9 +571,9 @@
       "showcase.lab.role": "서비스 실험 · UI 연구 · 프로토타입",
 
       "contact.label": "Contact",
-      "contact.title": "문의하기",
+      "contact.title": "프로젝트, 함께 시작해요",
       "contact.lead":
-        "프로젝트 문의는 Instagram DM으로 가장 빠르게 확인합니다. 웹서비스 제작, 랜딩페이지 개선, 브랜드 사이트 구성, UI/UX 정리에 관한 문의를 편하게 보내주세요.",
+        "작은 아이디어라도 괜찮습니다. Lunervia는 구조를 정리하고, 실제 서비스로 구현하는 과정을 함께 설계합니다. 문의는 Instagram DM으로 가장 빠르게 확인합니다.",
       "contact.cta.instagram": "Instagram으로 문의하기",
       "contact.cta.propose": "프로젝트 제안하기",
       "contact.official.label": "Official Instagram",
@@ -621,6 +786,9 @@
     },
     en: {
       "nav.about": "About",
+      "nav.services": "Services",
+      "nav.work": "Work",
+      "nav.process": "Process",
       "nav.partners": "Projects",
       "nav.module": "Module",
       "nav.philosophy": "Philosophy",
@@ -632,17 +800,69 @@
       "nav.intro.brand.meta": "What Lunervia is about",
       "nav.intro.philosophy": "Philosophy",
       "nav.intro.philosophy.meta": "How we design our products",
+      "nav.intro.projects": "All projects",
+      "nav.intro.projects.meta": "Projects & collaborations",
       "nav.intro.why": "Why we built Lunervia",
       "nav.intro.why.meta": "Where the brand starts",
 
       "back.toMain": "Back to main",
       "back.toMainLong": "Back to main page",
 
-      "hero.eyebrow": "Lunervia Software Studio",
-      "hero.title": "We design user experience<br />and build web services that work.",
-      "hero.sub": "Lunervia is a software brand that turns small ideas into working services — designing clear flows and reliable interfaces people can actually use.",
-      "hero.cta.projects": "View projects",
-      "hero.cta.contact": "Contact us",
+      "hero.eyebrow": "Lunervia — Software Studio",
+      "hero.title": "We design web services people find easy to use,<br />and build them into products that actually work.",
+      "hero.sub": "A small software studio that turns complex ideas into simple structures, and builds them end to end — from screen to function.",
+      "hero.cta.contact": "Start a project",
+      "hero.cta.work": "View work",
+
+      "services.label": "Services",
+      "services.title": "What Lunervia does",
+      "services.lead": "Planning, interface design, front-end, and AI-assisted work. The goal is simple — make one service that works end to end.",
+      "services.s1.name": "Web Service Development",
+      "services.s1.desc": "We turn ideas into deployable web services — not just screens, but flows that actually work.",
+      "services.s2.name": "Frontend System Design",
+      "services.s2.desc": "Reusable components and design tokens for a front-end structure that stays easy to maintain.",
+      "services.s3.name": "UI/UX Redesign",
+      "services.s3.desc": "We restructure tangled screens into clear flows where users never get lost.",
+      "services.s4.name": "Landing Page Optimization",
+      "services.s4.desc": "We tune speed, message, and conversion flow so visits turn into real enquiries.",
+      "services.s5.name": "Brand Experience",
+      "services.s5.desc": "Beyond logo and color — a brand experience felt consistently across the whole site.",
+      "services.s6.name": "AI Workflow Integration",
+      "services.s6.desc": "We weave AI into the build process to ship faster and keep quality consistent.",
+
+      "process.label": "Process",
+      "process.title": "The order we work in",
+      "process.lead": "Before styling a screen, we map a flow where users won't get lost. Usually in five steps.",
+      "process.s1.name": "Discovery",
+      "process.s1.desc": "We understand the goal and the users first, then set the scope.",
+      "process.s1.state": "Done",
+      "process.s2.name": "UX Flow",
+      "process.s2.desc": "We design structure and paths so users never get confused.",
+      "process.s2.state": "Done",
+      "process.s3.name": "Interface System",
+      "process.s3.desc": "We compose a consistent interface from design tokens and components.",
+      "process.s3.state": "In progress",
+      "process.s4.name": "Frontend Build",
+      "process.s4.desc": "We build working screens with responsiveness and accessibility in mind.",
+      "process.s4.state": "Next",
+      "process.s5.name": "Launch & Improve",
+      "process.s5.desc": "After launch we keep refining based on real usability.",
+      "process.s5.state": "Queued",
+
+      "work.label": "Work",
+      "work.title": "Projects we build and experiment on ourselves",
+      "work.lead": "Projects Lunervia planned and built in-house. We try to make them work well, stay easy to fix, and last.",
+      "work.status.live": "Live",
+      "work.lab.status": "Experimenting",
+      "work.lab.desc": "An internal space for experimenting with and shaping small web service ideas.",
+      "work.lab.role": "Service experiments · UI research · Prototypes",
+      "work.lab.foot": "INTERNAL_EXPERIMENT",
+      "work.smbest.status": "In preparation",
+      "work.smbest.desc": "We're preparing the web experience for a corporate partner we'll work with.",
+      "work.smbest.role": "Client · Web service · Brand experience",
+      "work.more.name": "More projects",
+      "work.more.desc": "Browse the full list of major projects and collaborations.",
+      "work.more.cta": "View all projects",
 
       "trust.title": "What Lunervia cares about",
       "trust.lead":
@@ -659,7 +879,7 @@
       "about.lead":
         "From planning and interface design to front-end development and flow refinement — we care about the whole process that makes a service actually work.",
       "about.focusLabel": "Focus",
-      "about.focusValue": "Web · Mobile · UX design",
+      "about.focusValue": "Web · Frontend · UX design",
       "about.stageValue": "Growing",
       "about.step1.name": "Plan",
       "about.step1.desc": "We shape ideas into a service structure.",
@@ -673,21 +893,22 @@
       "philosophy.label": "Philosophy",
       "philosophy.title": "Design Principles",
       "philosophy.big":
-        "Lunervia designs experiences that last, before screens that merely impress.",
-      "philosophy.card1.name": "User-centered design",
-      "philosophy.card1": "We design flows users can understand first.",
-      "philosophy.card2.name": "Reliable services",
-      "philosophy.card2": "Not just good-looking screens — services that actually run reliably.",
-      "philosophy.card3.name": "Clear & practical",
-      "philosophy.card3": "Clear, necessary experiences over complex features.",
-      "philosophy.card4.name": "Maintainable structure",
-      "philosophy.card4": "We consider structures that stay easy to modify and extend later.",
+        "Experiences that last come before screens that merely impress.",
+      "philosophy.card1.kr": "Clarity over complexity",
+      "philosophy.card1": "Before adding complex features, we design a flow users can understand.",
+      "philosophy.card2.kr": "Interfaces you can rely on",
+      "philosophy.card2": "Not just good-looking screens — interfaces that actually run reliably.",
+      "philosophy.card3.kr": "A structure that scales",
+      "philosophy.card3": "We design with a structure that stays easy to modify and extend.",
+      "philosophy.card4.kr": "Every small decision matters",
+      "philosophy.card4": "We treat each small decision that shapes the experience with care.",
       "philosophy.cta": "Read more about Lunervia",
 
-      "tml.label": "Lunervia Work · Badajwo",
+      "tml.label": "Featured · Lunervia Work",
       "tml.title": "Send your heart in a letter<br />Take My Letter",
       "tml.desc":
         "A digital letter service for sending your heart — anonymously or by name. It's Lunervia's own web service, planned and built in-house.",
+      "tml.role": "Planning · UX · Frontend · Brand",
       "tml.cta": "Open Take My Letter",
 
       "showcase.label": "Projects",
@@ -718,9 +939,9 @@
       "showcase.lab.role": "Service experiments · UI research · Prototypes",
 
       "contact.label": "Contact",
-      "contact.title": "Contact",
+      "contact.title": "Let's start your project",
       "contact.lead":
-        "Project enquiries are checked fastest through Instagram DM. Feel free to reach out about building a web service, improving a landing page, structuring a brand site, or refining UI/UX.",
+        "Even a small idea is welcome. Lunervia helps shape the structure and build it into a real service, together. Enquiries are checked fastest through Instagram DM.",
       "contact.cta.instagram": "Contact via Instagram",
       "contact.cta.propose": "Propose a project",
       "contact.official.label": "Official Instagram",

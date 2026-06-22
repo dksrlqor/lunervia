@@ -12,6 +12,34 @@ python serve_no_cache.py
 http://127.0.0.1:5173/
 ```
 
+## 2026-06-22 (2) — 히어로 회전 지구본 · 로고 다듬기 · 카피 디-AI화
+
+재설계 후속 작업(같은 날). 이 항목까지 반영해 배포(사용자 "푸시" 지시).
+
+- **히어로 우측 = 실제 대륙이 자전하는 지구본**. 원래 있던 AI 코드 에디터 패널(`lunervia/app.tsx`·SYSTEM_READY·Build passed)을 사용자가 "이걸 로더로 교체하라"고 해서 교체. (처음엔 인트로 프리로더로 오해해 구현 → 프리로더 제거하고 히어로 비주얼로 이동.)
+  - 실제 세계지도(world-atlas 110m → topojson merge) 해안선을 41링/1640점으로 데시메이션해 `<script type="application/json" id="globe-land-data">`(약 11.6KB)로 index.html 에 인라인. **외부 라이브러리 없음.**
+  - `script.js` `initHeroGlobe`: 직교투영(orthographic) 자전, tilt 20°, 뒷면 cull, 회전속도 `0.0002 rad/ms`(약 31s/회전). 초기 `draw(0)` 정적 프레임 필수(화면 밖이어도 대륙 보이게). IntersectionObserver + visibilitychange 로 **화면 밖/백그라운드 시 rAF 정지**(성능). reduced-motion 정적.
+  - 마크업 `.hero-globe` > `svg.globe-svg`(`#hero-globe-grat`/`#hero-globe-land` path + whirl 링/오빗 도트 + globe-disc/edge) + `Global-ready` 칩. CSS `.hero-globe/.globe-disc/.globe-grat/.globe-land-path/.whirl*/.hero-globe-tag`. 구 `.code-*`/`.preloader`/`.loader-globe` CSS 는 일부 dead 로 남음(무해).
+  - 데이터 재생성: `npm i topojson-client world-atlas` → merge + 거리기반 데시메이션(`/tmp/lvglobe`).
+- **로고 다듬음**: 헤더 `.brand-mark` 를 잉크 라운드스퀘어 + **달(lune) 크레센트 + 퍼플 도트**(매끈한 곡선)로 교체. 파비콘도 전 페이지 동일 모티프(구 Georgia serif "L" 제거).
+- **카피 디-AI화**("글자가 AI 같다" 피드백): hero/services/process/work 제목·리드 담백하게 재작성(KO/EN). 예) services.title `한 화면이 실제 서비스가…` → `Lunervia가 하는 일`, process.title `정돈된 과정에서…` → `이런 순서로 만듭니다`, hero "AI 시대의…" → "사용자가 쓰기 쉬운 웹서비스를…".
+- 검증: 데스크톱 지구본 430px·모바일 335px, 가로 오버플로 0, 콘솔 0, 투영 방향 정확. 자전은 rAF 라 보이는 탭에서만(프리뷰 hidden 탭/screenshot 도구는 이 세션 먹통이라 eval·좌표로 검증). **클로드 디자인(visualize show_widget)으로 로더/로고 시안 인라인 렌더**(1차 시안 "대충" 반려 → D3 실측 지구본 재시안 → 글로벌 확정).
+- 캐시 버스팅 `?v=20260622a → ?v=20260622e` (중간 b/c/d 거침). 폰트도 전 페이지 Pretendard+Inter+JetBrains 로 교체됨.
+
+## 2026-06-22 — 프리미엄 소프트웨어 스튜디오 재설계 (디자인 시스템 + 메인 전면 개편)
+
+사용자 요청: "고급 AI 소프트웨어 스튜디오 / AI 코딩 기술 브랜드 / 프리미엄 웹서비스 제작사"처럼 보이도록 프론트엔드·UI/UX·디자인 시스템·타이포·인터랙션·반응형·성능까지 전면 강화. **순수 HTML/CSS/JS 유지** (React/Next/Tailwind 미도입 — GitHub Pages 정적 배포 모델 보존 + "불필요한 라이브러리 금지" 룰). **이번엔 git push/commit 보류** (사용자가 "완성본 바로 푸시하지 말아줘" 라고 함 → 검토 후 별도 지시 시 배포). 백업: `index.html.bak-20260622` · `styles.css.bak-20260622` · `script.js.bak-20260622`.
+
+- **디자인 토큰 전면 교체** (`styles.css` :root): 크림 베이스 유지(`--bg #F7F3EA`), 포인트를 **브라운 → 조용한 AI 퍼플**(`--accent #6A4DE0` 텍스트용 AA 5:1, `--accent-bright #7C5CFF` 글로우/오브용), 잉크 텍스트 `#161616`, 경계선은 잉크 기반 rgba 투명도. 신규 토큰: `--code-green #2F855A`, `--warning-soft`, 코드에디터 IDE 라이트 테마 팔레트(`--code-*`), shadow(`--shadow-sm/md/lg/accent`), radius 8~28px. `--px-*`(픽셀)·`--tml-*`(받아줘 로즈)는 유지.
+- **폰트 교체** (궁서체/Georgia·Space Grotesk·Plus Jakarta 전면 제거): 본문/한글 **Pretendard**(jsdelivr variable dynamic-subset), 영문 디스플레이 **Inter**(Google), 코드/라벨 **JetBrains Mono**(Google). `--font-sans/display/mono` 매핑. 파비콘도 Georgia serif "L" → Inter sans "L" + 퍼플 도트로 교체(전 페이지).
+- **메인(`index.html`) 전면 재작성** — 새 섹션 흐름: Hero(좌 카피 + 우 **AI 코드 에디터 패널**: 탭·라인넘버·구문 강조·SYSTEM_READY 배지·Build passed/UX flow optimized 로그·blinking caret + 얇은 grid·gradient orb·떠다니는 상태 노드) → **Capability Strip**(역량 6개) → **01 Services**(6 카드: Web Service Dev / Frontend System Design / UI/UX Redesign / Landing Page Opt / Brand Experience / AI Workflow Integration, 선형 아이콘 + 모노 태그 + hover 부상/그라데이션) → **02 Process**(5단계 타임라인 + 상태배지 + 우측 **다크 터미널 build.log** sticky 패널) → **03 Work**(받아줘 픽셀 배너를 Featured 로 유지 + 보조 카드 3개: Lunervia Lab/SMBEST/더 많은 프로젝트→partners.html) → **04 About**(메타 4개) → **05 Philosophy**(빅 인용구 + 4 원칙: Clarity before complexity / Reliable interfaces / Designed to scale / Built with care, 영문 제목+한글 보조) → **06 Contact**(좌 CTA 2개 + 우 4채널 카드 패널) → Footer(+ status dot "Available for new projects"). skip-link 추가.
+- **헤더 개편**: nav `소개▾(브랜드/철학/전체 프로젝트/Why) · 서비스 · 작업 · 프로세스 · 문의 · 모듈 · SNS`. **스크롤 스파이**(`script.js` 7b) — 현재 섹션 nav 링크에 `aria-current="page"` 부여 + CSS 밑줄 강조. sticky + blur + border 유지.
+- **`styles.css` 구조**: 토큰~푸터+반응형+신규 컴포넌트는 새로 작성(코어 1~17번), **페이지 전용 블록(Showcase 마키·Take My Letter 배너·Article·Why 오버레이·Partners·SNS·Module·Modal·전역 reduced-motion)은 백업에서 그대로 이어붙임**(18~20번). 헤더/푸터/토큰이 공유라 새 디자인이 sns/partners/module/why 전 페이지에 일관 전파. 다른 페이지 마크업은 미수정(폰트 링크·파비콘·캐시버전만 갱신).
+- **i18n**: `script.js` I18N 에 KO/EN 모두 신규 키 추가(`nav.services/work/process`, `nav.intro.projects*`, `hero.cta.work`, `services.*`, `process.*`, `work.*`, `philosophy.card*.kr`, `tml.role`) + 변경 키 갱신(`hero.*`, `philosophy.big/card1~4`, `contact.title/lead`, `about.focusValue`, `tml.label`). 미사용 `trust.*`/`about.step*` 키는 무해하게 잔존.
+- **반응형/접근성/성능**: 375px 가로 오버플로 0 확인. 모바일 히어로 스택·프로세스 단일열·연락처 스택·서비스 1열. 모션은 transform/opacity 중심, 전역 `prefers-reduced-motion` 리셋이 caret/펄스/오브 정지. `aria-hidden` 장식, 키보드 포커스, heading 구조 유지.
+- 검증(로컬 :8095, preview): 콘솔 에러 0, 데스크톱/모바일 전 섹션 렌더, KO/EN 토글 전체 전환, 스크롤 스파이 동작, partners/sns(CRLF 폰트 수정)/module 페이지 무결성 확인.
+- 캐시 버스팅 `?v=20260620b → ?v=20260622a` (index/partners/sns/why/module 일괄). sitemap `/` lastmod 2026-06-22.
+
 ## 2026-06-20 (2) — 개인 SNS 핸들 변경 (@dksrlqor → @_dksrlqor)
 
 개인 Instagram·TikTok 핸들을 `_dksrlqor` 로 변경. 공식 `@lunerviasoft` 와 GitHub 저장소(dksrlqor/lunervia)는 그대로 유지.
