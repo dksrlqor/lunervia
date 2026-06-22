@@ -84,7 +84,7 @@
       crossorigin
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
-    <link rel="stylesheet" href="styles.css?v=20260622e" />
+    <link rel="stylesheet" href="styles.css?v=20260623a" />
   </head>
   <body>
     <!-- 지구본 좌표 데이터(아래 JSON) — 히어로 비주얼 지구본 렌더러(script.js)가 사용 -->
@@ -110,7 +110,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260622e"
+              src="assets/brand/lunervia-logo-text.png?v=20260623a"
               alt="LUNERVIA"
             />
           </span>
@@ -222,7 +222,6 @@
           <div class="hero-visual reveal" aria-hidden="true">
             <div class="hero-globe">
               <svg class="globe-svg" viewBox="0 0 200 200" focusable="false">
-                <g class="whirl-orbit"><circle class="whirl-dot" cx="100" cy="7" r="2.4" /></g>
                 <circle class="whirl whirl-1" cx="100" cy="100" r="95" />
                 <circle class="whirl whirl-2" cx="100" cy="100" r="89" />
                 <circle class="globe-disc" cx="100" cy="100" r="74" />
@@ -230,7 +229,6 @@
                 <path id="hero-globe-land" class="globe-land-path" d="" />
                 <circle class="globe-edge" cx="100" cy="100" r="74" />
               </svg>
-              <span class="hero-globe-tag mono"><span class="hero-globe-dot"></span>Global-ready</span>
             </div>
           </div>
         </div>
@@ -438,199 +436,12 @@
             rel="noopener noreferrer"
             aria-label="Take My Letter (받아줘) 편지 서비스 새 탭으로 열기"
           >
-            <span class="tml-scene" aria-hidden="true">
-              <!-- 스프라이트 정의 (symbol) — 한 번 그려 재사용 -->
-              <svg class="tml-defs" width="0" height="0" focusable="false" shape-rendering="crispEdges">
-                <defs>
-                  <symbol id="tmlSun" viewBox="0 0 24 24">
-                    <rect x="11" y="0" width="2" height="3" fill="#F7C85A"/>
-                    <rect x="11" y="21" width="2" height="3" fill="#F7C85A"/>
-                    <rect x="0" y="11" width="3" height="2" fill="#F7C85A"/>
-                    <rect x="21" y="11" width="3" height="2" fill="#F7C85A"/>
-                    <rect x="4" y="4" width="2" height="2" fill="#F7C85A"/>
-                    <rect x="18" y="4" width="2" height="2" fill="#F7C85A"/>
-                    <rect x="4" y="18" width="2" height="2" fill="#F7C85A"/>
-                    <rect x="18" y="18" width="2" height="2" fill="#F7C85A"/>
-                    <rect x="10" y="5" width="4" height="2" fill="#F7C85A"/>
-                    <rect x="8" y="7" width="8" height="2" fill="#F7C85A"/>
-                    <rect x="6" y="9" width="12" height="6" fill="#F7C85A"/>
-                    <rect x="8" y="15" width="8" height="2" fill="#F7C85A"/>
-                    <rect x="10" y="17" width="4" height="2" fill="#F7C85A"/>
-                    <rect x="9" y="7" width="3" height="3" fill="#FCDD8E"/>
-                    <rect x="8" y="9" width="2" height="2" fill="#FCDD8E"/>
-                    <rect x="13" y="12" width="3" height="3" fill="#ECB748"/>
-                    <rect x="14" y="15" width="2" height="1" fill="#ECB748"/>
-                  </symbol>
-
-                  <symbol id="tmlCloud" viewBox="0 0 28 14">
-                    <rect x="6" y="4" width="9" height="4" fill="#FFFDF8"/>
-                    <rect x="12" y="1" width="11" height="6" fill="#FFFDF8"/>
-                    <rect x="2" y="7" width="24" height="5" fill="#FFFDF8"/>
-                    <rect x="13" y="2" width="6" height="1" fill="#FFFFFF"/>
-                    <rect x="2" y="11" width="24" height="1" fill="#EFE0D2"/>
-                  </symbol>
-
-                  <symbol id="tmlBird" viewBox="0 0 10 5">
-                    <rect x="0" y="2" width="1" height="1" fill="#8C7C6E"/>
-                    <rect x="1" y="1" width="1" height="1" fill="#8C7C6E"/>
-                    <rect x="2" y="2" width="1" height="1" fill="#8C7C6E"/>
-                    <rect x="3" y="1" width="1" height="1" fill="#8C7C6E"/>
-                    <rect x="4" y="2" width="1" height="1" fill="#8C7C6E"/>
-                  </symbol>
-
-                  <symbol id="tmlEnv" viewBox="0 0 18 13">
-                    <rect x="1" y="2" width="16" height="10" fill="#FFFDF6"/>
-                    <rect x="1" y="11" width="16" height="1" fill="#E3CDB8"/>
-                    <rect x="1" y="2" width="16" height="2" fill="#F6CFDD"/>
-                    <rect x="1" y="4" width="8" height="1" fill="#DC9DB6"/>
-                    <rect x="9" y="4" width="8" height="1" fill="#DC9DB6"/>
-                    <rect x="7" y="7" width="1" height="1" fill="#EE6F97"/>
-                    <rect x="10" y="7" width="1" height="1" fill="#EE6F97"/>
-                    <rect x="7" y="8" width="4" height="1" fill="#EE6F97"/>
-                    <rect x="8" y="9" width="2" height="1" fill="#EE6F97"/>
-                  </symbol>
-
-                  <symbol id="tmlTree" viewBox="0 0 18 24">
-                    <rect x="7" y="16" width="4" height="8" fill="#9C6F4E"/>
-                    <rect x="9" y="16" width="2" height="8" fill="#7E5638"/>
-                    <rect x="6" y="22" width="6" height="2" fill="#8A5F40"/>
-                    <rect x="7" y="3" width="5" height="2" fill="#6BB257"/>
-                    <rect x="4" y="5" width="11" height="2" fill="#6BB257"/>
-                    <rect x="2" y="7" width="14" height="2" fill="#6BB257"/>
-                    <rect x="1" y="9" width="16" height="3" fill="#6BB257"/>
-                    <rect x="2" y="12" width="14" height="2" fill="#6BB257"/>
-                    <rect x="4" y="14" width="11" height="2" fill="#6BB257"/>
-                    <rect x="5" y="4" width="4" height="2" fill="#8CCB6F"/>
-                    <rect x="3" y="6" width="3" height="2" fill="#8CCB6F"/>
-                    <rect x="2" y="9" width="2" height="2" fill="#8CCB6F"/>
-                    <rect x="12" y="10" width="4" height="4" fill="#52984A"/>
-                    <rect x="10" y="14" width="5" height="2" fill="#52984A"/>
-                    <rect x="5" y="16" width="9" height="1" fill="#46863F"/>
-                  </symbol>
-
-                  <symbol id="tmlPine" viewBox="0 0 16 26">
-                    <rect x="7" y="20" width="2" height="6" fill="#8A5F40"/>
-                    <rect x="7" y="2" width="2" height="2" fill="#5FA86F"/>
-                    <rect x="6" y="4" width="4" height="2" fill="#5FA86F"/>
-                    <rect x="5" y="6" width="6" height="2" fill="#5FA86F"/>
-                    <rect x="5" y="9" width="6" height="2" fill="#5FA86F"/>
-                    <rect x="4" y="11" width="8" height="2" fill="#5FA86F"/>
-                    <rect x="4" y="14" width="8" height="2" fill="#5FA86F"/>
-                    <rect x="3" y="16" width="10" height="2" fill="#5FA86F"/>
-                    <rect x="2" y="18" width="12" height="2" fill="#5FA86F"/>
-                    <rect x="6" y="4" width="2" height="2" fill="#79C083"/>
-                    <rect x="5" y="9" width="2" height="2" fill="#79C083"/>
-                    <rect x="4" y="14" width="2" height="2" fill="#79C083"/>
-                    <rect x="3" y="16" width="2" height="2" fill="#79C083"/>
-                    <rect x="9" y="11" width="3" height="2" fill="#4E9460"/>
-                    <rect x="10" y="16" width="3" height="2" fill="#4E9460"/>
-                    <rect x="11" y="18" width="3" height="2" fill="#4E9460"/>
-                  </symbol>
-
-                  <symbol id="tmlBush" viewBox="0 0 16 10">
-                    <rect x="2" y="4" width="12" height="6" fill="#6BB257"/>
-                    <rect x="4" y="2" width="8" height="2" fill="#6BB257"/>
-                    <rect x="3" y="3" width="4" height="3" fill="#8CCB6F"/>
-                    <rect x="10" y="5" width="5" height="5" fill="#52984A"/>
-                    <rect x="2" y="9" width="12" height="1" fill="#46863F"/>
-                  </symbol>
-
-                  <symbol id="tmlMail" viewBox="0 0 16 22">
-                    <rect x="7" y="11" width="2" height="11" fill="#9C6F4E"/>
-                    <rect x="8" y="11" width="1" height="11" fill="#7E5638"/>
-                    <rect x="5" y="3" width="7" height="1" fill="#DA7C9C"/>
-                    <rect x="4" y="4" width="9" height="1" fill="#DA7C9C"/>
-                    <rect x="3" y="5" width="11" height="7" fill="#DA7C9C"/>
-                    <rect x="3" y="5" width="2" height="7" fill="#E795AF"/>
-                    <rect x="4" y="4" width="2" height="1" fill="#E795AF"/>
-                    <rect x="3" y="11" width="11" height="1" fill="#C26A8A"/>
-                    <rect x="5" y="8" width="7" height="1" fill="#C26A8A"/>
-                    <rect x="6" y="6" width="5" height="1" fill="#5A3F4A"/>
-                    <rect x="13" y="4" width="1" height="5" fill="#C26A8A"/>
-                    <rect x="14" y="4" width="2" height="3" fill="#EE6F97"/>
-                  </symbol>
-
-                  <symbol id="tmlFlowerA" viewBox="0 0 6 9">
-                    <rect x="3" y="4" width="1" height="5" fill="#5A9E4C"/>
-                    <rect x="1" y="6" width="2" height="1" fill="#6BB45C"/>
-                    <rect x="2" y="1" width="3" height="3" fill="#F2A9C4"/>
-                    <rect x="2" y="0" width="1" height="1" fill="#F2A9C4"/>
-                    <rect x="4" y="0" width="1" height="1" fill="#F2A9C4"/>
-                    <rect x="2" y="1" width="1" height="2" fill="#F9C8DB"/>
-                    <rect x="4" y="2" width="1" height="1" fill="#E98FB4"/>
-                  </symbol>
-
-                  <symbol id="tmlFlowerB" viewBox="0 0 6 9">
-                    <rect x="3" y="4" width="1" height="5" fill="#5A9E4C"/>
-                    <rect x="3" y="6" width="2" height="1" fill="#6BB45C"/>
-                    <rect x="3" y="1" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="3" y="3" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="2" y="2" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="4" y="2" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="2" y="1" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="4" y="1" width="1" height="1" fill="#FBF3F6"/>
-                    <rect x="3" y="2" width="1" height="1" fill="#F6C453"/>
-                  </symbol>
-
-                  <symbol id="tmlBfly" viewBox="0 0 8 6">
-                    <rect x="3" y="1" width="1" height="4" fill="#7C5C42"/>
-                    <rect x="3" y="0" width="1" height="1" fill="#7C5C42"/>
-                    <rect x="0" y="1" width="3" height="2" fill="#F2A9C4"/>
-                    <rect x="0" y="3" width="2" height="2" fill="#F2A9C4"/>
-                    <rect x="4" y="1" width="3" height="2" fill="#F2A9C4"/>
-                    <rect x="5" y="3" width="2" height="2" fill="#F2A9C4"/>
-                    <rect x="1" y="1" width="1" height="1" fill="#F9C8DB"/>
-                    <rect x="5" y="1" width="1" height="1" fill="#F9C8DB"/>
-                  </symbol>
-
-                  <symbol id="tmlTuft" viewBox="0 0 6 5">
-                    <rect x="0" y="2" width="1" height="3" fill="#5A9E4C"/>
-                    <rect x="2" y="0" width="1" height="5" fill="#6BB45C"/>
-                    <rect x="4" y="1" width="1" height="4" fill="#5A9E4C"/>
-                  </symbol>
-                </defs>
+            <!-- 하트 ↔ 편지 모핑 로더 (장식, 바닐라 JS — 라이브러리 없음) -->
+            <span class="tml-loader" aria-hidden="true">
+              <svg viewBox="0 0 200 200" focusable="false">
+                <path id="tml-mp" fill="#E8709A" stroke="#E8709A" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" d="M100 158 C78 138 40 116 40 82 C40 60 56 46 76 46 C90 46 98 56 100 64 C102 56 110 46 124 46 C144 46 160 60 160 82 C160 116 122 138 100 158 Z"/>
+                <path id="tml-cr" d="M44 70 L100 102 L156 70" fill="none" stroke="#FCE3EC" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
               </svg>
-
-              <!-- 하늘 -->
-              <svg class="tml-sun" viewBox="0 0 24 24" focusable="false"><use href="#tmlSun"/></svg>
-              <svg class="tml-cloud tml-cloud-1" viewBox="0 0 28 14" focusable="false"><use href="#tmlCloud"/></svg>
-              <svg class="tml-cloud tml-cloud-2" viewBox="0 0 28 14" focusable="false"><use href="#tmlCloud"/></svg>
-              <svg class="tml-cloud tml-cloud-3" viewBox="0 0 28 14" focusable="false"><use href="#tmlCloud"/></svg>
-              <svg class="tml-bird tml-bird-1" viewBox="0 0 10 5" focusable="false"><use href="#tmlBird"/></svg>
-              <svg class="tml-bird tml-bird-2" viewBox="0 0 10 5" focusable="false"><use href="#tmlBird"/></svg>
-
-              <!-- 떠다니는 하트 + 날아가는 편지 -->
-              <span class="tml-heart tml-heart-1">♥</span>
-              <span class="tml-heart tml-heart-2">♥</span>
-              <svg class="tml-envelope" viewBox="0 0 18 13" focusable="false"><use href="#tmlEnv"/></svg>
-
-              <!-- 땅 (잔디) -->
-              <span class="tml-ground"></span>
-
-              <!-- 원경 나무 (멀리, 흐릿 — 깊이감) -->
-              <svg class="tml-tree tml-tree-far tml-tree-far-1" viewBox="0 0 18 24" focusable="false"><use href="#tmlTree"/></svg>
-              <svg class="tml-tree tml-tree-far tml-tree-far-2" viewBox="0 0 16 26" focusable="false"><use href="#tmlPine"/></svg>
-              <svg class="tml-tree tml-tree-far tml-tree-far-3" viewBox="0 0 18 24" focusable="false"><use href="#tmlTree"/></svg>
-
-              <!-- 근경 나무 · 솔잎나무 · 덤불 -->
-              <svg class="tml-tree tml-tree-1" viewBox="0 0 18 24" focusable="false"><use href="#tmlTree"/></svg>
-              <svg class="tml-tree tml-tree-2" viewBox="0 0 18 24" focusable="false"><use href="#tmlTree"/></svg>
-              <svg class="tml-pine tml-pine-1" viewBox="0 0 16 26" focusable="false"><use href="#tmlPine"/></svg>
-              <svg class="tml-bush tml-bush-1" viewBox="0 0 16 10" focusable="false"><use href="#tmlBush"/></svg>
-
-              <!-- 우편함 (편지 모티프) -->
-              <svg class="tml-mailbox" viewBox="0 0 16 22" focusable="false"><use href="#tmlMail"/></svg>
-
-              <!-- 꽃 · 잔디 포기 -->
-              <svg class="tml-flower tml-flower-1" viewBox="0 0 6 9" focusable="false"><use href="#tmlFlowerA"/></svg>
-              <svg class="tml-flower tml-flower-2" viewBox="0 0 6 9" focusable="false"><use href="#tmlFlowerB"/></svg>
-              <svg class="tml-flower tml-flower-3" viewBox="0 0 6 9" focusable="false"><use href="#tmlFlowerA"/></svg>
-              <svg class="tml-flower tml-flower-4" viewBox="0 0 6 9" focusable="false"><use href="#tmlFlowerB"/></svg>
-              <svg class="tml-tuft tml-tuft-1" viewBox="0 0 6 5" focusable="false"><use href="#tmlTuft"/></svg>
-              <svg class="tml-tuft tml-tuft-2" viewBox="0 0 6 5" focusable="false"><use href="#tmlTuft"/></svg>
-
-              <!-- 나비 -->
-              <svg class="tml-butterfly" viewBox="0 0 8 6" focusable="false"><use href="#tmlBfly"/></svg>
             </span>
 
             <span class="tml-body">
@@ -671,23 +482,6 @@
               <p class="work-card-desc" data-i18n="work.lab.desc">작은 웹서비스 아이디어를 실험하고 정리하는 내부 공간입니다.</p>
               <p class="work-card-role" data-i18n="work.lab.role">서비스 실험 · UI 연구 · 프로토타입</p>
               <span class="work-card-foot mono" data-i18n="work.lab.foot">INTERNAL_EXPERIMENT</span>
-            </li>
-
-            <li class="work-card">
-              <div class="work-card-top">
-                <span class="work-card-thumb work-thumb-client" aria-hidden="true">
-                  <svg viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="var(--accent-soft)"/>
-                    <rect x="14" y="16" width="20" height="18" rx="2" stroke="var(--accent)" stroke-width="2"/>
-                    <path d="M18 22h6M18 26h12M18 30h9" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                </span>
-                <span class="status-badge is-active" data-i18n="work.smbest.status">준비 중</span>
-              </div>
-              <h3 class="work-card-name">SMBEST</h3>
-              <p class="work-card-desc" data-i18n="work.smbest.desc">함께할 예정인 기업 파트너의 웹 경험을 준비하고 있습니다.</p>
-              <p class="work-card-role" data-i18n="work.smbest.role">Client · 웹서비스 · 브랜드 경험</p>
-              <span class="work-card-foot mono">CLIENT_PARTNER</span>
             </li>
 
             <li class="work-card work-card-more">
@@ -885,7 +679,7 @@
           <a class="footer-brand" href="index.html" aria-label="Lunervia 메인으로 (새로고침)">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260622e"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260623a"
               alt="LUNERVIA"
               hidden
             />
@@ -982,6 +776,80 @@
       </div>
     </aside>
 
-    <script src="script.js?v=20260622e"></script>
+    <!-- 받아줘 배너 하트↔편지 모핑 로더 엔진 (바닐라 JS, 라이브러리 없음) -->
+    <script>
+      (function () {
+        var mp = document.getElementById("tml-mp"),
+          cr = document.getElementById("tml-cr");
+        if (!mp) return;
+        var TAU = 6.28319, K = 72, PER = 12;
+        var H0 = [100,158, 78,138,40,116,40,82, 40,60,56,46,76,46, 90,46,98,56,100,64, 102,56,110,46,124,46, 144,46,160,60,160,82, 160,116,122,138,100,158];
+        var H1 = [98,159, 76,140,38,114,37,80, 39,58,55,45,74,44, 89,46,98,55,100,62, 102,57,112,46,126,47, 145,47,161,61,162,84, 161,117,123,139,98,159];
+        var H2 = [102,157, 80,137,42,118,43,84, 41,62,57,47,78,48, 91,46,98,57,100,66, 102,55,109,46,123,45, 143,45,159,59,158,80, 159,115,121,137,102,157];
+        var E0 = [100,150, 64,151,40,149,40,107, 40,93,40,78,40,64, 60,64,80,64,100,64, 120,64,140,64,160,64, 160,78,160,93,160,107, 160,149,136,151,100,150];
+        var E1 = [100,150, 64,151,40,149,40,106, 40,92,40,77,40,62, 60,62,80,62,100,62, 120,62,140,62,160,62, 160,77,160,92,160,106, 160,149,136,151,100,150];
+        var E2 = [100,148, 66,149,42,147,42,107, 42,93,42,79,42,66, 61,66,80,66,100,66, 120,66,139,66,158,66, 158,79,158,93,158,107, 158,147,134,149,100,148];
+        function cub(a, b, c, d, t) { var u = 1 - t; return u*u*u*a + 3*u*u*t*b + 3*u*t*t*c + t*t*t*d; }
+        function sb(a) {
+          var o = [], px = a[0], py = a[1], k = 2, s, j, t;
+          for (s = 0; s < 6; s++) {
+            var c1x=a[k],c1y=a[k+1],c2x=a[k+2],c2y=a[k+3],ex=a[k+4],ey=a[k+5]; k += 6;
+            for (j = 0; j < PER; j++) { t = j / PER; o.push(cub(px,c1x,c2x,ex,t), cub(py,c1y,c2y,ey,t)); }
+            px = ex; py = ey;
+          }
+          return o;
+        }
+        function burst(ext, eR, rot) {
+          var o = [], sp = 11, R0 = 62, RIN = 25, i;
+          for (i = 0; i < K; i++) {
+            var th = 1.5708 + (i / K) * TAU + rot;
+            var ph = (i / K) * sp, si = Math.floor(ph) % sp, fr = ph - Math.floor(ph);
+            var bump = 0.5 - 0.5 * Math.cos(TAU * fr);
+            var tip = ext.indexOf(si) >= 0 ? eR : R0;
+            var r = RIN + (tip - RIN) * bump;
+            o.push(100 + r * Math.cos(th), 100 + r * Math.sin(th));
+          }
+          return o;
+        }
+        function rnd(n, k) { var s = []; while (s.length < k) { var v = Math.floor(Math.random() * n); if (s.indexOf(v) < 0) s.push(v); } return s; }
+        function path(p) { var d = "M" + p[0].toFixed(1) + " " + p[1].toFixed(1), i; for (i = 2; i < p.length; i += 2) d += "L" + p[i].toFixed(1) + " " + p[i + 1].toFixed(1); return d + "Z"; }
+        function lerp(a, b, t) { var o = [], i; for (i = 0; i < a.length; i++) o.push(a[i] + (b[i] - a[i]) * t); return o; }
+        var hH0 = sb(H0), CLA = burst([], 0, 0);
+        var seq = [hH0, sb(H1), sb(H2), CLA, CLA, CLA, CLA, sb(E0), sb(E1), sb(E2), hH0];
+        var ev = [0,0,0,0,0,0,0,1,1,1,0];
+        var du = [380,380,820,720,760,720,820,380,380,820];
+        var es = ["S","S","C","S","S","S","C","S","S","C"];
+        function eC(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+        function eS(t) { return 0.5 - 0.5 * Math.cos(Math.PI * t); }
+        var ti = [], total = 0, i;
+        for (i = 0; i < du.length; i++) { ti.push(total); total += du[i]; }
+        function regen() {
+          seq[4] = burst(rnd(11, 2 + (Math.random() < 0.5 ? 0 : 1)), 80, Math.random()*0.18 - 0.09);
+          seq[5] = burst(rnd(11, 2 + (Math.random() < 0.5 ? 0 : 1)), 84, Math.random()*0.18 - 0.09);
+        }
+        if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { mp.setAttribute("d", path(hH0)); return; }
+        var start = null, cyc = -1, raf = null, vis = true;
+        function frame(ts) {
+          if (start === null) start = ts;
+          var el = ts - start, c = Math.floor(el / total);
+          if (c !== cyc) { cyc = c; regen(); }
+          var p = el % total, s = 0;
+          while (s < du.length - 1 && p >= ti[s] + du[s]) s++;
+          var lt = (p - ti[s]) / du[s], et = es[s] === "C" ? eC(lt) : eS(lt);
+          mp.setAttribute("d", path(lerp(seq[s], seq[s + 1], et)));
+          var e = ev[s] + (ev[s + 1] - ev[s]) * et;
+          cr.style.opacity = Math.max(0, (e - 0.6) / 0.4);
+          raf = vis ? requestAnimationFrame(frame) : null;
+        }
+        function go() { if (!raf) { start = null; raf = requestAnimationFrame(frame); } }
+        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+        var host = mp.closest(".tml-loader") || mp;
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (en) { vis = en[0].isIntersecting; if (vis) go(); else stop(); }, { threshold: 0 }).observe(host);
+        } else { go(); }
+        document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (vis) go(); });
+      })();
+    </script>
+    <script src="script.js?v=20260623a"></script>
   </body>
 </html>
