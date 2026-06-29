@@ -11,7 +11,7 @@
     <meta name="keywords" content="Lunervia, 루네르비아, 소프트웨어 스튜디오, software studio, 프론트엔드, frontend, UI UX, 웹서비스, web service, 제품 설계, AI 워크플로우" />
     <meta name="author" content="Lunervia" />
     <link rel="canonical" href="https://lunervia.xyz/" />
-    <meta name="theme-color" content="#F7F3EA" />
+    <meta name="theme-color" content="#FBFAF7" />
 
     <!-- Open Graph (Facebook · Instagram · KakaoTalk 등 SNS 미리보기) -->
     <meta property="og:type" content="website" />
@@ -70,13 +70,13 @@
     </script>
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23161616'/%3E%3Ctext x='49%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='34' font-weight='700' fill='%23F7F3EA'%3EL%3C/text%3E%3Ccircle cx='47' cy='19' r='5' fill='%237C5CFF'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23161616'/%3E%3Ctext x='49%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='34' font-weight='700' fill='%23F7F3EA'%3EL%3C/text%3E%3Ccircle cx='47' cy='19' r='5' fill='%232E5BD6'/%3E%3C/svg%3E"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -84,7 +84,7 @@
       crossorigin
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
-    <link rel="stylesheet" href="styles.css?v=20260623a" />
+    <link rel="stylesheet" href="styles.css?v=20260630b" />
   </head>
   <body>
     <!-- 지구본 좌표 데이터(아래 JSON) — 히어로 비주얼 지구본 렌더러(script.js)가 사용 -->
@@ -110,7 +110,7 @@
           <span class="brand-logo" hidden>
             <img
               class="brand-img"
-              src="assets/brand/lunervia-logo-text.png?v=20260623a"
+              src="assets/brand/lunervia-logo-text.png?v=20260630b"
               alt="LUNERVIA"
             />
           </span>
@@ -170,7 +170,7 @@
           <a class="nav-link" href="#work" data-i18n="nav.work">작업</a>
           <a class="nav-link" href="#process" data-i18n="nav.process">프로세스</a>
           <a class="nav-link" href="#contact" data-i18n="nav.contact">문의</a>
-          <a class="nav-link nav-module" href="module-service-builder.html" data-i18n="nav.module">모듈</a>
+          <a class="nav-link nav-module" href="modules.html" data-i18n="nav.module">모듈</a>
           <a class="nav-link nav-sns" href="sns.html" data-i18n="nav.sns">SNS</a>
         </nav>
 
@@ -218,17 +218,30 @@
             </ul>
           </div>
 
-          <!-- Hero 우측 — 실제 대륙이 자전하는 지구본 (장식 비주얼) -->
+          <!-- Hero 우측 — Self-assembling interface (스튜디오가 인터페이스를 조립한다) -->
           <div class="hero-visual reveal" aria-hidden="true">
-            <div class="hero-globe">
-              <svg class="globe-svg" viewBox="0 0 200 200" focusable="false">
-                <circle class="whirl whirl-1" cx="100" cy="100" r="95" />
-                <circle class="whirl whirl-2" cx="100" cy="100" r="89" />
-                <circle class="globe-disc" cx="100" cy="100" r="74" />
-                <path id="hero-globe-grat" class="globe-grat" d="" />
-                <path id="hero-globe-land" class="globe-land-path" d="" />
-                <circle class="globe-edge" cx="100" cy="100" r="74" />
-              </svg>
+            <div class="assembly">
+              <span class="assembly-orb"></span>
+              <div class="assembly-frame">
+                <div class="assembly-bar">
+                  <span class="assembly-dot"></span>
+                  <span class="assembly-dot"></span>
+                  <span class="assembly-dot"></span>
+                  <span class="assembly-url mono">lunervia.app</span>
+                </div>
+                <div class="assembly-stage">
+                  <span class="ap ap-topbar"></span>
+                  <span class="ap ap-display"></span>
+                  <span class="ap ap-line ap-line-1"></span>
+                  <span class="ap ap-line ap-line-2"></span>
+                  <span class="ap ap-btn"></span>
+                  <span class="ap ap-card ap-card-1"></span>
+                  <span class="ap ap-card ap-card-2"></span>
+                  <span class="ap ap-chip"></span>
+                  <span class="assembly-cursor"></span>
+                </div>
+              </div>
+              <p class="assembly-caption mono"><span class="assembly-tick"></span>idea → live service</p>
             </div>
           </div>
         </div>
@@ -679,7 +692,7 @@
           <a class="footer-brand" href="index.html" aria-label="Lunervia 메인으로 (새로고침)">
             <img
               class="footer-brand-img"
-              src="assets/brand/lunervia-logo-symbol.png?v=20260623a"
+              src="assets/brand/lunervia-logo-symbol.png?v=20260630b"
               alt="LUNERVIA"
               hidden
             />
@@ -699,7 +712,7 @@
             <a href="#process" data-i18n="nav.process">프로세스</a>
             <a href="#about" data-i18n="nav.about">소개</a>
             <a href="partners.html" target="_blank" rel="noopener noreferrer" data-i18n="nav.partners">프로젝트</a>
-            <a href="module-service-builder.html" data-i18n="nav.module">모듈</a>
+            <a href="modules.html" data-i18n="nav.module">모듈</a>
             <button type="button" class="footer-col-button" data-open-why data-i18n="nav.why">루네르비아를 만든 이유</button>
           </div>
           <div class="footer-col">
@@ -850,6 +863,6 @@
         document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (vis) go(); });
       })();
     </script>
-    <script src="script.js?v=20260623a"></script>
+    <script src="script.js?v=20260630b"></script>
   </body>
 </html>

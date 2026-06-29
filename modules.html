@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모듈 — Lunervia 월간 구독형 제작·관리</title>
+    <meta
+      name="description"
+      content="Lunervia의 모듈은 한 번 만들고 끝나는 구조가 아니라, 매월 필요한 부분을 함께 다듬어가는 월간 협업 방식입니다. Starter · Growth · Product · Custom 중 프로젝트 상태에 맞는 모듈로 시작하세요."
+    />
+    <link rel="canonical" href="https://lunervia.xyz/modules.html" />
+    <meta name="theme-color" content="#FBFAF7" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Lunervia" />
+    <meta property="og:title" content="모듈 — Lunervia 월간 구독형 제작·관리" />
+    <meta property="og:description" content="매월 함께 다듬는 월간 협업 모듈. Starter · Growth · Product · Custom." />
+    <meta property="og:url" content="https://lunervia.xyz/modules.html" />
+    <meta property="og:image" content="https://lunervia.xyz/assets/brand/lunervia-logo-symbol.png" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="모듈 — Lunervia 월간 구독형 제작·관리" />
+    <meta name="twitter:description" content="매월 함께 다듬는 월간 협업 모듈." />
+    <meta name="twitter:image" content="https://lunervia.xyz/assets/brand/lunervia-logo-symbol.png" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23161616'/%3E%3Ctext x='49%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Helvetica,Arial,sans-serif' font-size='34' font-weight='700' fill='%23F7F3EA'%3EL%3C/text%3E%3Ccircle cx='47' cy='19' r='5' fill='%232E5BD6'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260630b" />
+  </head>
+  <body data-page="modules">
+    <!-- 스크롤 진행률 (상단 얇은 바) -->
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress-fill" id="scroll-progress-fill"></span>
+    </div>
+
+    <a class="skip-link" href="#modules-main">본문으로 건너뛰기</a>
+
+    <!-- ============================== TOPBAR (메인과 동일) ============================== -->
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="Lunervia 메인으로 (새로고침)">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" focusable="false">
+              <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="10.5" fill="var(--ink)" />
+              <path d="M17.4 7.2a9 9 0 1 0 0 17.6 7.1 7.1 0 0 1 0-17.6Z" fill="#F8F5EE" />
+              <circle cx="22.6" cy="10.4" r="2" fill="var(--accent)" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-text-main">Lunervia</span>
+            <span class="brand-text-kr">루네르비아</span>
+          </span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+          aria-label="메뉴 열기"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="nav-menu" id="nav-menu" aria-label="주 메뉴">
+          <div class="nav-item nav-item-dropdown" data-dropdown="intro">
+            <button
+              type="button"
+              class="nav-link nav-link-dropdown"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="nav-dropdown-intro"
+            >
+              <span data-i18n="nav.about">소개</span>
+              <svg class="nav-chevron" viewBox="0 0 12 8" aria-hidden="true">
+                <path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="nav-dropdown" id="nav-dropdown-intro" role="menu" hidden>
+              <a href="index.html#about" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.brand">브랜드 소개</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.brand.meta">루네르비아가 어떤 스튜디오인지</span>
+              </a>
+              <a href="index.html#philosophy" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.philosophy">철학</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.philosophy.meta">제품 설계의 기준</span>
+              </a>
+              <a href="partners.html" target="_blank" rel="noopener noreferrer" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.projects">전체 프로젝트</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.projects.meta">주요 프로젝트 및 협력</span>
+              </a>
+              <a href="why.html" role="menuitem">
+                <span class="nav-dropdown-name" data-i18n="nav.intro.why">루네르비아를 만든 이유</span>
+                <span class="nav-dropdown-meta" data-i18n="nav.intro.why.meta">브랜드의 출발점</span>
+              </a>
+            </div>
+          </div>
+
+          <a class="nav-link" href="index.html#services" data-i18n="nav.services">서비스</a>
+          <a class="nav-link" href="index.html#work" data-i18n="nav.work">작업</a>
+          <a class="nav-link" href="index.html#process" data-i18n="nav.process">프로세스</a>
+          <a class="nav-link" href="index.html#contact" data-i18n="nav.contact">문의</a>
+          <a class="nav-link nav-module" href="modules.html" aria-current="page" data-i18n="nav.module">모듈</a>
+          <a class="nav-link nav-sns" href="sns.html" data-i18n="nav.sns">SNS</a>
+        </nav>
+
+        <div class="nav-lang" role="group" aria-label="Language">
+          <button type="button" class="nav-lang-btn is-active" data-lang="ko" aria-label="한국어">KO</button>
+          <span class="nav-lang-sep" aria-hidden="true">/</span>
+          <button type="button" class="nav-lang-btn" data-lang="en" aria-label="English">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="modules-page" id="modules-main">
+      <div class="modules-inner">
+        <a class="back-link" href="index.html">
+          <span aria-hidden="true">←</span>
+          <span data-ko="메인으로" data-en="Back to home">메인으로</span>
+        </a>
+
+        <!-- ===================== HERO / INTRO ===================== -->
+        <header class="modules-hero">
+          <p class="modules-eyebrow mono">
+            <span class="modules-eyebrow-dot" aria-hidden="true"></span>
+            <span data-ko="Lunervia · Modules" data-en="Lunervia · Modules">Lunervia · Modules</span>
+          </p>
+          <h1 class="modules-title" data-ko="필요한 만큼, 매월 함께 다듬는 모듈" data-en="Modules we refine together, month by month">
+            필요한 만큼, 매월 함께 다듬는 모듈
+          </h1>
+          <p class="modules-lead" data-ko="모듈은 한 번 만들고 끝나는 작업이 아니라, 프로젝트의 상태에 맞춰 매월 조금씩 손보는 협업 방식입니다. 작은 수정부터 서비스형 기능 개선까지, 지금 단계에 맞는 모듈로 시작할 수 있습니다." data-en="A module isn't a one-time build — it's a monthly way of working that fits where your project is. From small edits to real product features, start with the module that matches your stage.">
+            모듈은 한 번 만들고 끝나는 작업이 아니라, 프로젝트의 상태에 맞춰 매월 조금씩 손보는 협업 방식입니다. 작은 수정부터 서비스형 기능 개선까지, 지금 단계에 맞는 모듈로 시작할 수 있습니다.
+          </p>
+        </header>
+
+        <!-- ===================== BILLING NOTICE ===================== -->
+        <aside class="billing-notice" aria-label="월간 결제 안내">
+          <span class="billing-notice-mark mono" aria-hidden="true">monthly</span>
+          <div class="billing-notice-body">
+            <p class="billing-notice-line" data-ko="Lunervia의 모듈은 매월 결제하며 필요한 부분을 함께 다듬어가는 월간 협업 구조입니다." data-en="Lunervia modules run on a monthly rhythm — you pay each month, and we refine what the project needs together.">
+              Lunervia의 모듈은 매월 결제하며 필요한 부분을 함께 다듬어가는 월간 협업 구조입니다.
+            </p>
+            <p class="billing-notice-sub" data-ko="결제 구조는 월간 단위로 확장 가능하도록 설계하되, 실제 진행 범위는 상담 후 조정됩니다." data-en="The billing is built to scale month to month, while the actual scope is adjusted after we talk.">
+              결제 구조는 월간 단위로 확장 가능하도록 설계하되, 실제 진행 범위는 상담 후 조정됩니다.
+            </p>
+          </div>
+        </aside>
+
+        <!-- ===================== MODULE GRID (JS 렌더) ===================== -->
+        <section class="modules-section" aria-labelledby="module-section-title">
+          <h2 class="modules-section-title" id="module-section-title" data-ko="네 가지 모듈" data-en="Four modules">네 가지 모듈</h2>
+          <div class="module-grid" id="module-grid">
+            <!-- data/modules.js + 인라인 렌더러가 채움 -->
+            <noscript>
+              <p class="module-noscript">모듈 목록을 보려면 자바스크립트를 켜 주세요. 또는 <a href="index.html#contact">문의하기</a>로 바로 연락 주셔도 됩니다.</p>
+            </noscript>
+          </div>
+        </section>
+
+        <!-- ===================== 관련 상품 + 마무리 CTA ===================== -->
+        <section class="modules-foot">
+          <a class="modules-related" href="module-service-builder.html">
+            <span class="modules-related-tag mono">Module 시리즈 01</span>
+            <span class="modules-related-body">
+              <strong class="modules-related-name">Service Builder</strong>
+              <span class="modules-related-desc" data-ko="개별 디지털 상품으로 제공되는 모듈도 따로 둘러볼 수 있습니다." data-en="A standalone digital-product module you can also browse on its own.">개별 디지털 상품으로 제공되는 모듈도 따로 둘러볼 수 있습니다.</span>
+            </span>
+            <span class="modules-related-arrow" aria-hidden="true">↗</span>
+          </a>
+
+          <div class="modules-cta-band">
+            <p class="modules-cta-text" data-ko="어떤 모듈이 맞을지 모르겠다면, 지금 상태를 알려주시면 함께 정리해 드립니다." data-en="Not sure which module fits? Tell us where things are now and we'll sort it out together.">
+              어떤 모듈이 맞을지 모르겠다면, 지금 상태를 알려주시면 함께 정리해 드립니다.
+            </p>
+            <a class="modules-cta-button" href="index.html#contact">
+              <span data-ko="문의하기" data-en="Get in touch">문의하기</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ============================== FOOTER ============================== -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-brand-block">
+          <a class="footer-brand" href="index.html" aria-label="Lunervia 메인으로">
+            <span class="footer-brand-text">Lunervia</span>
+          </a>
+          <p class="footer-tagline">
+            Lunervia는 사용자 경험 중심의 웹·모바일 서비스를 설계합니다.<br />작은 실험과 개선을 반복하며 완성도 있는 제품을 만들어갑니다.
+          </p>
+          <p class="footer-status mono" aria-hidden="true"><span class="footer-status-dot"></span>Available for new projects</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="푸터 메뉴">
+          <div class="footer-col">
+            <h3 class="footer-col-title mono" data-i18n="footer.explore">Explore</h3>
+            <a href="index.html#services" data-i18n="nav.services">서비스</a>
+            <a href="index.html#work" data-i18n="nav.work">작업</a>
+            <a href="index.html#process" data-i18n="nav.process">프로세스</a>
+            <a href="index.html#about" data-i18n="nav.about">소개</a>
+            <a href="partners.html" target="_blank" rel="noopener noreferrer" data-i18n="nav.partners">프로젝트</a>
+            <a href="modules.html" aria-current="page" data-i18n="nav.module">모듈</a>
+            <a href="why.html" data-i18n="nav.why">루네르비아를 만든 이유</a>
+          </div>
+          <div class="footer-col">
+            <h3 class="footer-col-title mono" data-i18n="footer.connect">Connect</h3>
+            <a href="https://www.instagram.com/lunerviasoft/" target="_blank" rel="noopener noreferrer">Instagram · @lunerviasoft</a>
+            <a href="https://www.instagram.com/_dksrlqor/" target="_blank" rel="noopener noreferrer">Instagram · @_dksrlqor</a>
+            <a href="https://www.tiktok.com/@_dksrlqor" target="_blank" rel="noopener noreferrer">TikTok · @_dksrlqor</a>
+            <a href="sns.html" target="_blank" rel="noopener noreferrer" data-i18n="footer.snsAll">공식 SNS 채널 보기 ↗</a>
+            <span class="footer-soon" data-i18n="footer.emailSoon">Email · 준비 중</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-inner">
+          <p class="footer-copyright">© 2026 Lunervia. All rights reserved.</p>
+          <p class="footer-built" data-i18n="footer.built">Designed with care.</p>
+          <a class="footer-top-link" href="#modules-main" data-i18n="footer.top">맨 위로 ↑</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 공통 nav/언어/메뉴 동작 (기존 사이트 스크립트) -->
+    <script src="script.js?v=20260630b"></script>
+
+    <!-- 모듈 섹션 전용 렌더러 (데이터·결제 로직 import) -->
+    <script type="module">
+      import { LUNERVIA_MODULES } from "./data/modules.js";
+      import {
+        buildCheckoutUrl,
+        getStatusMeta,
+        getPriceLabel,
+      } from "./lib/subscription.js";
+
+      const LANG_KEY = "lunervia-lang";
+      const getLang = () => {
+        try {
+          return localStorage.getItem(LANG_KEY) === "en" ? "en" : "ko";
+        } catch (_) {
+          return "ko";
+        }
+      };
+
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c])
+        );
+
+      const chevron =
+        '<svg class="module-chevron" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5 L6 6.5 L11 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const arrow =
+        '<svg class="module-cta-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      const T = {
+        ko: { best: "적합한 대상", scope: "포함되는 작업", more: "포함 작업 보기" },
+        en: { best: "Best for", scope: "What's included", more: "See what's included" },
+      };
+
+      function moduleCard(mod, lang) {
+        const c = mod.i18n[lang] || mod.i18n.ko;
+        const t = T[lang] || T.ko;
+        const status = getStatusMeta(mod.status, lang);
+        const price = getPriceLabel(mod, lang);
+        const isCustom = mod.planId === "custom";
+        const detailId = `mod-detail-${mod.planId}`;
+        // 신청 가능한 모듈 → 준비된 /checkout 라우트(현재는 상담 안내), 문의형 → 바로 문의로.
+        const ctaHref = isCustom
+          ? "index.html#contact"
+          : buildCheckoutUrl(mod.planId);
+
+        const features = c.features
+          .map((f) => `<li>${esc(f)}</li>`)
+          .join("");
+
+        return `
+        <article class="module-card${mod.accent ? " module-card--accent" : ""}${
+          isCustom ? " module-card--custom" : ""
+        }" data-plan="${esc(mod.planId)}">
+          <div class="module-rail">
+            <span class="module-planid mono">MOD·${esc(mod.planId.toUpperCase())}</span>
+            <span class="module-status module-status--${status.tone}">
+              <span class="module-status-dot" aria-hidden="true"></span>${esc(status.label)}
+            </span>
+          </div>
+
+          <div class="module-body">
+            <h3 class="module-name">${esc(mod.name)}</h3>
+            <p class="module-pricelabel mono">${esc(price)}</p>
+            <p class="module-summary">${esc(c.summary)}</p>
+            <p class="module-target">
+              <span class="module-target-label mono">${esc(t.best)}</span>
+              <span>${esc(c.target)}</span>
+            </p>
+
+            <button class="module-toggle" type="button" aria-expanded="false" aria-controls="${detailId}">
+              <span class="module-toggle-text">${esc(t.more)}</span>
+              ${chevron}
+            </button>
+            <div class="module-detail" id="${detailId}" hidden>
+              <p class="module-scope-label mono">${esc(t.scope)}</p>
+              <ul class="module-scope">${features}</ul>
+            </div>
+          </div>
+
+          <a class="module-cta${isCustom ? " module-cta--ghost" : ""}${
+          mod.accent ? " module-cta--accent" : ""
+        }" href="${esc(ctaHref)}">
+            <span>${esc(c.ctaLabel)}</span>${arrow}
+          </a>
+        </article>`;
+      }
+
+      function renderGrid() {
+        const grid = document.getElementById("module-grid");
+        if (!grid) return;
+        const lang = getLang();
+        grid.innerHTML = LUNERVIA_MODULES.map((m) => moduleCard(m, lang)).join("");
+      }
+
+      // 정적 텍스트(data-ko / data-en) 언어 스왑
+      function swapStaticText() {
+        const lang = getLang();
+        document.querySelectorAll("[data-ko]").forEach((el) => {
+          const v = el.getAttribute(lang === "en" ? "data-en" : "data-ko");
+          if (typeof v === "string") el.textContent = v;
+        });
+      }
+
+      // 카드 펼침/접힘 (이벤트 위임, 키보드 접근 가능한 <button>)
+      function bindToggles() {
+        const grid = document.getElementById("module-grid");
+        if (!grid) return;
+        grid.addEventListener("click", (e) => {
+          const btn = e.target.closest(".module-toggle");
+          if (!btn) return;
+          const id = btn.getAttribute("aria-controls");
+          const panel = id && document.getElementById(id);
+          if (!panel) return;
+          const open = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!open));
+          panel.hidden = open;
+          btn.closest(".module-card")?.classList.toggle("is-open", !open);
+        });
+      }
+
+      function rerender() {
+        renderGrid();
+        swapStaticText();
+      }
+
+      // 언어 토글에 반응 (script.js 가 localStorage 를 갱신하므로, 버튼 클릭 직후 다시 그림)
+      document.querySelectorAll(".nav-lang-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // localStorage 반영 타이밍을 보장하기 위해 다음 프레임에 재렌더
+          requestAnimationFrame(rerender);
+        });
+      });
+      window.addEventListener("storage", (e) => {
+        if (e.key === LANG_KEY) rerender();
+      });
+
+      renderGrid();
+      swapStaticText();
+      bindToggles();
+    </script>
+  </body>
+</html>

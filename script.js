@@ -32,9 +32,12 @@
     pagePath === "" || pagePath === "/" ||
     pagePath.endsWith("/") || pagePath.endsWith("/index.html");
 
-  // 모듈 판매 페이지는 공유·북마크되는 랜딩이므로 새로고침해도 메인으로 보내지
+  // 모듈/결제 관련 페이지는 공유·북마크되는 랜딩이므로 새로고침해도 메인으로 보내지
   // 않고 그 자리에 머문다 (맨 위로만 스크롤). 메인과 같은 부류로 취급.
-  const isModulePage = pagePath.endsWith("module-service-builder.html");
+  const isModulePage =
+    pagePath.endsWith("module-service-builder.html") ||
+    pagePath.endsWith("modules.html") ||
+    pagePath.endsWith("checkout.html");
   const stayOnReload = isMainPage || isModulePage;
 
   const navEntry =
