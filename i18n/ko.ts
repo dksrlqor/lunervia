@@ -373,6 +373,63 @@ export const ko = {
     final: { title: "좋은 프롬프트 찾기를 끝내고,\n일정한 결과를 뽑으세요." },
   },
 
+  workPage: {
+    label: "WORK",
+    title: "증명은 배포로 합니다.",
+    lead: "운영 중인 서비스, 실험, 클라이언트 작업 — 전부 실제입니다.",
+    badajwo: {
+      status: "운영 중 · takemyletter.site",
+      name: "받아줘 — Take My Letter",
+      desc: "익명 손편지를 받는 픽셀 감성 편지함. 내 편지함 링크를 인스타 스토리에 올리면 누구나 익명 또는 이름으로 편지를 보냅니다. 기획, 디자인, 프론트엔드, 백엔드까지 전부 Lunervia가 직접 만들어 운영합니다.",
+      stackLabel: "STACK",
+      stack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "Framer Motion"],
+      featuresLabel: "만든 것들",
+      features: [
+        "익명 편지함 — 링크 하나로 받는 손편지",
+        "24시간 일회성 편지 링크",
+        "편지지 템플릿 4종 (픽셀·로맨틱·빈티지·포토프레임)",
+        "인스타 스토리 공유 이미지 자동 생성",
+        "레코드 플레이어 BGM",
+        "관리자 대시보드와 신고 처리",
+      ],
+      role: "기획 · UX · 프론트엔드 · 백엔드",
+      cta: "서비스 열기",
+      petHint: "고양이를 쓰다듬어 보세요",
+    },
+    cards: [
+      { tag: "LAB", name: "Lunervia Lab", status: "준비 중", desc: "서비스 실험, UI 연구, 프로토타입." },
+      { tag: "CLIENT", name: "SMBEST", status: "협업", desc: "기업 사이트 구축 프로젝트." },
+      {
+        tag: "PARTNER",
+        name: "Todak Life",
+        status: "채널",
+        desc: "앱 제작 과정과 기록을 영상으로 공유하는 크리에이터 채널.",
+      },
+    ],
+  },
+
+  why: {
+    eyebrow: "WHY LUNERVIA",
+    title: "루네르비아를 만든 이유",
+    intro:
+      "Lunervia는 디지털 서비스가 사용자의 실제 문제를 더 명확하고 편리하게 해결해야 한다는 생각에서 출발한 소프트웨어 브랜드입니다.",
+    paragraphs: [
+      "Lunervia는 단순한 제작자 이름이 아니라, 사용자가 마주하는 디지털 환경을 보다 명확하고 안정적으로 설계하기 위해 시작한 브랜드입니다.",
+      "웹과 모바일에서 사용자가 쉽게 이해하고 안정적으로 사용할 수 있는 제품을 만듭니다. 시각적 화려함보다 일관된 사용 경험과 신뢰할 수 있는 동작이 먼저입니다.",
+      "작은 실험과 개선을 반복하며 완성도를 쌓습니다. 새 기능을 빠르게 붙이기보다, 사용자가 오래 쓸 수 있는 구조와 흐름을 다듬는 데 시간을 씁니다.",
+    ],
+    emphasis:
+      "기술은 기능에 그치지 않고, 사용자의 맥락을 이해하는 방향으로 설계되어야 합니다.",
+    paragraphs2: [
+      "사용자는 기능 이상의 경험을 기대합니다. Lunervia는 그 경험을 구성하는 작은 결정들을 진지하게 다룹니다.",
+      "실험과 기록을 통해 디지털 제품의 기준을 한 걸음씩 만들어갑니다.",
+    ],
+    enLine:
+      "Lunervia is a software brand designing web and mobile services with a focus on clear and reliable user experience.",
+    ctaContact: "프로젝트 문의하기",
+    ctaWork: "작업 보기",
+  },
+
   notFound: {
     code: "404 — FAR SIDE OF THE MOON",
     title: "달 뒤편입니다.",

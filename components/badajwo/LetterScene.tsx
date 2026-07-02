@@ -4,6 +4,7 @@
 
 import Sprite from "./Sprite";
 import MailCat from "./MailCat";
+import PettableMailCat from "./PettableMailCat";
 
 const CLOUD_BIG = [
   "...wwww.....",
@@ -20,13 +21,17 @@ const GRASS = ["g.g..g.g", ".g.gg.g."];
 export default function LetterScene({
   catPx = 7,
   className = "",
+  interactive = false,
+  petHint,
 }: {
   catPx?: number;
   className?: string;
+  interactive?: boolean;
+  petHint?: string;
 }) {
   return (
     <div
-      aria-hidden="true"
+      aria-hidden={interactive ? undefined : "true"}
       className={`relative h-full min-h-56 overflow-hidden rounded-2xl border-2 border-[#3D2E22]/25 bg-[#FDF8EE] ${className}`}
       style={{ imageRendering: "pixelated" }}
     >
@@ -79,12 +84,21 @@ export default function LetterScene({
 
       {/* 배달 고양이 — 편지를 물고 방긋 */}
       <div className="absolute inset-x-0 bottom-6 flex justify-center">
-        <MailCat stage={2} px={catPx} />
+        {interactive ? (
+          <PettableMailCat px={catPx} hint={petHint} />
+        ) : (
+          <MailCat stage={2} px={catPx} />
+        )}
       </div>
 
       <p className="pointer-events-none absolute bottom-2 left-3 font-mono text-[9px] tracking-[0.2em] text-[#3D2E22]/55 uppercase">
         takemyletter.site
       </p>
+      {interactive && petHint && (
+        <p className="pointer-events-none absolute right-3 bottom-2 font-mono text-[9px] tracking-[0.12em] text-[#3D2E22]/45">
+          {petHint} ♥
+        </p>
+      )}
     </div>
   );
 }

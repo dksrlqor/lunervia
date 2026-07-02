@@ -375,6 +375,63 @@ export const en: Dict = {
     final: { title: "Stop hunting for the perfect prompt —\nget consistent results." },
   },
 
+  workPage: {
+    label: "WORK",
+    title: "Proof, shipped.",
+    lead: "Services in production, experiments, client work — all of it real.",
+    badajwo: {
+      status: "Live · takemyletter.site",
+      name: "Badajwo — Take My Letter",
+      desc: "A pixel-art letterbox for anonymous handwritten letters. Post your letterbox link on an Instagram story and anyone can write to you — anonymously or by name. Planned, designed, built, and operated end to end by Lunervia.",
+      stackLabel: "STACK",
+      stack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "Framer Motion"],
+      featuresLabel: "What we built",
+      features: [
+        "An anonymous letterbox behind a single link",
+        "One-time letter links that live for 24 hours",
+        "4 letter-paper templates (pixel · romantic · vintage · photo frame)",
+        "Auto-generated Instagram story share images",
+        "A record-player BGM",
+        "Admin dashboard and report handling",
+      ],
+      role: "Product · UX · Frontend · Backend",
+      cta: "Open the service",
+      petHint: "Try petting the cat",
+    },
+    cards: [
+      { tag: "LAB", name: "Lunervia Lab", status: "In progress", desc: "Experiments, UI research, prototypes." },
+      { tag: "CLIENT", name: "SMBEST", status: "Collaboration", desc: "Corporate website build." },
+      {
+        tag: "PARTNER",
+        name: "Todak Life",
+        status: "Channel",
+        desc: "A creator channel sharing the journey of building apps through video.",
+      },
+    ],
+  },
+
+  why: {
+    eyebrow: "WHY LUNERVIA",
+    title: "Why we built Lunervia",
+    intro:
+      "Lunervia is a software brand built on the belief that digital services should solve real user problems more clearly and conveniently.",
+    paragraphs: [
+      "Lunervia is more than a maker's name. It is a brand started to design clearer, more reliable digital environments for the people who use them.",
+      "We build products on web and mobile that people understand quickly and rely on consistently. Dependable behaviour and a coherent experience come before visual flourish.",
+      "Quality accumulates through small experiments and steady improvements. Rather than rushing new features, we spend time refining the structure and flow that lets a product last.",
+    ],
+    emphasis:
+      "Technology should not stop at functionality. It should be designed with an understanding of the user's context.",
+    paragraphs2: [
+      "Users expect more than features. We treat the small decisions that shape that experience with care.",
+      "Through experiments and records, we are defining our standard for digital products one step at a time.",
+    ],
+    enLine:
+      "Lunervia is a software brand designing web and mobile services with a focus on clear and reliable user experience.",
+    ctaContact: "Start a project",
+    ctaWork: "View work",
+  },
+
   notFound: {
     code: "404 — FAR SIDE OF THE MOON",
     title: "You've reached the far side of the moon.",
