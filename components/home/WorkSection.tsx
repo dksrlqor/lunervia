@@ -3,55 +3,7 @@
 import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
 import Reveal from "@/components/Reveal";
-
-/* §3-1 예외 구역의 홈 프리뷰 — 받아줘 픽셀 세계는 이 프레임 밖으로 새지 않는다. */
-function PixelLetterPreview() {
-  return (
-    <div className="relative h-full min-h-52 overflow-hidden rounded-2xl border-2 border-[#3D2E22]/25 bg-[#FDF8EE]">
-      <svg
-        viewBox="0 0 32 24"
-        shapeRendering="crispEdges"
-        preserveAspectRatio="xMidYMid slice"
-        className="h-full w-full"
-        aria-hidden="true"
-      >
-        <rect width="32" height="24" fill="#FDF8EE" />
-        <rect x="0" y="21" width="32" height="3" fill="#E8D5B8" />
-        {/* 봉투 */}
-        <rect x="8" y="9" width="16" height="10" fill="#FFFDF9" />
-        <rect x="8" y="9" width="16" height="1" fill="#3D2E22" />
-        <rect x="8" y="18" width="16" height="1" fill="#3D2E22" />
-        <rect x="8" y="9" width="1" height="10" fill="#3D2E22" />
-        <rect x="23" y="9" width="1" height="10" fill="#3D2E22" />
-        {/* 플랩 */}
-        <rect x="9" y="10" width="14" height="1" fill="#F8D0C7" />
-        <rect x="10" y="11" width="12" height="1" fill="#F8D0C7" />
-        <rect x="12" y="12" width="8" height="1" fill="#F8D0C7" />
-        <rect x="14" y="13" width="4" height="1" fill="#F8D0C7" />
-        {/* 하트 실링 */}
-        <rect x="15" y="14" width="1" height="1" fill="#D89588" />
-        <rect x="17" y="14" width="1" height="1" fill="#D89588" />
-        <rect x="14" y="15" width="5" height="1" fill="#D89588" />
-        <rect x="15" y="16" width="3" height="1" fill="#D89588" />
-        <rect x="16" y="17" width="1" height="1" fill="#D89588" />
-        {/* 떠 있는 하트 */}
-        <rect x="5" y="5" width="1" height="1" fill="#F8D0C7" />
-        <rect x="7" y="5" width="1" height="1" fill="#F8D0C7" />
-        <rect x="4" y="6" width="5" height="1" fill="#F8D0C7" />
-        <rect x="5" y="7" width="3" height="1" fill="#F8D0C7" />
-        <rect x="6" y="8" width="1" height="1" fill="#F8D0C7" />
-        <rect x="26" y="4" width="1" height="1" fill="#D89588" />
-        <rect x="28" y="4" width="1" height="1" fill="#D89588" />
-        <rect x="25" y="5" width="5" height="1" fill="#D89588" />
-        <rect x="26" y="6" width="3" height="1" fill="#D89588" />
-        <rect x="27" y="7" width="1" height="1" fill="#D89588" />
-      </svg>
-      <p className="pointer-events-none absolute bottom-2.5 left-3 font-mono text-[9px] tracking-[0.2em] text-[#3D2E22]/55 uppercase">
-        takemyletter.site
-      </p>
-    </div>
-  );
-}
+import LetterScene from "@/components/badajwo/LetterScene";
 
 export default function WorkSection() {
   const { t } = useI18n();
@@ -97,7 +49,7 @@ export default function WorkSection() {
               </div>
             </div>
             <div className="p-4 md:p-5">
-              <PixelLetterPreview />
+              <LetterScene />
             </div>
           </Link>
         </Reveal>

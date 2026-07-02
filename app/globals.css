@@ -166,6 +166,105 @@
 
 /* 4) 호버 마이크로 인터랙션은 transform/opacity 만 — 각 컴포넌트에서 */
 
+/* ============================================================
+   §3-1 받아줘 예외 구역 — 8비트 픽셀 모션 (허용된 유일한 예외)
+   원본: badajwo/src/styles/pixel.css
+   ============================================================ */
+@keyframes px-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+.px-bob {
+  animation: px-bob 1.6s steps(2) infinite;
+}
+@keyframes px-frame-a {
+  0%,
+  49.9% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes px-frame-b {
+  0%,
+  49.9% {
+    opacity: 0;
+  }
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+.px-frame-a {
+  animation: px-frame-a 0.9s steps(1) infinite;
+}
+.px-frame-b {
+  animation: px-frame-b 0.9s steps(1) infinite;
+}
+@keyframes px-cat-jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-2px);
+  }
+  60% {
+    transform: translateY(-1px);
+  }
+}
+.px-cat-jump {
+  animation: px-cat-jump 0.45s steps(3);
+}
+@keyframes px-float-heart {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+.px-float-heart {
+  animation: px-float-heart 0.9s steps(6) both;
+}
+@keyframes px-handover {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(6px);
+  }
+}
+.px-handover {
+  animation: px-handover 0.5s steps(2) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-bob,
+  .px-frame-a,
+  .px-frame-b,
+  .px-cat-jump,
+  .px-float-heart,
+  .px-handover {
+    animation: none !important;
+  }
+  .px-frame-b {
+    opacity: 0 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
