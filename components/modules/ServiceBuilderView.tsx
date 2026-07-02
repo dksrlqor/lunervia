@@ -3,7 +3,7 @@
 import { useI18n } from "@/i18n/LanguageContext";
 import { fmt } from "@/components/format";
 import Reveal from "@/components/Reveal";
-import { btnPaper, btnGhostDark, btnInk } from "@/components/ui";
+import { btnPaper, btnGhostDark } from "@/components/ui";
 
 const IG = "https://www.instagram.com/lunerviasoft/";
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;

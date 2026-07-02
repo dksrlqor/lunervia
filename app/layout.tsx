@@ -36,6 +36,30 @@ export const viewport: Viewport = {
   themeColor: "#171717",
 };
 
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Lunervia",
+      url: "https://lunervia.xyz",
+      logo: "https://lunervia.xyz/brand/lunervia-symbol.png",
+      sameAs: [
+        "https://www.instagram.com/lunerviasoft/",
+        "https://www.instagram.com/_dksrlqor/",
+        "https://www.tiktok.com/@_dksrlqor",
+        "https://github.com/dksrlqor",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      name: "Lunervia",
+      url: "https://lunervia.xyz",
+      inLanguage: "ko-KR",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -45,6 +69,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preload" as="style" href={PRETENDARD} />
         <link rel="stylesheet" href={PRETENDARD} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
       </head>
       <body>
         <LanguageProvider>

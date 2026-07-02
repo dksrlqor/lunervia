@@ -20,12 +20,10 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [activeHash, setActiveHash] = useState<string | null>(null);
 
-  /* 홈 스크롤 스파이 — aria-current 패턴 계승 */
+  /* 홈 스크롤 스파이 — aria-current 패턴 계승.
+     홈이 아니면 관찰하지 않는다(activeHash 는 isActive 에서 pathname 으로 걸러짐). */
   useEffect(() => {
-    if (pathname !== "/") {
-      setActiveHash(null);
-      return;
-    }
+    if (pathname !== "/") return;
     const els = ["services", "work", "process", "philosophy", "contact"]
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
@@ -45,12 +43,7 @@ export default function Header() {
     return () => io.disconnect();
   }, [pathname]);
 
-  /* 라우트 이동 시 모바일 메뉴 닫기 */
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  /* 메뉴 열림: 스크롤 잠금 + Esc 닫기 */
+  /* 메뉴 열림: 스크롤 잠금 + Esc 닫기 (링크들은 클릭 시 스스로 닫는다) */
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
     if (!open) return;
@@ -114,6 +107,7 @@ export default function Header() {
         <div className="flex items-center justify-between rounded-full border border-paper/10 bg-ink/85 px-4 py-2 backdrop-blur-md md:px-6">
           <Link
             href="/"
+            onClick={() => setOpen(false)}
             className="flex items-center py-1.5 transition-opacity hover:opacity-80"
           >
             <Image

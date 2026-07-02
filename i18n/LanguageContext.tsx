@@ -25,6 +25,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("ko");
 
   useEffect(() => {
+    // 저장된 언어를 마운트 후 1회 동기화 — SSR 은 항상 KO 로 렌더되므로
+    // hydration 이후에만 외부 상태(localStorage)를 반영할 수 있다.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (window.localStorage.getItem(STORAGE_KEY) === "en") setLangState("en");
   }, []);
 

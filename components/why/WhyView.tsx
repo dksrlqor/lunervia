@@ -46,9 +46,9 @@ export default function WhyView() {
 
             <Reveal className="mt-12">
               <div className="flex flex-wrap gap-3">
-                <a href="/#contact" className={btnInk}>
+                <Link href="/#contact" className={btnInk}>
                   {w.ctaContact}
-                </a>
+                </Link>
                 <Link href="/work" className={btnGhostLight}>
                   {w.ctaWork}
                 </Link>

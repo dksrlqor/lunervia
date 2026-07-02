@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
 import Reveal from "@/components/Reveal";
 import PageHeader from "@/components/PageHeader";
@@ -109,9 +110,9 @@ export default function WorkView() {
           <Reveal className="mt-12">
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-ink/10 p-7 md:p-9">
               <p className="text-lg font-bold">{t.contact.title}</p>
-              <a href="/#contact" className={btnGhostLight}>
+              <Link href="/#contact" className={btnGhostLight}>
                 {t.hero.ctaContact}
-              </a>
+              </Link>
             </div>
           </Reveal>
         </div>

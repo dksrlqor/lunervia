@@ -41,9 +41,9 @@ export default function Hero() {
         </p>
 
         <div className="fade-up mt-10 flex flex-wrap items-center gap-4" style={d(880)}>
-          <a href="/#contact" className={btnPaper}>
+          <Link href="/#contact" className={btnPaper}>
             {t.hero.ctaContact}
-          </a>
+          </Link>
           <Link href="/work" className={btnGhostDark}>
             {t.hero.ctaWork}
           </Link>

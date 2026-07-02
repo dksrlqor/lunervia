@@ -3,14 +3,31 @@
 ## 프로젝트 개요
 
 Lunervia(루네르비아)는 사용자 경험을 중심으로 웹과 모바일 서비스를 설계하는 소프트웨어 브랜드의 공식 홈페이지입니다.
-크림/아이보리 베이스의 미니멀·따뜻한 톤이며, 포인트 컬러는 절제된 브라운/차콜입니다.
+2026-07-03 전면 리뉴얼 이후: **Next.js(App Router) + TypeScript + Tailwind v4**, 다크(#171717)↔라이트(#FFF9FA) 교차 + 민트(#21F1A8) 포인트, Pretendard 단일 서체. 구 순수 HTML/CSS/JS 사이트는 `legacy/`에 보존.
 
-로컬 서버는 `serve_no_cache.py` 로 실행합니다.
+로컬 서버:
 
 ```text
-python serve_no_cache.py
-http://127.0.0.1:5173/
+npm run dev
+http://localhost:3000/
 ```
+
+## 2026-07-03 — 전면 리뉴얼: Next.js 재건축 (Pretendard 원툴 · 파티클 달 · 받아줘 픽셀 구역)
+
+지시서 2건(`lunervia-redesign-prompt_1.md` + `lunervia-typography-patch.md`) 기반 재건축. 부분 수정이 아니라 스택·디자인·카피 전면 교체. 기존 파일은 전부 `legacy/`로 git mv(삭제 없음).
+
+- **스택**: Next.js 16.2(App Router, Turbopack) + TypeScript + Tailwind v4(CSS-first `@theme`). 배포 타깃 Vercel(도메인/DNS 작업은 범위 외 — 배포 가능 상태까지만). GitHub Pages 루트 서빙은 이 커밋들이 push되기 전까지 기존 사이트 유지.
+- **디자인 토큰(협상 불가 3색)**: `--black #171717`(다크 섹션 배경/라이트 텍스트) · `--white #FFF9FA`(라이트 배경/다크 텍스트) · `--accent #21F1A8`(민트, 화면의 10% 미만 — 호버·상태 도트·헤드라인 1단어·스크롤스파이 도트·포커스 링·가는 구분선만). 그 외 색은 두 색의 투명도 변형만. Tailwind 유틸 `bg-ink/bg-paper/text-mint`.
+- **타이포(패치 반영)**: 마루부리 폐기 → **Pretendard 단일 서체** 극단 웨이트 대비(히어로 900 `clamp(2.75rem,8vw,7rem)` 자간 -0.035em/EN -0.045em, 본문 400-500) + JetBrains Mono(라벨·메타·숫자, next/font). Pretendard는 variable dynamic-subset CDN + preload + `font-display:swap`.
+- **시그니처**: 다크 히어로에서 **흩어진 입자 ~900개가 모여 초승달 + 4점 별(로고 모티프 그대로)이 되는 캔버스 연출**(`components/MoonParticles.tsx`, 라이브러리 없음). 진입 1회(헤드라인 줄단위 마스크 리빌과 동기) → 이후 미세 표류·반짝임. IntersectionObserver·visibilitychange로 화면 밖 rAF 정지, reduced-motion은 완성된 달 정적 1프레임. 헤드라인(사용자 확정): **"당신의 생각을 / 현실로 만들어 드립니다."**(민트 = "현실") / EN "Your ideas, / made real."
+- **로고 자산**: 사용자 제공 흰색 로고(구 `legacy/assets/brand`)를 알파 경계 트리밍해 `public/brand/`(wordmark 1320×129 · symbol 852×612 · mark 333×505)로. 헤더=워드마크, 푸터=심볼 로크업. 파비콘 `app/icon.svg` + `apple-icon.png` = 민트 크레센트+4점별(#171717/#21F1A8), OG `app/opengraph-image.png` = 다크+화이트 심볼 로크업(1200×630, GDI 생성).
+- **IA(사용자 확정 통합안)**: `/`(Hero다크→Services라이트→Work다크→Process라이트→Philosophy다크→Contact라이트→푸터다크, 시트 오버랩 `.sheet`로 경계 연출) · `/modules`(구독 모듈 허브) · `/modules/service-builder`(판매 10섹션: 문제→해결4→샘플→구성품8→대상→비교표→가격3→안내→FAQ6→최종CTA+구매안내, 모달 2종은 섹션으로 흡수) · `/checkout?plan=`(스텁·noindex) · `/work`(받아줘 상세+Lab/SMBEST/Todak — partners 흡수) · `/why`(브랜드 스토리 유지) · 404("달 뒤편"). **sns.html은 Contact 섹션+푸터로 흡수**, partners.html 폐지.
+- **§3-1 받아줘 예외 구역**: 사용자 제공 받아줘 소스(`바탕 화면\badajwo`)에서 `MailCat`/`Sprite` 원본 이식(`components/badajwo/`, 의존성 반입 없음). 크림 프레임(`LetterScene`) 안에 구름·하트·잔디·**편지 문 배달 고양이**(bob+꼬리 2프레임). `/work`에선 **쓰다듬기 인터랙션**(클릭→stage 0→3 표정 변화+점프+하트, §2 모션 4종의 유일 예외). 팔레트·모션 모두 프레임 밖 유출 없음. reduced-motion 정지.
+- **i18n**: next-intl 대신 **자체 경량 컨텍스트**(`i18n/LanguageContext.tsx` + `ko.ts`/`en.ts` 구조화 사전, localStorage `lunervia-lang`, `<html lang>` 동기화). 사유: 페이지 6개·정적 사전 2개 규모에 미들웨어/로케일 라우팅은 과설계, "불필요한 라이브러리 최소화" 원칙. 전 카피 KO/EN 쌍 재작성(겸손 모드 제거, Vercel/Linear 톤). 도메인 레이어는 `data/modules.ts`+`lib/subscription.ts`로 TS 이식(시그니처 유지, secret 서버 전용 seam 보존, `buildCheckoutUrl`만 `/checkout?plan=`로).
+- **모션 4종 준수**: ①히어로 마스크 리빌+달 수렴 ②IO 스크롤 리빌(`Reveal`, 카드 스태거) ③다크↔라이트 경계(시트 라운드 오버랩) ④호버(transform/opacity). `prefers-reduced-motion` 전역 정지.
+- **SEO**: Metadata API(페이지별 title/desc/canonical), JSON-LD(Organization+WebSite), `app/sitemap.ts`(5 URL)·`app/robots.ts`(checkout 차단). checkout `robots:{index:false}`.
+- **검증**: `next build` 13라우트 전부 정적 프리렌더 OK · tsc 0 · eslint 0(legacy 제외) · 콘솔 에러 0 · 375px 가로 오버플로 0(전 라우트, 비교표는 모바일 카드 스택 전환) · KO/EN 토글+localStorage 영속(EN 자간 오버라이드 동작) · 파티클 달/받아줘 씬/쓰다듬기 실동작 스크린샷 확인. Lighthouse 실측은 배포 후 권장.
+- **작업 방식**: 단계별 커밋 5건(smbes 명의, push 안 함 — 사용자 지시 대기). dev 서버는 `dev.cmd`(launch.json `lunervia-next`, :3000). package.json 등 JSON은 **BOM 없는 UTF-8**이어야 함(PS5.1 `Set-Content -Encoding utf8`이 BOM을 넣어 Turbopack이 거부했던 사고 있음 — Write 도구/`WriteAllText`로 저장할 것).
 
 ## 2026-06-22 (2) — 히어로 회전 지구본 · 로고 다듬기 · 카피 디-AI화
 
