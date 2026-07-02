@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/LanguageContext";
-import BrandMark from "./BrandMark";
 
 const NAV = [
   { key: "about", href: "/why" },
@@ -114,10 +114,16 @@ export default function Header() {
         <div className="flex items-center justify-between rounded-full border border-paper/10 bg-ink/85 px-4 py-2 backdrop-blur-md md:px-6">
           <Link
             href="/"
-            className="flex items-center gap-2 text-paper transition-opacity hover:opacity-80"
+            className="flex items-center py-1.5 transition-opacity hover:opacity-80"
           >
-            <BrandMark id="header" className="h-5 w-5" />
-            <span className="text-[15px] font-bold tracking-tight">Lunervia</span>
+            <Image
+              src="/brand/lunervia-wordmark.png"
+              alt="Lunervia"
+              width={1320}
+              height={129}
+              priority
+              className="h-3 w-auto md:h-3.5"
+            />
           </Link>
 
           <nav className="hidden items-center gap-7 md:flex" aria-label="주 메뉴">

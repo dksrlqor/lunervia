@@ -59,7 +59,21 @@ export default function MoonParticles({ className = "" }: { className?: string }
       return bx * bx + by * by >= br * br;
     };
 
-    function makeTarget(kind: 0 | 1 | 2): [number, number] {
+    /* 로고의 4점 별 — 초승달 품 안에 함께 맺힌다 */
+    function makeStarTarget(): [number, number] {
+      const t = Math.random() * 2 - 1;
+      const taper = Math.pow(1 - Math.abs(t), 1.7);
+      const L = R * 0.3;
+      const Wd = R * 0.045;
+      const a = t * L;
+      const b = (Math.random() * 2 - 1) * Wd * taper;
+      return Math.random() < 0.5
+        ? [0.42 * R + a, -0.18 * R + b]
+        : [0.42 * R + b, -0.18 * R + a];
+    }
+
+    function makeTarget(kind: 0 | 1 | 2 | 3): [number, number] {
+      if (kind === 3) return makeStarTarget();
       for (let i = 0; i < 80; i++) {
         if (kind === 0) {
           const x = (Math.random() * 2 - 1) * R;
@@ -98,7 +112,8 @@ export default function MoonParticles({ className = "" }: { className?: string }
       const far = Math.max(W, H);
       ps = [];
       for (let i = 0; i < count; i++) {
-        const kind: 0 | 1 | 2 = i < count * 0.7 ? 0 : i < count * 0.88 ? 1 : 2;
+        const kind: 0 | 1 | 2 | 3 =
+          i < count * 0.64 ? 0 : i < count * 0.81 ? 1 : i < count * 0.92 ? 2 : 3;
         const [tx, ty] = makeTarget(kind);
         const th = Math.random() * Math.PI * 2;
         const d = far * (0.5 + Math.random() * 0.55);
@@ -107,9 +122,19 @@ export default function MoonParticles({ className = "" }: { className?: string }
           ty,
           sx: tx + Math.cos(th) * d,
           sy: ty + Math.sin(th) * d,
-          r: (kind === 0 ? 0.5 + Math.random() * 1.0 : 0.7 + Math.random() * 1.1) * dpr,
-          a: kind === 0 ? 0.16 + Math.random() * 0.55 : 0.45 + Math.random() * 0.45,
-          mint: Math.random() < 0.055,
+          r:
+            (kind === 0
+              ? 0.5 + Math.random() * 1.0
+              : kind === 3
+                ? 0.6 + Math.random() * 1.2
+                : 0.7 + Math.random() * 1.1) * dpr,
+          a:
+            kind === 0
+              ? 0.16 + Math.random() * 0.55
+              : kind === 3
+                ? 0.5 + Math.random() * 0.5
+                : 0.45 + Math.random() * 0.45,
+          mint: kind === 3 ? Math.random() < 0.1 : Math.random() < 0.05,
           delay: withEntry ? Math.random() * 1100 : 0,
           dur: withEntry ? 900 + Math.random() * 1700 : 1,
           ph: Math.random() * Math.PI * 2,

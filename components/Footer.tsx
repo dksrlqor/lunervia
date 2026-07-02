@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
-import BrandMark from "./BrandMark";
 
 const EXPLORE = [
   { key: "services", href: "/#services" },
@@ -20,11 +20,14 @@ export default function Footer() {
       <div className="wrap pt-20 pb-10 md:pt-28">
         <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr]">
           <div>
-            <div className="flex items-center gap-2.5">
-              <BrandMark id="footer" className="h-6 w-6" />
-              <span className="text-lg font-bold tracking-tight">Lunervia</span>
-            </div>
-            <p className="mt-5 text-paper/75">{t.footer.tagline}</p>
+            <Image
+              src="/brand/lunervia-symbol.png"
+              alt="Lunervia"
+              width={852}
+              height={612}
+              className="h-28 w-auto"
+            />
+            <p className="mt-6 text-paper/75">{t.footer.tagline}</p>
             <p className="mt-1.5 text-sm leading-relaxed text-paper/45">
               {t.footer.sub}
             </p>
