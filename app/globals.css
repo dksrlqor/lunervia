@@ -251,13 +251,54 @@
   animation: px-handover 0.5s steps(2) forwards;
 }
 
+/* 창 안 산책 — 오른쪽으로 걷고, 잠깐 쉬고, 되돌아온다. 호버 시 멈춤 */
+@keyframes px-stroll-x {
+  0% {
+    transform: translateX(-20%);
+  }
+  40% {
+    transform: translateX(20%);
+  }
+  50% {
+    transform: translateX(20%);
+  }
+  90% {
+    transform: translateX(-20%);
+  }
+  100% {
+    transform: translateX(-20%);
+  }
+}
+@keyframes px-stroll-face {
+  0%,
+  49.9% {
+    transform: scaleX(-1);
+  }
+  50%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+.px-stroll {
+  animation: px-stroll-x 18s steps(72) infinite;
+}
+.px-stroll-face {
+  animation: px-stroll-face 18s steps(1) infinite;
+}
+.px-scene:hover .px-stroll,
+.px-scene:hover .px-stroll-face {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .px-bob,
   .px-frame-a,
   .px-frame-b,
   .px-cat-jump,
   .px-float-heart,
-  .px-handover {
+  .px-handover,
+  .px-stroll,
+  .px-stroll-face {
     animation: none !important;
   }
   .px-frame-b {

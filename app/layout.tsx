@@ -69,6 +69,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preload" as="style" href={PRETENDARD} />
         <link rel="stylesheet" href={PRETENDARD} />
+        {/* Galmuri — §3-1 받아줘 예외 구역 전용 픽셀 서체 (원본과 동일 소스) */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}

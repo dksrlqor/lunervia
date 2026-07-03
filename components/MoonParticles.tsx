@@ -3,23 +3,27 @@
 import { useEffect, useRef } from "react";
 
 /* ============================================================
-   시그니처 — 흩어진 입자가 모여 초승달이 되는 연출.
+   시그니처 — 흩어진 입자가 로고의 초승달+4점 별로 맺힌 뒤,
+   큰 별 → 고리 행성 → 다시 달로 순환하며 형태를 바꾸는 연출.
    · canvas 2D 단일 요소, 외부 라이브러리 없음.
-   · 진입 1회(로드 시 헤드라인 리빌과 동기) → 이후 미세한 표류/반짝임.
-   · prefers-reduced-motion: 완성된 달을 정적 1프레임으로만 그린다.
+   · 진입 1회(헤드라인 리빌과 동기) → 정지 호흡 → 부드러운 모프 순환.
+   · prefers-reduced-motion: 초승달 정적 1프레임.
    · 화면 밖/백그라운드 탭에서는 rAF 정지.
    ============================================================ */
 
 type Particle = {
-  tx: number;
+  fx: number; // 모프 출발
+  fy: number;
+  tx: number; // 목표
   ty: number;
-  sx: number;
+  sx: number; // 최초 진입 출발(산개)
   sy: number;
   r: number;
   a: number;
   mint: boolean;
-  delay: number;
-  dur: number;
+  delay: number; // 진입 지연
+  dur: number; // 진입 시간
+  md: number; // 모프 지연
   ph: number;
   sp: number;
   wob: number;
@@ -27,6 +31,18 @@ type Particle = {
 
 const PAPER = "255, 249, 250";
 const MINT = "33, 241, 168";
+
+/* 입자 대역 — 인덱스 순서 고정: 앞은 은은한 채움, 뒤로 갈수록 밝은 윤곽 */
+const B1 = 0.62;
+const B2 = 0.92;
+
+const HOLD_MS = 4600;
+const MORPH_MS = 1500;
+const MORPH_SPREAD = 550;
+
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+const easeInOut = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 export default function MoonParticles({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +56,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let ps: Particle[] = [];
+    let targets: [number, number][][] = [];
     let W = 0;
     let H = 0;
     let R = 0;
@@ -48,9 +65,13 @@ export default function MoonParticles({ className = "" }: { className?: string }
     let dpr = 1;
     let raf = 0;
     let visible = true;
-    let entryAt = performance.now();
+    let phase: "entry" | "hold" | "morph" = "entry";
+    let phaseAt = performance.now();
+    let entryMax = 0;
+    let shapeIdx = 0;
 
-    /* 초승달 = 바깥 원 − 물린 원(오른쪽 위로 비켜 감) */
+    /* ── 형태 샘플러 ─────────────────────────────── */
+
     const inCrescent = (x: number, y: number) => {
       if (x * x + y * y > R * R) return false;
       const bx = x - 0.45 * R;
@@ -59,42 +80,113 @@ export default function MoonParticles({ className = "" }: { className?: string }
       return bx * bx + by * by >= br * br;
     };
 
-    /* 로고의 4점 별 — 초승달 품 안에 함께 맺힌다 */
-    function makeStarTarget(): [number, number] {
+    /* 4점 별 — 십자 두 획을 끝으로 갈수록 가늘게 */
+    function starPoint(sx: number, sy: number, L: number, Wd: number): [number, number] {
       const t = Math.random() * 2 - 1;
       const taper = Math.pow(1 - Math.abs(t), 1.7);
-      const L = R * 0.3;
-      const Wd = R * 0.045;
       const a = t * L;
       const b = (Math.random() * 2 - 1) * Wd * taper;
-      return Math.random() < 0.5
-        ? [0.42 * R + a, -0.18 * R + b]
-        : [0.42 * R + b, -0.18 * R + a];
+      return Math.random() < 0.5 ? [sx + a, sy + b] : [sx + b, sy + a];
     }
 
-    function makeTarget(kind: 0 | 1 | 2 | 3): [number, number] {
-      if (kind === 3) return makeStarTarget();
-      for (let i = 0; i < 80; i++) {
-        if (kind === 0) {
-          const x = (Math.random() * 2 - 1) * R;
-          const y = (Math.random() * 2 - 1) * R;
-          if (inCrescent(x, y)) return [x, y];
-        } else if (kind === 1) {
-          const th = Math.random() * Math.PI * 2;
-          const rr = R * (0.94 + Math.random() * 0.055);
-          const x = Math.cos(th) * rr;
-          const y = Math.sin(th) * rr;
-          if (inCrescent(x, y)) return [x, y];
+    /* ① 초승달 + 로고 별 */
+    function crescentTargets(count: number): [number, number][] {
+      const out: [number, number][] = [];
+      for (let i = 0; i < count; i++) {
+        const f = i / count;
+        let p: [number, number] | null = null;
+        for (let k = 0; k < 90 && !p; k++) {
+          if (f < B1) {
+            const x = (Math.random() * 2 - 1) * R;
+            const y = (Math.random() * 2 - 1) * R;
+            if (inCrescent(x, y)) p = [x, y];
+          } else if (f < B2) {
+            if (Math.random() < 0.6) {
+              const th = Math.random() * Math.PI * 2;
+              const rr = R * (0.945 + Math.random() * 0.05);
+              const x = Math.cos(th) * rr;
+              const y = Math.sin(th) * rr;
+              if (inCrescent(x, y)) p = [x, y];
+            } else {
+              const th = Math.random() * Math.PI * 2;
+              const rr = 0.85 * R * (1.008 + Math.random() * 0.045);
+              const x = 0.45 * R + Math.cos(th) * rr;
+              const y = -0.2 * R + Math.sin(th) * rr;
+              if (inCrescent(x, y)) p = [x, y];
+            }
+          } else {
+            p = starPoint(0.42 * R, -0.18 * R, R * 0.3, R * 0.045);
+          }
+        }
+        out.push(p ?? [-R * 0.45, R * 0.3]);
+      }
+      return out;
+    }
+
+    /* ② 큰 4점 별 + 잔별 */
+    function starTargets(count: number): [number, number][] {
+      const out: [number, number][] = [];
+      for (let i = 0; i < count; i++) {
+        const f = i / count;
+        if (f < B1) {
+          out.push(starPoint(0, 0, R * 0.78, R * 0.15));
+        } else if (f < B2) {
+          out.push(starPoint(0, 0, R * 0.82, R * 0.05));
         } else {
-          const th = Math.random() * Math.PI * 2;
-          const rr = 0.85 * R * (1.008 + Math.random() * 0.05);
-          const x = 0.45 * R + Math.cos(th) * rr;
-          const y = -0.2 * R + Math.sin(th) * rr;
-          if (inCrescent(x, y)) return [x, y];
+          const r3 = Math.random();
+          if (r3 < 0.4) out.push(starPoint(-0.58 * R, -0.42 * R, R * 0.2, R * 0.035));
+          else if (r3 < 0.75) out.push(starPoint(0.62 * R, 0.44 * R, R * 0.15, R * 0.03));
+          else out.push(starPoint(0, 0, R * 0.16, R * 0.05));
         }
       }
-      return [-R * 0.45, R * 0.3];
+      return out;
     }
+
+    /* ③ 고리 행성 — 위쪽 고리는 행성 뒤로 숨는다 */
+    function planetTargets(count: number): [number, number][] {
+      const out: [number, number][] = [];
+      const Rd = 0.5 * R;
+      const phi = -0.35;
+      const cosF = Math.cos(phi);
+      const sinF = Math.sin(phi);
+      const ringPoint = (frontOnly: boolean): [number, number] | null => {
+        for (let k = 0; k < 40; k++) {
+          const th = Math.random() * Math.PI * 2;
+          const j = 1 + (Math.random() * 2 - 1) * 0.05;
+          const u = 0.95 * R * Math.cos(th) * j;
+          const v = 0.3 * R * Math.sin(th) * j;
+          if (frontOnly && v < 0) continue;
+          const x = u * cosF - v * sinF;
+          const y = u * sinF + v * cosF;
+          if (v < 0 && Math.hypot(x, y) < Rd * 1.06) continue; // 뒤쪽은 행성에 가림
+          return [x, y];
+        }
+        return null;
+      };
+      for (let i = 0; i < count; i++) {
+        const f = i / count;
+        let p: [number, number] | null = null;
+        if (f < B1) {
+          const th = Math.random() * Math.PI * 2;
+          const rr = Rd * Math.sqrt(Math.random());
+          p = [Math.cos(th) * rr, Math.sin(th) * rr];
+        } else if (f < B2) {
+          p = ringPoint(false);
+        } else {
+          if (Math.random() < 0.55) {
+            const th = Math.random() * Math.PI * 2;
+            const rr = Rd * (0.95 + Math.random() * 0.06);
+            p = [Math.cos(th) * rr, Math.sin(th) * rr];
+          } else {
+            p = ringPoint(true);
+          }
+        }
+        out.push(p ?? [0, 0]);
+      }
+      return out;
+    }
+
+    /* ── 초기화 ─────────────────────────────────── */
 
     function init(withEntry: boolean) {
       const rect = canvas!.getBoundingClientRect();
@@ -108,69 +200,112 @@ export default function MoonParticles({ className = "" }: { className?: string }
       cy = H / 2;
       R = Math.min(W, H) * 0.37;
 
-      const count = rect.width < 480 ? 520 : 900;
+      const count = rect.width < 480 ? 640 : 1100;
+      targets = [crescentTargets(count), starTargets(count), planetTargets(count)];
+      shapeIdx = 0;
+
       const far = Math.max(W, H);
       ps = [];
       for (let i = 0; i < count; i++) {
-        const kind: 0 | 1 | 2 | 3 =
-          i < count * 0.64 ? 0 : i < count * 0.81 ? 1 : i < count * 0.92 ? 2 : 3;
-        const [tx, ty] = makeTarget(kind);
+        const f = i / count;
+        const [tx, ty] = targets[0][i];
         const th = Math.random() * Math.PI * 2;
         const d = far * (0.5 + Math.random() * 0.55);
         ps.push({
+          fx: tx,
+          fy: ty,
           tx,
           ty,
           sx: tx + Math.cos(th) * d,
           sy: ty + Math.sin(th) * d,
           r:
-            (kind === 0
-              ? 0.5 + Math.random() * 1.0
-              : kind === 3
-                ? 0.6 + Math.random() * 1.2
-                : 0.7 + Math.random() * 1.1) * dpr,
+            (f < B1
+              ? 0.4 + Math.random() * 0.7
+              : f < B2
+                ? 0.55 + Math.random() * 0.85
+                : 0.7 + Math.random() * 1.0) * dpr,
           a:
-            kind === 0
-              ? 0.16 + Math.random() * 0.55
-              : kind === 3
-                ? 0.5 + Math.random() * 0.5
-                : 0.45 + Math.random() * 0.45,
-          mint: kind === 3 ? Math.random() < 0.1 : Math.random() < 0.05,
+            f < B1
+              ? 0.13 + Math.random() * 0.37
+              : f < B2
+                ? 0.4 + Math.random() * 0.4
+                : 0.62 + Math.random() * 0.38,
+          mint: Math.random() < (f < B1 ? 0.04 : f < B2 ? 0.06 : 0.1),
           delay: withEntry ? Math.random() * 1100 : 0,
           dur: withEntry ? 900 + Math.random() * 1700 : 1,
+          md: Math.random() * MORPH_SPREAD,
           ph: Math.random() * Math.PI * 2,
           sp: 0.5 + Math.random(),
           wob: (Math.random() * 2 - 1) * 26 * dpr,
         });
       }
-      entryAt = performance.now();
+      entryMax = withEntry ? 2900 : 0;
+      phase = withEntry ? "entry" : "hold";
+      phaseAt = performance.now();
     }
 
+    /* ── 렌더 ────────────────────────────────────── */
+
     function draw(now: number) {
+      /* 위상 전환 */
+      if (phase === "entry" && now - phaseAt > entryMax) {
+        phase = "hold";
+        phaseAt = now;
+      } else if (phase === "hold" && now - phaseAt > HOLD_MS && !reduced) {
+        shapeIdx = (shapeIdx + 1) % targets.length;
+        for (let i = 0; i < ps.length; i++) {
+          const p = ps[i];
+          p.fx = p.tx;
+          p.fy = p.ty;
+          p.tx = targets[shapeIdx][i][0];
+          p.ty = targets[shapeIdx][i][1];
+        }
+        phase = "morph";
+        phaseAt = now;
+      } else if (phase === "morph" && now - phaseAt > MORPH_MS + MORPH_SPREAD) {
+        phase = "hold";
+        phaseAt = now;
+      }
+
       ctx!.clearRect(0, 0, W, H);
 
       const g = ctx!.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 2.1);
-      g.addColorStop(0, `rgba(${PAPER}, 0.055)`);
+      g.addColorStop(0, `rgba(${PAPER}, 0.05)`);
       g.addColorStop(1, `rgba(${PAPER}, 0)`);
       ctx!.fillStyle = g;
       ctx!.fillRect(0, 0, W, H);
 
       for (const p of ps) {
-        const t = Math.min(Math.max((now - entryAt - p.delay) / p.dur, 0), 1);
-        const e = 1 - Math.pow(1 - t, 3);
-        let x: number;
-        let y: number;
-        if (t < 1) {
+        let bx: number;
+        let by: number;
+        let fade = 1;
+
+        if (phase === "entry") {
+          const t = Math.min(Math.max((now - phaseAt - p.delay) / p.dur, 0), 1);
+          const e = easeOutCubic(t);
           const swirl = Math.sin(e * Math.PI) * p.wob;
-          x = p.sx + (p.tx - p.sx) * e + swirl * Math.sin(p.ph);
-          y = p.sy + (p.ty - p.sy) * e + swirl * Math.cos(p.ph);
+          bx = p.sx + (p.tx - p.sx) * e + swirl * Math.sin(p.ph);
+          by = p.sy + (p.ty - p.sy) * e + swirl * Math.cos(p.ph);
+          fade = Math.max(e, 0.05);
+        } else if (phase === "morph") {
+          const t = Math.min(Math.max((now - phaseAt - p.md) / MORPH_MS, 0), 1);
+          const e = easeInOut(t);
+          const swirl = Math.sin(e * Math.PI) * p.wob * 0.35;
+          bx = p.fx + (p.tx - p.fx) * e + swirl * Math.sin(p.ph);
+          by = p.fy + (p.ty - p.fy) * e + swirl * Math.cos(p.ph);
         } else {
-          x = p.tx + Math.sin(now * 0.00045 * p.sp + p.ph) * 1.4 * dpr;
-          y = p.ty + Math.cos(now * 0.00038 * p.sp + p.ph) * 1.4 * dpr;
+          bx = p.tx;
+          by = p.ty;
         }
-        const tw = t < 1 ? 1 : 0.82 + 0.18 * Math.sin(now * 0.0012 * p.sp + p.ph);
+
+        const x = bx + Math.sin(now * 0.00045 * p.sp + p.ph) * 1.3 * dpr;
+        const y = by + Math.cos(now * 0.00038 * p.sp + p.ph) * 1.3 * dpr;
+        const tw =
+          phase === "entry" ? 1 : 0.84 + 0.16 * Math.sin(now * 0.0012 * p.sp + p.ph);
+
         ctx!.beginPath();
         ctx!.arc(cx + x, cy + y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${p.mint ? MINT : PAPER}, ${(p.a * tw * (t < 1 ? Math.max(e, 0.05) : 1)).toFixed(3)})`;
+        ctx!.fillStyle = `rgba(${p.mint ? MINT : PAPER}, ${(p.a * tw * fade).toFixed(3)})`;
         ctx!.fill();
       }
     }
@@ -183,7 +318,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
 
     init(!reduced);
     if (reduced) {
-      draw(entryAt + 10);
+      draw(phaseAt + 10);
     } else {
       raf = requestAnimationFrame(loop);
     }
