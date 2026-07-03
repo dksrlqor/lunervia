@@ -12,6 +12,17 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-04 (2) — SMBEST 제거 · /why "만든 이유" 재구축(별-글쓰기) · 민트+가독성 스윕
+
+사용자 지시: ① SMBEST(개인 간 계약) 관련 전부 삭제 ② 강조색 사용 확대 ③ 가독성 최대화 ④ /why 를 "무조건 사람이 읽게" — 히어로급 대형 타이포 + 장문 스토리 + 별이 손·책·글쓰기를 그리는 모션.
+
+- **SMBEST 제거**: i18n ko/en `work.smbest*` 키 + workPage showcase 배열 항목 삭제, `WorkSection` 카드 제거(하단 그리드 3열→2열), `/work` metadata description 갱신. legacy/ 와 PROJECT_NOTES 과거 기록은 보존(서빙 안 됨).
+- **`components/why/WritingParticles.tsx` 신규 — "별이 쓰는 글"**: 펼친 책(두 페이지 사변형+책등)과 펜을 쥔 손(펜대·손가락 3마디·손등·엄지·손목 캡슐/타원 샘플링) 실루엣을 별 입자로 구성. 손이 오른쪽 페이지 위를 실제로 이동하며 **민트 잉크 점으로 4줄을 필기**(줄당 2.6s, 단어 공백 랜덤, 손글씨 흔들림) → 줄 사이 transit(펜 들림) → 다 쓰면 hold 1.6s → 잉크 페이드 → 반복. 왼쪽 페이지엔 바랜 기존 글, 주변에 표류+트윙클 별, 진입은 홈과 같은 산개→수렴, 구성 전체 리사주·회전·호흡(정지 없음). MoonParticles 성능 문법 동일(불투명 캔버스·fillRect·픽셀 상한). reduced-motion: 4줄 완성 정적 1프레임.
+- **`WhyView` 재구축**: PageHeader 폐기 → 홈 히어로 문법의 풀블리드 다크 히어로(t-hero 2줄 "왜 만들었는지, / 여기 **적어** 둡니다." — 민트 단어 "적어", 마스크 리빌) + `만든 이유 읽기 ↓` 버튼(#story 앵커). 스토리 = **4챕터 장문**(01 이름 / 02 시작(받아줘) / 03 일하는 방식 / 04 앞으로) — max-w-2xl, 17~18px, leading 1.95, text-ink/82, 챕터 헤더 = 민트 도트+모노 번호. 챕터 2·3 뒤 **다크 인용 카드**(bg-ink + t-quote, 민트 단어 — 라이트 지면에서 민트 텍스트 저대비 회피). 마지막 서명 모노 라인 + CTA 2. i18n `why.*` 전면 재작성(heroLines/heroSub/readCta/chapters[4]/quote1·2/sign, KO/EN 쌍), `/why` metadata desc 갱신.
+- **홈 Philosophy**: 작은 텍스트 링크 → **대형 초대 블록**(보더 카드, t-quote 크기 "루네르비아를 만든 이유" + `만든 이유 읽기 →`, hover 민트 보더). `philosophy.ctaBtn` 키 신설.
+- **민트+가독성 스윕(전 사이트)**: 다크 섹션 eyebrow 라벨 → `text-mint/80`(홈 히어로·Work·Philosophy·PageHeader=전 서브페이지), 라이트 섹션 라벨 → 민트 도트 + ink/60(Services·Process·Contact). 본문 대비 일괄 상향: paper/55~65→/70~78, ink/60~65→/72~75, 카드 설명 text-sm→15px, Process 번호 ink/40→/70+**민트 언더라인 바**, Philosophy 카드 민트 도트, Footer 헤딩 민트/링크·서브 대비↑, 상태 라벨 /40→/55.
+- **검증**: tsc 0 · eslint 0 · `next build` 13 라우트 OK(= /why SSG 프리렌더 통과) · /why 실측: 4챕터/16문단/2인용 렌더, 캔버스 픽셀 diff 900(필기 모션 동작), 홈 SMBEST 0·/work SMBEST 0, Philosophy CTA 블록 스크린샷 확인. 콘솔의 WhyView map 에러는 편집 도중 HMR 잔재(빌드+fresh 로드 정상으로 실증).
+
 ## 2026-07-04 — 백엔드 하드닝 + 성능 최적화 + 버그 스윕
 
 사용자 지시: "백엔드 더 튼튼하게, 렉 줄게 최적화, 버그 다 잡아".

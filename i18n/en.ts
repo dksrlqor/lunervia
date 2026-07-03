@@ -83,9 +83,6 @@ export const en: Dict = {
     labName: "Lunervia Lab",
     labStatus: "In progress",
     labDesc: "Experiments, UI research, prototypes.",
-    smbestName: "SMBEST",
-    smbestType: "CLIENT",
-    smbestDesc: "Corporate website build.",
     moreCta: "View all work",
   },
 
@@ -128,6 +125,7 @@ export const en: Dict = {
       },
     ],
     cta: "Why Lunervia exists",
+    ctaBtn: "Read the story",
   },
 
   contact: {
@@ -400,7 +398,6 @@ export const en: Dict = {
     },
     cards: [
       { tag: "LAB", name: "Lunervia Lab", status: "In progress", desc: "Experiments, UI research, prototypes." },
-      { tag: "CLIENT", name: "SMBEST", status: "Collaboration", desc: "Corporate website build." },
       {
         tag: "PARTNER",
         name: "Todak Life",
@@ -412,22 +409,52 @@ export const en: Dict = {
 
   why: {
     eyebrow: "WHY LUNERVIA",
-    title: "Why we built Lunervia",
-    intro:
-      "Lunervia is a software brand built on the belief that digital services should solve real user problems more clearly and conveniently.",
-    paragraphs: [
-      "Lunervia is more than a maker's name. It is a brand started to design clearer, more reliable digital environments for the people who use them.",
-      "We build products on web and mobile that people understand quickly and rely on consistently. Dependable behaviour and a coherent experience come before visual flourish.",
-      "Quality accumulates through small experiments and steady improvements. Rather than rushing new features, we spend time refining the structure and flow that lets a product last.",
+    heroLines: ["Why we build —", "**written** down, here."],
+    heroSub:
+      "A slightly long letter from the person who builds under the name Lunervia. Five minutes to read.",
+    readCta: "Read the story",
+    storyLabel: "THE STORY",
+    chapters: [
+      {
+        no: "01",
+        title: "On the name",
+        paragraphs: [
+          "Lunervia is a name built around the idea of 'a road to the moon' — it starts from luna, the Latin word for moon. It was never meant to carry a grand philosophy. I simply needed a direction.",
+          "The moon is less a destination than a reference point. The way someone walking at night checks the moon to keep their bearing, I wanted one fixed standard I could return to every time I build something. Put it in the name itself, I thought, and the name would pull me back whenever I drift.",
+          "So Lunervia has had one standard from day one: we don't make screens. We make services that work.",
+        ],
+      },
+      {
+        no: "02",
+        title: "On how it started",
+        paragraphs: [
+          "A studio was never the plan. I just wanted to build one service with my own hands, end to end. I had seen too many ideas stop at the planning deck, too many screens that never left the mockup — and every one of them felt like a waste.",
+          "So I built one. Badajwo — Take My Letter, an anonymous letterbox service, came out of exactly that. Carrying it alone through planning, design, frontend, backend and launch taught me things a hundred decks never did.",
+          "What a button shows when it fails keeps users longer than what color it is. Build, ship, watch real people use it — that loop is all of Lunervia.",
+        ],
+      },
+      {
+        no: "03",
+        title: "On how we work",
+        paragraphs: [
+          "Lunervia is not a big organization, which means it can work in ways big organizations find hard. The person who plans is the one who designs, builds, and watches the deployed screen to the end. Intent doesn't evaporate between hand-offs.",
+          "The restraint in our screens comes from the same place. Not because we can't decorate — because erasing is the harder discipline. A screen that needs explaining gets redesigned. Everything clickable must work. We draw the failing, empty and waiting states before we ship.",
+          "And launch day is not completion day; it is the first day of refining. Watch the numbers, fix, ship again. We have never seen a lasting service finished in one pass.",
+        ],
+      },
+      {
+        no: "04",
+        title: "On where this goes",
+        paragraphs: [
+          "What Lunervia wants is a simple scene: someone who only ever thought \"it would be nice if this existed\" — holding a real service that opens when you type the address.",
+          "An idea should not end as a few screens. It should have an address, load, and work when pressed. We want to be the studio that goes with you to that last step — not one that hands off and leaves, but one that keeps refining while the lights are on.",
+          "If you've read this far, there is probably something you want to build. Tell us the idea. We'll make it real.",
+        ],
+      },
     ],
-    emphasis:
-      "Technology should not stop at functionality. It should be designed with an understanding of the user's context.",
-    paragraphs2: [
-      "Users expect more than features. We treat the small decisions that shape that experience with care.",
-      "Through experiments and records, we are defining our standard for digital products one step at a time.",
-    ],
-    enLine:
-      "Lunervia is a software brand designing web and mobile services with a focus on clear and reliable user experience.",
+    quote1: "A service is not a sum of screens.\nIt is a sum of **decisions**.",
+    quote2: "Launch is not the finish line.\nIt is where **refining** starts.",
+    sign: "Lunervia — a software studio that makes ideas real",
     ctaContact: "Start a project",
     ctaWork: "View work",
   },

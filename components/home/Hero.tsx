@@ -19,7 +19,7 @@ export default function Hero() {
       </div>
 
       <div className="wrap relative z-10 pt-44 pb-20 md:pb-28">
-        <p className="t-label fade-up text-paper/55" style={d(150)}>
+        <p className="t-label fade-up text-mint/80" style={d(150)}>
           {t.hero.eyebrow}
         </p>
 
@@ -32,7 +32,7 @@ export default function Hero() {
         </h1>
 
         <p
-          className="fade-up mt-7 max-w-xl text-base leading-relaxed text-paper/65 md:text-lg"
+          className="fade-up mt-7 max-w-xl text-base leading-relaxed text-paper/78 md:text-lg"
           style={d(720)}
         >
           {t.hero.sub}
@@ -45,7 +45,7 @@ export default function Hero() {
           <Link href="/work" className={btnGhostDark}>
             {t.hero.ctaWork}
           </Link>
-          <span className="t-label ml-1 inline-flex items-center gap-2 text-paper/55">
+          <span className="t-label ml-1 inline-flex items-center gap-2 text-paper/70">
             <span
               aria-hidden="true"
               className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-mint"

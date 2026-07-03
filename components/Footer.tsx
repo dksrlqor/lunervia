@@ -27,20 +27,20 @@ export default function Footer() {
               height={612}
               className="h-28 w-auto"
             />
-            <p className="mt-6 text-paper/75">{t.footer.tagline}</p>
-            <p className="mt-1.5 text-sm leading-relaxed text-paper/45">
+            <p className="mt-6 text-paper/85">{t.footer.tagline}</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-paper/60">
               {t.footer.sub}
             </p>
           </div>
 
           <nav aria-label={t.footer.explore}>
-            <h2 className="t-label text-paper/40">{t.footer.explore}</h2>
+            <h2 className="t-label text-mint/70">{t.footer.explore}</h2>
             <ul className="mt-5 space-y-3">
               {EXPLORE.map((item) => (
                 <li key={item.key}>
                   <Link
                     href={item.href}
-                    className="text-sm text-paper/65 transition-colors hover:text-mint"
+                    className="text-sm text-paper/75 transition-colors hover:text-mint"
                   >
                     {t.nav[item.key]}
                   </Link>
@@ -50,7 +50,7 @@ export default function Footer() {
           </nav>
 
           <div>
-            <h2 className="t-label text-paper/40">{t.footer.connect}</h2>
+            <h2 className="t-label text-mint/70">{t.footer.connect}</h2>
             <ul className="mt-5 space-y-3">
               {t.contact.channels
                 .filter((c) => c.href)
@@ -60,7 +60,7 @@ export default function Footer() {
                       href={c.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-paper/65 transition-colors hover:text-mint"
+                      className="text-sm text-paper/75 transition-colors hover:text-mint"
                     >
                       {c.name} {c.handle}
                     </a>
@@ -71,7 +71,7 @@ export default function Footer() {
                   href="https://github.com/dksrlqor"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-paper/65 transition-colors hover:text-mint"
+                  className="text-sm text-paper/75 transition-colors hover:text-mint"
                 >
                   GitHub dksrlqor
                 </a>

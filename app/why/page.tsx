@@ -4,7 +4,7 @@ import WhyView from "@/components/why/WhyView";
 export const metadata: Metadata = {
   title: "루네르비아를 만든 이유",
   description:
-    "Lunervia는 디지털 서비스가 사용자의 실제 문제를 더 명확하고 편리하게 해결해야 한다는 생각에서 출발한 소프트웨어 브랜드입니다.",
+    "왜 만들었는지, 여기 적어 둡니다 — 이름의 뜻, 받아줘를 만들며 배운 것, 일하는 방식, 그리고 앞으로. 루네르비아를 만든 사람이 직접 쓴 글.",
   alternates: { canonical: "/why" },
 };
 
