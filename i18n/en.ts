@@ -99,33 +99,11 @@ export const en: Dict = {
     ],
   },
 
-  philosophy: {
-    label: "PHILOSOPHY",
-    big: "Experiences that last\ncome before screens that impress.",
-    cards: [
-      {
-        en: "Clarity before complexity",
-        name: "Clarity before complexity",
-        desc: "A screen that needs explaining gets redesigned.",
-      },
-      {
-        en: "Reliable interfaces",
-        name: "Reliable interfaces",
-        desc: "Everything clickable works — error states included.",
-      },
-      {
-        en: "Designed to scale",
-        name: "Designed to scale",
-        desc: "Adding a feature shouldn't mean rebuilding the whole.",
-      },
-      {
-        en: "Built with care",
-        name: "Built with care",
-        desc: "Launch isn't the finish line. It's where refining starts.",
-      },
-    ],
-    cta: "Why Lunervia exists",
-    ctaBtn: "Read the story",
+  whyInvite: {
+    label: "WHY LUNERVIA",
+    titleLines: ["Why Lunervia", "**exists**"],
+    lead: "From the meaning of the name to what building Badajwo taught us — a slightly long letter from the person who builds here.",
+    cta: "Read the story",
   },
 
   contact: {

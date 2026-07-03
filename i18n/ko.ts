@@ -97,33 +97,11 @@ export const ko = {
     ],
   },
 
-  philosophy: {
-    label: "PHILOSOPHY",
-    big: "화려한 화면보다,\n오래 쓰이는 경험을 먼저 만듭니다.",
-    cards: [
-      {
-        en: "Clarity before complexity",
-        name: "복잡함보다 명확함",
-        desc: "설명이 필요한 화면은 다시 설계합니다.",
-      },
-      {
-        en: "Reliable interfaces",
-        name: "신뢰할 수 있는 화면",
-        desc: "눌리는 것은 반드시 동작합니다. 예외 상태까지 설계합니다.",
-      },
-      {
-        en: "Designed to scale",
-        name: "확장을 전제로 한 구조",
-        desc: "기능 하나를 붙일 때 전체를 고치지 않아도 되는 구조.",
-      },
-      {
-        en: "Built with care",
-        name: "오래 다듬는 완성도",
-        desc: "배포는 끝이 아니라 다듬기의 시작입니다.",
-      },
-    ],
-    cta: "루네르비아를 만든 이유",
-    ctaBtn: "만든 이유 읽기",
+  whyInvite: {
+    label: "WHY LUNERVIA",
+    titleLines: ["루네르비아를", "만든 **이유**"],
+    lead: "이름의 뜻부터 받아줘를 만들며 배운 것, 일하는 방식까지 — 만든 사람이 직접 쓴 조금 긴 글입니다.",
+    cta: "만든 이유 읽기",
   },
 
   contact: {

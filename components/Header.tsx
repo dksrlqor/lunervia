@@ -24,7 +24,7 @@ export default function Header() {
      홈이 아니면 관찰하지 않는다(activeHash 는 isActive 에서 pathname 으로 걸러짐). */
   useEffect(() => {
     if (pathname !== "/") return;
-    const els = ["services", "work", "process", "philosophy", "contact"]
+    const els = ["services", "work", "process", "contact"]
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
     if (!els.length) return;

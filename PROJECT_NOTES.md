@@ -12,6 +12,16 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-04 (3) — 홈 재배치: Philosophy 삭제 → "만든 이유" 히어로형 2번째 섹션 승격
+
+사용자 지시: Philosophy 인용문+4카드("화려한 화면보다…"/Clarity/Reliable/Scale/Care)는 홈에서 전부 잘라내고, "루네르비아를 만든 이유"를 **두 번째 섹션**으로 — 히어로처럼 배경(별-글쓰기)을 깔고 크게.
+
+- **홈 순서**: Hero → **WhyInvite(신규)** → Services → Work → Process → Contact. Philosophy.tsx 삭제(git rm), i18n `philosophy` 섹션 제거 → `whyInvite`(label/titleLines/lead/cta) 신설(KO/EN).
+- **`components/home/WhyInvite.tsx`**: 히어로 문법 그대로 — `min-h-[92svh] items-end`, 시트 없음(히어로의 밤하늘이 그대로 이어짐), 배경 = `WritingParticles` 풀블리드(책+손 필기 장면, 홈에서 재사용), 콘텐츠 = 민트 eyebrow + 대형 헤드라인 "루네르비아를 / 만든 **이유**"(clamp 2.5rem~5.5rem, 민트 단어 "이유") + 리드 1줄 + `만든 이유 읽기 →`(btnPaper→/why). 아래에서 Services 시트가 닫고 들어옴.
+- 4원칙 카피 자체는 /why 스토리 03장(일하는 방식)에 서사로 녹아 있어 내용 유실 없음. Header 스크롤스파이 ids 에서 "philosophy" 제거.
+- 시트 교차: ink(Hero)+ink(WhyInvite)는 의도적 연속(한 밤하늘), Process(paper)→Contact(paper)는 동색 시트 오버랩이라 경계 자연 소멸 — 확인됨.
+- **검증**: tsc 0 · eslint 0 · `next build` OK · 프리뷰 실측 — 섹션 순서/캔버스 배치 확인(두 번째 섹션 canvas 1), Philosophy 텍스트 0, 스크린샷 확인. 콘솔의 Philosophy label 에러는 편집 도중 HMR 잔재(최종 로드·빌드 정상).
+
 ## 2026-07-04 (2) — SMBEST 제거 · /why "만든 이유" 재구축(별-글쓰기) · 민트+가독성 스윕
 
 사용자 지시: ① SMBEST(개인 간 계약) 관련 전부 삭제 ② 강조색 사용 확대 ③ 가독성 최대화 ④ /why 를 "무조건 사람이 읽게" — 히어로급 대형 타이포 + 장문 스토리 + 별이 손·책·글쓰기를 그리는 모션.
