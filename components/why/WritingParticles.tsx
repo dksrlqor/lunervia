@@ -78,7 +78,14 @@ function quadPoint(q: [V2, V2, V2, V2], u: number, v: number): V2 {
   return lerp2(lerp2(q[0], q[1], u), lerp2(q[3], q[2], u), v);
 }
 
-export default function WritingParticles({ className = "" }: { className?: string }) {
+export default function WritingParticles({
+  className = "",
+  variant = "hero",
+}: {
+  className?: string;
+  /** hero: 섹션 풀블리드(우측 배치) · panel: 카드 내부(중앙 배치) */
+  variant?: "hero" | "panel";
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -320,10 +327,16 @@ export default function WritingParticles({ className = "" }: { className?: strin
       canvas!.width = W;
       canvas!.height = H;
 
-      const mobile = rect.width < 768;
-      cx = W * (mobile ? 0.5 : 0.71);
-      cy = H * (mobile ? 0.3 : 0.52);
-      R = mobile ? Math.min(W * 0.4, H * 0.24) : Math.min(W * 0.17, H * 0.3);
+      if (variant === "panel") {
+        cx = W * 0.5;
+        cy = H * 0.48;
+        R = Math.min(W * 0.42, H * 0.34);
+      } else {
+        const mobile = rect.width < 768;
+        cx = W * (mobile ? 0.5 : 0.71);
+        cy = H * (mobile ? 0.3 : 0.52);
+        R = mobile ? Math.min(W * 0.4, H * 0.24) : Math.min(W * 0.17, H * 0.3);
+      }
 
       buildScene();
 
@@ -572,7 +585,7 @@ export default function WritingParticles({ className = "" }: { className?: strin
       ro?.disconnect();
       document.removeEventListener("visibilitychange", onVis);
     };
-  }, []);
+  }, [variant]);
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
 }
