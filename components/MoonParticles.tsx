@@ -3,11 +3,15 @@
 import { useEffect, useRef } from "react";
 
 /* ============================================================
-   시그니처 — 흩어진 입자가 로고의 초승달+4점 별로 맺힌 뒤,
-   큰 별 → 고리 행성 → 다시 달로 순환하며 형태를 바꾸는 연출.
+   시그니처 — 히어로 전면이 하나의 밤하늘.
+   · 배경: 깊이(시차)를 가진 딥필드 별이 아주 느리게 표류 + 트윙클.
+   · 전경: 흩어진 입자가 로고의 초승달+4점 별로 맺힌 뒤,
+     큰 별 → 고리 행성 → 다시 달로 순환하며 형태를 바꾼다.
+     맺힌 뒤에도 성단 전체가 궤도에 떠 있듯 호흡(스케일)·
+     기울기(회전)·리사주 표류를 멈추지 않는다 — 정지 프레임 없음.
+   · 이따금 유성 하나가 조용히 지나간다.
    · canvas 2D 단일 요소, 외부 라이브러리 없음.
-   · 진입 1회(헤드라인 리빌과 동기) → 정지 호흡 → 부드러운 모프 순환.
-   · prefers-reduced-motion: 초승달 정적 1프레임.
+   · prefers-reduced-motion: 초승달+별하늘 정적 1프레임, 유성 없음.
    · 화면 밖/백그라운드 탭에서는 rAF 정지.
    ============================================================ */
 
@@ -29,6 +33,27 @@ type Particle = {
   wob: number;
 };
 
+type Star = {
+  x: number;
+  y: number;
+  z: number; // 깊이 — 표류 속도·크기에 시차를 준다
+  r: number;
+  a: number;
+  tw: number; // 트윙클 속도
+  ph: number;
+  mint: boolean;
+};
+
+type Meteor = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  born: number;
+  life: number;
+  len: number;
+};
+
 const PAPER = "255, 249, 250";
 const MINT = "33, 241, 168";
 
@@ -36,13 +61,21 @@ const MINT = "33, 241, 168";
 const B1 = 0.62;
 const B2 = 0.92;
 
-const HOLD_MS = 4600;
+const HOLD_MS = 5400;
 const MORPH_MS = 1500;
 const MORPH_SPREAD = 550;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeInOut = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+/* 표류 좌표 순환 — 여백 m 을 두고 캔버스 밖으로 나가면 반대편에서 돌아온다 */
+const wrap = (v: number, max: number, m: number) => {
+  const span = max + m * 2;
+  let r = (v + m) % span;
+  if (r < 0) r += span;
+  return r - m;
+};
 
 export default function MoonParticles({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,6 +89,9 @@ export default function MoonParticles({ className = "" }: { className?: string }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let ps: Particle[] = [];
+    let stars: Star[] = [];
+    let meteor: Meteor | null = null;
+    let meteorNext = 0;
     let targets: [number, number][][] = [];
     let W = 0;
     let H = 0;
@@ -196,9 +232,13 @@ export default function MoonParticles({ className = "" }: { className?: string }
       H = Math.round(rect.height * dpr);
       canvas!.width = W;
       canvas!.height = H;
-      cx = W / 2;
-      cy = H / 2;
-      R = Math.min(W, H) * 0.37;
+
+      /* 성단 배치 — 캔버스가 히어로 전면이므로 구도는 내부에서 잡는다.
+         기존 박스 위치(데스크톱 우측 중단, 모바일 우측 상단) 계승. */
+      const mobile = rect.width < 768;
+      cx = W * (mobile ? 0.72 : 0.76);
+      cy = H * (mobile ? 0.27 : 0.41);
+      R = Math.min(W, H) * (mobile ? 0.34 : 0.27);
 
       const count = rect.width < 480 ? 640 : 1100;
       targets = [crescentTargets(count), starTargets(count), planetTargets(count)];
@@ -239,9 +279,74 @@ export default function MoonParticles({ className = "" }: { className?: string }
           wob: (Math.random() * 2 - 1) * 26 * dpr,
         });
       }
+
+      /* 딥필드 — 화면 전체에 깔리는 배경 별. 밝기를 낮게 눌러
+         성단(시그니처)이 항상 주인공으로 남는다. */
+      const starCount = Math.round(
+        Math.min(220, Math.max(60, (rect.width * rect.height) / 8000)),
+      );
+      stars = [];
+      for (let i = 0; i < starCount; i++) {
+        const depth = 0.25 + Math.random() * 0.75;
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          z: depth,
+          r: (0.3 + Math.pow(Math.random(), 2.2)) * (0.6 + depth * 0.5) * dpr,
+          a: 0.05 + Math.random() * 0.33,
+          tw: 0.0007 + Math.random() * 0.0011,
+          ph: Math.random() * Math.PI * 2,
+          mint: Math.random() < 0.05,
+        });
+      }
+
+      meteor = null;
+      meteorNext = performance.now() + 4500 + Math.random() * 5000;
       entryMax = withEntry ? 2900 : 0;
       phase = withEntry ? "entry" : "hold";
       phaseAt = performance.now();
+    }
+
+    /* ── 유성 — 드물게, 가늘게, 조용히 ───────────── */
+
+    function drawMeteor(now: number) {
+      if (!meteor) {
+        if (now < meteorNext) return;
+        const th = Math.PI * (0.86 + Math.random() * 0.1); // 좌하향 12°~25°
+        const spd = (0.38 + Math.random() * 0.2) * dpr;
+        meteor = {
+          x: W * (0.25 + Math.random() * 0.7),
+          y: H * (0.04 + Math.random() * 0.3),
+          vx: Math.cos(th) * spd,
+          vy: Math.sin(th) * spd,
+          born: now,
+          life: 750 + Math.random() * 350,
+          len: (70 + Math.random() * 60) * dpr,
+        };
+      }
+      const t = (now - meteor.born) / meteor.life;
+      if (t >= 1) {
+        meteor = null;
+        meteorNext = now + 9000 + Math.random() * 11000;
+        return;
+      }
+      const age = now - meteor.born;
+      const hx = meteor.x + meteor.vx * age;
+      const hy = meteor.y + meteor.vy * age;
+      const mag = Math.hypot(meteor.vx, meteor.vy);
+      const tx2 = hx - (meteor.vx / mag) * meteor.len;
+      const ty2 = hy - (meteor.vy / mag) * meteor.len;
+      const a = 0.5 * Math.sin(Math.PI * t);
+      const grad = ctx!.createLinearGradient(hx, hy, tx2, ty2);
+      grad.addColorStop(0, `rgba(${PAPER}, ${a.toFixed(3)})`);
+      grad.addColorStop(1, `rgba(${PAPER}, 0)`);
+      ctx!.strokeStyle = grad;
+      ctx!.lineWidth = dpr;
+      ctx!.lineCap = "round";
+      ctx!.beginPath();
+      ctx!.moveTo(hx, hy);
+      ctx!.lineTo(tx2, ty2);
+      ctx!.stroke();
     }
 
     /* ── 렌더 ────────────────────────────────────── */
@@ -275,6 +380,32 @@ export default function MoonParticles({ className = "" }: { className?: string }
       ctx!.fillStyle = g;
       ctx!.fillRect(0, 0, W, H);
 
+      /* 딥필드 — 느린 카메라 팬처럼 한 방향으로 표류(깊을수록 느리게) */
+      const driftX = -0.0024 * dpr;
+      const driftY = 0.0009 * dpr;
+      const margin = 14 * dpr;
+      for (const s of stars) {
+        const px = wrap(s.x + driftX * s.z * now, W, margin);
+        const py = wrap(s.y + driftY * s.z * now, H, margin);
+        const tw = reduced ? 1 : 0.66 + 0.34 * Math.sin(now * s.tw + s.ph);
+        ctx!.beginPath();
+        ctx!.arc(px, py, s.r, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(${s.mint ? MINT : PAPER}, ${(s.a * tw).toFixed(3)})`;
+        ctx!.fill();
+      }
+
+      if (!reduced) drawMeteor(now);
+
+      /* 성단 — 궤도 위 정거장처럼 호흡·기울기·리사주 표류를 계속한다 */
+      const ox = (6 * Math.sin(now * 0.00019) + 2.5 * Math.sin(now * 0.00047 + 1.3)) * dpr;
+      const oy = (5 * Math.cos(now * 0.00016) + 2 * Math.sin(now * 0.00041 + 0.5)) * dpr;
+      const rot = 0.022 * Math.sin(now * 0.00013) + 0.01 * Math.sin(now * 0.00031 + 2.1);
+      const sc = 1 + 0.008 * Math.sin(now * 0.00017 + 0.7);
+      ctx!.save();
+      ctx!.translate(cx + ox, cy + oy);
+      ctx!.rotate(rot);
+      ctx!.scale(sc, sc);
+
       for (const p of ps) {
         let bx: number;
         let by: number;
@@ -298,16 +429,27 @@ export default function MoonParticles({ className = "" }: { className?: string }
           by = p.ty;
         }
 
-        const x = bx + Math.sin(now * 0.00045 * p.sp + p.ph) * 1.3 * dpr;
-        const y = by + Math.cos(now * 0.00038 * p.sp + p.ph) * 1.3 * dpr;
+        /* 개별 미세 표류 — 두 주파수를 겹쳐 기계적 반복감을 없앤다 */
+        const x =
+          bx +
+          (Math.sin(now * 0.00042 * p.sp + p.ph) * 1.6 +
+            Math.sin(now * 0.00011 * p.sp + p.ph * 1.7)) *
+            dpr;
+        const y =
+          by +
+          (Math.cos(now * 0.00036 * p.sp + p.ph) * 1.6 +
+            Math.cos(now * 0.000095 * p.sp + p.ph * 2.3)) *
+            dpr;
         const tw =
           phase === "entry" ? 1 : 0.84 + 0.16 * Math.sin(now * 0.0012 * p.sp + p.ph);
 
         ctx!.beginPath();
-        ctx!.arc(cx + x, cy + y, p.r, 0, Math.PI * 2);
+        ctx!.arc(x, y, p.r, 0, Math.PI * 2);
         ctx!.fillStyle = `rgba(${p.mint ? MINT : PAPER}, ${(p.a * tw * fade).toFixed(3)})`;
         ctx!.fill();
       }
+
+      ctx!.restore();
     }
 
     function loop(now: number) {

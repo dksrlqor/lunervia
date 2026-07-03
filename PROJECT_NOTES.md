@@ -12,6 +12,18 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-03 (2) — 히어로 우주화(풀블리드) + 스크롤 진행 민트 바
+
+사용자 지시: ① 스크롤 진행도를 사이트 최상단에 민트로 표시 ② 히어로 파티클을 별도 사각형 박스가 아니라 배경 전체로 ③ "움직이고 멈추고"가 아니라 진짜 우주에 떠 있는 듯한 상시 부유감(섬세하게).
+
+- **`components/ScrollProgress.tsx` 신규**: 뷰포트 최상단 고정 2px 민트 라인(`z-[60]`, 헤더 z-50 위), `scaleX`를 rAF 스로틀로 직접 갱신(리렌더 없음). scroll/resize 리스너 + `documentElement`에 ResizeObserver(라우트 이동·언어 전환처럼 스크롤 이벤트 없이 문서 높이만 변하는 경우 대응). 위치 피드백 UI라 reduced-motion에서도 유지(전환 효과 자체가 없음). layout.tsx에서 `<Header/>` 앞에 전역 마운트. 민트 면적: 2px 라인 — 10% 규칙 안전.
+- **`MoonParticles.tsx` 전면 개편 — 박스 오브젝트 → 히어로 전면 밤하늘**: Hero.tsx의 위치 지정 박스(`right-[-18%]…md:w-[min(50vw,660px)]`) 제거, 캔버스가 `inset-0` 풀블리드. 성단 구도는 캔버스 내부에서 계산(데스크톱 cx=0.76W·cy=0.41H·R=0.27min, 모바일 cx=0.72W·cy=0.27H·R=0.34min — 기존 박스 위치 계승).
+  - **딥필드 별**(신규): 화면 전체 60~220개(면적/8000), 깊이 z(0.25~1)로 시차 — 느린 카메라 팬처럼 한 방향 표류(0.6~2.4px/s, wrap 순환) + 개별 트윙클, 민트 5%. 밝기 상한 낮게(성단이 항상 주인공).
+  - **정지 프레임 제거**: hold 중에도 성단 전체가 캔버스 transform으로 리사주 표류(±6px·±5px, 33s/39s 주기 + 2차 주파수) · 기울기 회전(±1.8° 조합) · 호흡 스케일(1±0.008). 개별 입자 미세 표류도 단일 sin → 두 주파수 합성으로 교체(기계적 반복감 제거). HOLD_MS 4600→5400(주변 모션이 생겨 순환을 약간 느긋하게).
+  - **유성**(신규): 첫 4.5~9.5s 후 1개, 이후 9~20s 간격. 좌하향 12~25°, 750~1100ms 수명, 1px 스트로크 + 꼬리 그라디언트, 알파 sin 엔벨로프(최대 0.5). reduced-motion 시 없음.
+  - reduced-motion: 초승달+별하늘 정적 1프레임(기존 동작 유지). IntersectionObserver/visibilitychange/ResizeObserver 로직 그대로.
+- **검증**: tsc 0 · eslint 0 · 콘솔 무오류. 프리뷰(:3000) 실측 — 캔버스=히어로 완전 일치(fullBleed), 진행 바 scaleX 0→0.5→1.0(단, `scroll-behavior:smooth` 때문에 프로그래매틱 스크롤 검증은 `behavior:"instant"` 필요), hold 구간 1초 픽셀 diff 807(정지 없음 확인), 스크린샷 2장에서 고리 행성·큰 별 형태 순환 확인.
+
 ## 2026-07-03 — 전면 리뉴얼: Next.js 재건축 (Pretendard 원툴 · 파티클 달 · 받아줘 픽셀 구역)
 
 지시서 2건(`lunervia-redesign-prompt_1.md` + `lunervia-typography-patch.md`) 기반 재건축. 부분 수정이 아니라 스택·디자인·카피 전면 교체. 기존 파일은 전부 `legacy/`로 git mv(삭제 없음).
