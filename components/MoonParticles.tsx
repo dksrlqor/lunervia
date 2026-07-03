@@ -3,15 +3,22 @@
 import { useEffect, useRef } from "react";
 
 /* ============================================================
-   시그니처 — 히어로 전면이 하나의 밤하늘.
-   · 배경: 깊이(시차)를 가진 딥필드 별이 아주 느리게 표류 + 트윙클.
-   · 전경: 흩어진 입자가 로고의 초승달+4점 별로 맺힌 뒤,
-     큰 별 → 고리 행성 → 다시 달로 순환하며 형태를 바꾼다.
-     맺힌 뒤에도 성단 전체가 궤도에 떠 있듯 호흡(스케일)·
-     기울기(회전)·리사주 표류를 멈추지 않는다 — 정지 프레임 없음.
-   · 이따금 유성 하나가 조용히 지나간다.
-   · canvas 2D 단일 요소, 외부 라이브러리 없음.
-   · prefers-reduced-motion: 초승달+별하늘 정적 1프레임, 유성 없음.
+   시그니처 — 히어로 전면이 하나의 밤하늘. "궤도에서 본 밤".
+   · 성운 헤이즈: 초저알파 radial 2겹이 느리게 호흡·표류 — 검정이
+     평면이 되지 않게 깊이의 바닥을 깐다.
+   · 딥필드: 깊이(depth)로 크기·밝기·표류 속도·시차가 전부 갈라지는
+     별 90~300개. 원경은 기어가고 근경은 흐른다. 일부 근경 별은
+     사전 렌더한 글로우 스프라이트를 두른다.
+   · 글린트: 이따금 별 하나가 십자 스파이크와 함께 잠깐 밝아진다.
+   · 유성: 드물게 두 종류 — 빠르고 가는 것, 느리고 조금 밝은 것.
+   · 전경 성단: 입자가 로고의 초승달+4점 별로 맺힌 뒤 큰 별 →
+     고리 행성으로 순환 모프. 맺힌 뒤에도 리사주 표류·기울기·호흡을
+     (전부 2주파수 합성으로) 멈추지 않는다 — 정지 프레임 없음.
+   · 포인터 시차: 마우스 이동에 레이어가 깊이별 진폭으로 반응
+     (원경 1px … 성단 7px, lerp 추종). 터치·reduced-motion 제외.
+   · canvas 2D 단일 요소, 외부 라이브러리 없음. globalAlpha +
+     사전 계산 색상으로 프레임당 문자열 생성 없음.
+   · prefers-reduced-motion: 정적 1프레임(글린트·유성·시차 없음).
    · 화면 밖/백그라운드 탭에서는 rAF 정지.
    ============================================================ */
 
@@ -36,12 +43,13 @@ type Particle = {
 type Star = {
   x: number;
   y: number;
-  z: number; // 깊이 — 표류 속도·크기에 시차를 준다
+  depth: number; // 0(원경)~1(근경) — 크기·밝기·속도·시차 전부 이걸로
   r: number;
   a: number;
   tw: number; // 트윙클 속도
   ph: number;
   mint: boolean;
+  glow: boolean; // 근경 일부만 글로우 스프라이트
 };
 
 type Meteor = {
@@ -52,18 +60,24 @@ type Meteor = {
   born: number;
   life: number;
   len: number;
+  bright: boolean; // 느리고 밝은 변종 — 머리에 점광
 };
+
+type Glint = { idx: number; born: number; dur: number };
 
 const PAPER = "255, 249, 250";
 const MINT = "33, 241, 168";
+const PAPER_RGB = "rgb(255, 249, 250)";
+const MINT_RGB = "rgb(33, 241, 168)";
 
 /* 입자 대역 — 인덱스 순서 고정: 앞은 은은한 채움, 뒤로 갈수록 밝은 윤곽 */
 const B1 = 0.62;
 const B2 = 0.92;
 
-const HOLD_MS = 5400;
+const HOLD_MS = 5200;
 const MORPH_MS = 1500;
 const MORPH_SPREAD = 550;
+const TAU = Math.PI * 2;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeInOut = (t: number) =>
@@ -77,6 +91,21 @@ const wrap = (v: number, max: number, m: number) => {
   return r - m;
 };
 
+/* 글로우 스프라이트 — 프레임마다 gradient 를 만들지 않도록 미리 굽는다 */
+function makeGlowSprite(rgb: string): HTMLCanvasElement {
+  const s = document.createElement("canvas");
+  s.width = 64;
+  s.height = 64;
+  const c = s.getContext("2d")!;
+  const g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, `rgba(${rgb}, 0.4)`);
+  g.addColorStop(0.4, `rgba(${rgb}, 0.12)`);
+  g.addColorStop(1, `rgba(${rgb}, 0)`);
+  c.fillStyle = g;
+  c.fillRect(0, 0, 64, 64);
+  return s;
+}
+
 export default function MoonParticles({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -87,11 +116,14 @@ export default function MoonParticles({ className = "" }: { className?: string }
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarse = window.matchMedia("(hover: none)").matches;
 
     let ps: Particle[] = [];
     let stars: Star[] = [];
     let meteor: Meteor | null = null;
     let meteorNext = 0;
+    let glint: Glint | null = null;
+    let glintNext = 0;
     let targets: [number, number][][] = [];
     let W = 0;
     let H = 0;
@@ -105,6 +137,15 @@ export default function MoonParticles({ className = "" }: { className?: string }
     let phaseAt = performance.now();
     let entryMax = 0;
     let shapeIdx = 0;
+
+    /* 포인터 시차 — 목표값(ptx,pty)을 향해 현재값(px,py)이 lerp 로 따라온다 */
+    let px = 0;
+    let py = 0;
+    let ptx = 0;
+    let pty = 0;
+
+    const glowPaper = makeGlowSprite(PAPER);
+    const glowMint = makeGlowSprite(MINT);
 
     /* ── 형태 샘플러 ─────────────────────────────── */
 
@@ -138,13 +179,13 @@ export default function MoonParticles({ className = "" }: { className?: string }
             if (inCrescent(x, y)) p = [x, y];
           } else if (f < B2) {
             if (Math.random() < 0.6) {
-              const th = Math.random() * Math.PI * 2;
+              const th = Math.random() * TAU;
               const rr = R * (0.945 + Math.random() * 0.05);
               const x = Math.cos(th) * rr;
               const y = Math.sin(th) * rr;
               if (inCrescent(x, y)) p = [x, y];
             } else {
-              const th = Math.random() * Math.PI * 2;
+              const th = Math.random() * TAU;
               const rr = 0.85 * R * (1.008 + Math.random() * 0.045);
               const x = 0.45 * R + Math.cos(th) * rr;
               const y = -0.2 * R + Math.sin(th) * rr;
@@ -187,7 +228,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
       const sinF = Math.sin(phi);
       const ringPoint = (frontOnly: boolean): [number, number] | null => {
         for (let k = 0; k < 40; k++) {
-          const th = Math.random() * Math.PI * 2;
+          const th = Math.random() * TAU;
           const j = 1 + (Math.random() * 2 - 1) * 0.05;
           const u = 0.95 * R * Math.cos(th) * j;
           const v = 0.3 * R * Math.sin(th) * j;
@@ -203,14 +244,14 @@ export default function MoonParticles({ className = "" }: { className?: string }
         const f = i / count;
         let p: [number, number] | null = null;
         if (f < B1) {
-          const th = Math.random() * Math.PI * 2;
+          const th = Math.random() * TAU;
           const rr = Rd * Math.sqrt(Math.random());
           p = [Math.cos(th) * rr, Math.sin(th) * rr];
         } else if (f < B2) {
           p = ringPoint(false);
         } else {
           if (Math.random() < 0.55) {
-            const th = Math.random() * Math.PI * 2;
+            const th = Math.random() * TAU;
             const rr = Rd * (0.95 + Math.random() * 0.06);
             p = [Math.cos(th) * rr, Math.sin(th) * rr];
           } else {
@@ -249,7 +290,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
       for (let i = 0; i < count; i++) {
         const f = i / count;
         const [tx, ty] = targets[0][i];
-        const th = Math.random() * Math.PI * 2;
+        const th = Math.random() * TAU;
         const d = far * (0.5 + Math.random() * 0.55);
         ps.push({
           fx: tx,
@@ -274,60 +315,75 @@ export default function MoonParticles({ className = "" }: { className?: string }
           delay: withEntry ? Math.random() * 1100 : 0,
           dur: withEntry ? 900 + Math.random() * 1700 : 1,
           md: Math.random() * MORPH_SPREAD,
-          ph: Math.random() * Math.PI * 2,
+          ph: Math.random() * TAU,
           sp: 0.5 + Math.random(),
           wob: (Math.random() * 2 - 1) * 26 * dpr,
         });
       }
 
-      /* 딥필드 — 화면 전체에 깔리는 배경 별. 밝기를 낮게 눌러
-         성단(시그니처)이 항상 주인공으로 남는다. */
+      /* 딥필드 — depth 를 원경 쪽으로 스큐해 "먼 별이 훨씬 많은" 하늘.
+         밝기 상한은 낮게 눌러 성단(시그니처)이 항상 주인공으로 남는다. */
       const starCount = Math.round(
-        Math.min(220, Math.max(60, (rect.width * rect.height) / 8000)),
+        Math.min(300, Math.max(90, (rect.width * rect.height) / 6500)),
       );
       stars = [];
       for (let i = 0; i < starCount; i++) {
-        const depth = 0.25 + Math.random() * 0.75;
+        const depth = Math.pow(Math.random(), 1.6);
         stars.push({
           x: Math.random() * W,
           y: Math.random() * H,
-          z: depth,
-          r: (0.3 + Math.pow(Math.random(), 2.2)) * (0.6 + depth * 0.5) * dpr,
-          a: 0.05 + Math.random() * 0.33,
-          tw: 0.0007 + Math.random() * 0.0011,
-          ph: Math.random() * Math.PI * 2,
-          mint: Math.random() < 0.05,
+          depth,
+          r: (0.3 + 0.55 * depth + Math.random() * (0.35 + 0.45 * depth)) * dpr,
+          a: 0.04 + 0.14 * depth + Math.random() * (0.05 + 0.2 * depth),
+          tw: 0.0005 + Math.random() * 0.0013,
+          ph: Math.random() * TAU,
+          mint: Math.random() < 0.03 + 0.03 * depth,
+          glow: depth > 0.75 && Math.random() < 0.3,
         });
       }
 
       meteor = null;
-      meteorNext = performance.now() + 4500 + Math.random() * 5000;
+      meteorNext = performance.now() + 6000 + Math.random() * 4000;
+      glint = null;
+      glintNext = performance.now() + 3500 + Math.random() * 4000;
       entryMax = withEntry ? 2900 : 0;
       phase = withEntry ? "entry" : "hold";
       phaseAt = performance.now();
     }
 
-    /* ── 유성 — 드물게, 가늘게, 조용히 ───────────── */
+    /* 별의 현재 위치 — 표류 + 순환 + 깊이 시차 (글린트에서도 재사용) */
+    function starPos(s: Star, now: number): [number, number] {
+      const spd = 0.12 + 0.88 * s.depth * s.depth;
+      const amp = (1 + 4 * s.depth) * dpr;
+      return [
+        wrap(s.x - 0.0022 * dpr * spd * now, W, 16 * dpr) - px * amp,
+        wrap(s.y + 0.00085 * dpr * spd * now, H, 16 * dpr) - py * amp * 0.7,
+      ];
+    }
+
+    /* ── 유성 — 드물게, 가늘게, 조용히. 가끔 느리고 밝은 변종 ── */
 
     function drawMeteor(now: number) {
       if (!meteor) {
         if (now < meteorNext) return;
+        const bright = Math.random() < 0.3;
         const th = Math.PI * (0.86 + Math.random() * 0.1); // 좌하향 12°~25°
-        const spd = (0.38 + Math.random() * 0.2) * dpr;
+        const spd = (bright ? 0.22 : 0.38 + Math.random() * 0.2) * dpr;
         meteor = {
           x: W * (0.25 + Math.random() * 0.7),
           y: H * (0.04 + Math.random() * 0.3),
           vx: Math.cos(th) * spd,
           vy: Math.sin(th) * spd,
           born: now,
-          life: 750 + Math.random() * 350,
-          len: (70 + Math.random() * 60) * dpr,
+          life: bright ? 1400 + Math.random() * 400 : 700 + Math.random() * 350,
+          len: (bright ? 110 + Math.random() * 50 : 65 + Math.random() * 50) * dpr,
+          bright,
         };
       }
       const t = (now - meteor.born) / meteor.life;
       if (t >= 1) {
         meteor = null;
-        meteorNext = now + 9000 + Math.random() * 11000;
+        meteorNext = now + 11000 + Math.random() * 14000;
         return;
       }
       const age = now - meteor.born;
@@ -336,7 +392,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
       const mag = Math.hypot(meteor.vx, meteor.vy);
       const tx2 = hx - (meteor.vx / mag) * meteor.len;
       const ty2 = hy - (meteor.vy / mag) * meteor.len;
-      const a = 0.5 * Math.sin(Math.PI * t);
+      const a = (meteor.bright ? 0.55 : 0.45) * Math.sin(Math.PI * t);
       const grad = ctx!.createLinearGradient(hx, hy, tx2, ty2);
       grad.addColorStop(0, `rgba(${PAPER}, ${a.toFixed(3)})`);
       grad.addColorStop(1, `rgba(${PAPER}, 0)`);
@@ -347,6 +403,49 @@ export default function MoonParticles({ className = "" }: { className?: string }
       ctx!.moveTo(hx, hy);
       ctx!.lineTo(tx2, ty2);
       ctx!.stroke();
+      if (meteor.bright) {
+        ctx!.globalAlpha = a;
+        const gs = 7 * dpr;
+        ctx!.drawImage(glowPaper, hx - gs, hy - gs, gs * 2, gs * 2);
+        ctx!.globalAlpha = 1;
+      }
+    }
+
+    /* ── 글린트 — 별 하나가 십자 스파이크와 함께 잠깐 밝아진다 ── */
+
+    function drawGlint(now: number) {
+      if (!glint) {
+        if (now < glintNext) return;
+        const near = stars
+          .map((s, i) => ({ s, i }))
+          .filter(({ s }) => s.depth > 0.5);
+        if (!near.length) return;
+        const pick = near[Math.floor(Math.random() * near.length)];
+        glint = { idx: pick.i, born: now, dur: 1100 + Math.random() * 500 };
+      }
+      const t = (now - glint.born) / glint.dur;
+      if (t >= 1) {
+        glint = null;
+        glintNext = now + 4000 + Math.random() * 6000;
+        return;
+      }
+      const s = stars[glint.idx];
+      const [gx, gy] = starPos(s, now);
+      const e = Math.sin(Math.PI * t);
+      const len = (3 + 9 * e) * dpr;
+      const rgb = s.mint ? MINT : PAPER;
+      ctx!.strokeStyle = `rgba(${rgb}, ${(0.5 * e).toFixed(3)})`;
+      ctx!.lineWidth = dpr * 0.8;
+      ctx!.beginPath();
+      ctx!.moveTo(gx - len, gy);
+      ctx!.lineTo(gx + len, gy);
+      ctx!.moveTo(gx, gy - len);
+      ctx!.lineTo(gx, gy + len);
+      ctx!.stroke();
+      ctx!.globalAlpha = 0.6 * e;
+      const gs = 5 * dpr;
+      ctx!.drawImage(s.mint ? glowMint : glowPaper, gx - gs, gy - gs, gs * 2, gs * 2);
+      ctx!.globalAlpha = 1;
     }
 
     /* ── 렌더 ────────────────────────────────────── */
@@ -372,33 +471,72 @@ export default function MoonParticles({ className = "" }: { className?: string }
         phaseAt = now;
       }
 
+      /* 포인터 시차 추종 */
+      px += (ptx - px) * 0.045;
+      py += (pty - py) * 0.045;
+
       ctx!.clearRect(0, 0, W, H);
 
+      /* 성운 헤이즈 — 검정이 평면이 되지 않게, 아주 낮게 두 겹 */
+      const n1x = W * 0.3 + Math.sin(now * 0.00007) * 40 * dpr - px * 2 * dpr;
+      const n1y = H * 0.74 + Math.cos(now * 0.000056) * 30 * dpr - py * 1.5 * dpr;
+      const n1r = Math.max(W, H) * 0.5;
+      const n1a = 0.02 + 0.006 * Math.sin(now * 0.00009);
+      const g1 = ctx!.createRadialGradient(n1x, n1y, 0, n1x, n1y, n1r);
+      g1.addColorStop(0, `rgba(${PAPER}, ${n1a.toFixed(4)})`);
+      g1.addColorStop(1, `rgba(${PAPER}, 0)`);
+      ctx!.fillStyle = g1;
+      ctx!.fillRect(0, 0, W, H);
+
+      const n2x = W * 0.88 + Math.cos(now * 0.00005) * 34 * dpr - px * 2 * dpr;
+      const n2y = H * 0.12 + Math.sin(now * 0.000063) * 26 * dpr - py * 1.5 * dpr;
+      const n2r = Math.max(W, H) * 0.38;
+      const n2a = 0.024 + 0.007 * Math.sin(now * 0.00008 + 2);
+      const g2 = ctx!.createRadialGradient(n2x, n2y, 0, n2x, n2y, n2r);
+      g2.addColorStop(0, `rgba(${PAPER}, ${n2a.toFixed(4)})`);
+      g2.addColorStop(1, `rgba(${PAPER}, 0)`);
+      ctx!.fillStyle = g2;
+      ctx!.fillRect(0, 0, W, H);
+
+      /* 성단 후광 */
       const g = ctx!.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 2.1);
       g.addColorStop(0, `rgba(${PAPER}, 0.05)`);
       g.addColorStop(1, `rgba(${PAPER}, 0)`);
       ctx!.fillStyle = g;
       ctx!.fillRect(0, 0, W, H);
 
-      /* 딥필드 — 느린 카메라 팬처럼 한 방향으로 표류(깊을수록 느리게) */
-      const driftX = -0.0024 * dpr;
-      const driftY = 0.0009 * dpr;
-      const margin = 14 * dpr;
+      /* 딥필드 — 깊을수록 느리게 표류, 얕을수록 시차 크게 */
       for (const s of stars) {
-        const px = wrap(s.x + driftX * s.z * now, W, margin);
-        const py = wrap(s.y + driftY * s.z * now, H, margin);
-        const tw = reduced ? 1 : 0.66 + 0.34 * Math.sin(now * s.tw + s.ph);
+        const [sx, sy] = starPos(s, now);
+        const tw = reduced ? 1 : 0.62 + 0.38 * Math.sin(now * s.tw + s.ph);
+        const alpha = s.a * tw;
+        if (alpha < 0.012) continue;
+        if (s.glow) {
+          ctx!.globalAlpha = alpha * 0.55;
+          const gs = s.r * 7;
+          ctx!.drawImage(s.mint ? glowMint : glowPaper, sx - gs, sy - gs, gs * 2, gs * 2);
+        }
+        ctx!.globalAlpha = alpha;
+        ctx!.fillStyle = s.mint ? MINT_RGB : PAPER_RGB;
         ctx!.beginPath();
-        ctx!.arc(px, py, s.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${s.mint ? MINT : PAPER}, ${(s.a * tw).toFixed(3)})`;
+        ctx!.arc(sx, sy, s.r, 0, TAU);
         ctx!.fill();
       }
+      ctx!.globalAlpha = 1;
 
-      if (!reduced) drawMeteor(now);
+      if (!reduced) {
+        drawGlint(now);
+        drawMeteor(now);
+      }
 
-      /* 성단 — 궤도 위 정거장처럼 호흡·기울기·리사주 표류를 계속한다 */
-      const ox = (6 * Math.sin(now * 0.00019) + 2.5 * Math.sin(now * 0.00047 + 1.3)) * dpr;
-      const oy = (5 * Math.cos(now * 0.00016) + 2 * Math.sin(now * 0.00041 + 0.5)) * dpr;
+      /* 성단 — 궤도 위 정거장처럼 표류·기울기·호흡을 계속한다.
+         전부 2주파수 합성이라 같은 자세가 다시 오지 않는다. */
+      const ox =
+        (6 * Math.sin(now * 0.00019) + 2.5 * Math.sin(now * 0.00047 + 1.3)) * dpr -
+        px * 7 * dpr;
+      const oy =
+        (5 * Math.cos(now * 0.00016) + 2 * Math.sin(now * 0.00041 + 0.5)) * dpr -
+        py * 5 * dpr;
       const rot = 0.022 * Math.sin(now * 0.00013) + 0.01 * Math.sin(now * 0.00031 + 2.1);
       const sc = 1 + 0.008 * Math.sin(now * 0.00017 + 0.7);
       ctx!.save();
@@ -443,12 +581,14 @@ export default function MoonParticles({ className = "" }: { className?: string }
         const tw =
           phase === "entry" ? 1 : 0.84 + 0.16 * Math.sin(now * 0.0012 * p.sp + p.ph);
 
+        ctx!.globalAlpha = Math.min(p.a * tw * fade, 1);
+        ctx!.fillStyle = p.mint ? MINT_RGB : PAPER_RGB;
         ctx!.beginPath();
-        ctx!.arc(x, y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${p.mint ? MINT : PAPER}, ${(p.a * tw * fade).toFixed(3)})`;
+        ctx!.arc(x, y, p.r, 0, TAU);
         ctx!.fill();
       }
 
+      ctx!.globalAlpha = 1;
       ctx!.restore();
     }
 
@@ -486,6 +626,21 @@ export default function MoonParticles({ className = "" }: { className?: string }
     };
     document.addEventListener("visibilitychange", onVis);
 
+    /* 포인터 시차 — 마우스 전용(터치·reduced 제외), 창 밖으로 나가면 복귀 */
+    const onPointer = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      ptx = Math.min(Math.max((e.clientX / window.innerWidth) * 2 - 1, -1), 1);
+      pty = Math.min(Math.max((e.clientY / window.innerHeight) * 2 - 1, -1), 1);
+    };
+    const onPointerOut = () => {
+      ptx = 0;
+      pty = 0;
+    };
+    if (!reduced && !coarse) {
+      window.addEventListener("pointermove", onPointer, { passive: true });
+      document.documentElement.addEventListener("mouseleave", onPointerOut);
+    }
+
     let ro: ResizeObserver | undefined;
     if ("ResizeObserver" in window) {
       let first = true;
@@ -505,6 +660,8 @@ export default function MoonParticles({ className = "" }: { className?: string }
       io.disconnect();
       ro?.disconnect();
       document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pointermove", onPointer);
+      document.documentElement.removeEventListener("mouseleave", onPointerOut);
     };
   }, []);
 
