@@ -27,7 +27,8 @@ http://localhost:3000/
 - **모션 4종 준수**: ①히어로 마스크 리빌+달 수렴 ②IO 스크롤 리빌(`Reveal`, 카드 스태거) ③다크↔라이트 경계(시트 라운드 오버랩) ④호버(transform/opacity). `prefers-reduced-motion` 전역 정지.
 - **SEO**: Metadata API(페이지별 title/desc/canonical), JSON-LD(Organization+WebSite), `app/sitemap.ts`(5 URL)·`app/robots.ts`(checkout 차단). checkout `robots:{index:false}`.
 - **검증**: `next build` 13라우트 전부 정적 프리렌더 OK · tsc 0 · eslint 0(legacy 제외) · 콘솔 에러 0 · 375px 가로 오버플로 0(전 라우트, 비교표는 모바일 카드 스택 전환) · KO/EN 토글+localStorage 영속(EN 자간 오버라이드 동작) · 파티클 달/받아줘 씬/쓰다듬기 실동작 스크린샷 확인. Lighthouse 실측은 배포 후 권장.
-- **작업 방식**: 단계별 커밋 5건(smbes 명의, push 안 함 — 사용자 지시 대기). dev 서버는 `dev.cmd`(launch.json `lunervia-next`, :3000). package.json 등 JSON은 **BOM 없는 UTF-8**이어야 함(PS5.1 `Set-Content -Encoding utf8`이 BOM을 넣어 Turbopack이 거부했던 사고 있음 — Write 도구/`WriteAllText`로 저장할 것).
+- **(추가) 6단계 다듬기 + push**: 히어로 입자를 1100개로 정밀화하고 **형태 순환 모프** 도입(초승달+로고별 4.6s 유지 → 1.5s 모프 → 큰 4점 별+잔별 → 고리 행성(위쪽 고리는 행성 뒤로 컬링) → 반복, reduced-motion 은 초승달 정적). 받아줘 구역은 원본 **PixelWindow**(♡ 받아줘 ♡ 핑크 타이틀바 + Galmuri — §3-1 전용 예외 서체, layout 에 galmuri.css 로드) 프레임으로 교체, 고양이 표정 기본 stage 1(은은한 미소)로 톤다운, **창 안 좌우 산책 모션**(px-stroll 18s steps, 방향 전환 시 scaleX 플립, 호버 시 일시정지), 쓰다듬기는 원본 PettableCat 로직(쿨다운 350ms·하트 2~4개 랜덤 burst·표정 4.5s 후 복귀). 꽃 스프라이트 2종 추가. **2026-07-03 `git push origin main` 완료(6e32dd7..38c0c3d)** — 이 시점부터 GitHub Pages 라이브(lunervia.xyz)는 404. **Vercel 임포트 + 도메인 연결이 즉시 필요**(Pages 는 Next 소스를 서빙 못 함).
+- **작업 방식**: 단계별 커밋 6건(smbes 명의). dev 서버는 `dev.cmd`(launch.json `lunervia-next`, :3000). package.json 등 JSON은 **BOM 없는 UTF-8**이어야 함(PS5.1 `Set-Content -Encoding utf8`이 BOM을 넣어 Turbopack이 거부했던 사고 있음 — Write 도구/`WriteAllText`로 저장할 것).
 
 ## 2026-06-22 (2) — 히어로 회전 지구본 · 로고 다듬기 · 카피 디-AI화
 
