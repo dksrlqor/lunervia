@@ -12,14 +12,16 @@ npm run dev
 http://localhost:3000/
 ```
 
-## 2026-07-04 (4) — WhyInvite 라이트 전환: 블랙 연속 해소 + 다크 패널("밤하늘로 난 창")
+## 2026-07-04 (4) — 홈 최종 재배치: Work 라이트 2번째 · 만든이유 다크 히어로 3번째 · 완전 교대 복원
 
-사용자 피드백: ① 히어로+만든이유가 둘 다 다크라 검정이 ~2화면 이어짐 — 디자인적으로 부족해 보임 ② 블랙이 지정 색(#171717)이 아닌 것 같다.
+사용자 피드백 흐름: ① 히어로+만든이유 다크 연속(~2화면)은 부족해 보임 ② 블랙이 지정 색이 아닌 것 같다 ③ (중간안이었던 다크 패널 카드는) "포인트 짚은 것처럼 섬처럼 있으면 별로" → **차라리 "증명은 배포로 합니다"(Work)를 라이트로 2번째에 두고, 만든이유는 3번째에서 검은 배경 히어로로**.
 
-- **① 해소**: WhyInvite 를 92svh 다크 풀블리드 → **라이트 시트**(`sheet bg-paper`)로 전환. 좌 = 민트도트 라벨 + 잉크 대형 헤드라인(clamp 2.4~4.5rem, **민트 단어는 라이트 지면 저대비라 텍스트 대신 민트 밑줄** — 로컬 `accent()` 렌더러, `decoration-mint 0.13em`) + 리드 + btnInk CTA. 우 = **다크 라운드 패널**(`rounded-3xl bg-ink aspect-4/3·5/4`)에 별-글쓰기 장면만 담음. 다크↔라이트 교차 리듬 복원(ink→paper→paper→ink→paper→paper→ink, 동색 인접은 시트 오버랩으로 경계 자연 소멸).
-- **`WritingParticles` variant prop 신설**: `"hero"`(기존 — 섹션 풀블리드, 데스크톱 우측/모바일 상단 배치) · `"panel"`(카드 내부 — 중앙 배치 cx=0.5W·cy=0.48H·R=min(0.42W, 0.34H)). effect deps 에 variant 추가. /why 히어로는 hero variant 그대로.
-- **② 검증(실측)**: 섹션 배경 computed = **rgb(23,23,23) = #171717 정확**(전 다크 섹션), 패널 캔버스 모서리 픽셀 = (23,23,23). 히어로 캔버스 모서리 (24,24,24)로 +1 뜨는 건 성운 후광(paper 0.02α)이 얹힌 것 — 지정 색이 틀린 게 아니라 별빛 글로우가 만든 착시였음. 섹션 컬러 시퀀스 실측: ink→paper(WHY)→paper→ink→paper→paper.
-- tsc 0 · eslint 0 · build OK · 콘솔 에러 0 · 스크린샷 확인(민트 밑줄·패널 렌더).
+- **최종 홈 순서**: Hero(ink) → **Work(paper — 라이트로 반전, 2번째)** → **WhyInvite(ink 히어로형, 3번째 — WritingParticles 풀블리드 배경, 92svh, `sheet`)** → Services(paper) → **Process(ink — 다크로 반전)** → Contact(paper) → Footer(ink). **모든 경계가 교대** — 실측 시퀀스 (23,23,23)→(255,249,250)→(23,23,23)→(255,249,250)→(23,23,23)→(255,249,250)→footer(23,23,23).
+- **WorkSection 라이트 반전**: bg-ink→bg-paper, paper/*→ink/* 일괄, 라벨 = 민트도트+ink/60, featured CTA 호버는 민트 텍스트(저대비) 대신 **민트 밑줄**(`decoration-mint group-hover:underline`), 받아줘 PixelWindow(§3-1)는 자체 팔레트라 라이트 위에서도 정상 — 스크린샷 확인.
+- **ProcessSection 다크 반전**: bg-paper→bg-ink, ink/*→paper/* 일괄, 라벨 `text-mint/80`, 번호 paper/80+민트 언더라인 바 유지. (라이트 3연속 방지 — Services·Contact 사이에서 교대 리듬 유지용.)
+- **WhyInvite**: (3)에서 만든 다크 히어로형 복원 + `sheet` 추가(라이트 Work 위로 라운드 닫힘). 민트 단어 "이유"는 fmt(text-mint — 다크 위 고대비). 중간안의 라이트+다크패널 버전은 폐기(로컬 `accent()` 밑줄 렌더러도 함께 제거). `WritingParticles` 의 `variant="panel"` prop 은 남겨둠(미사용, 재사용 가능).
+- **블랙 색상 의혹 해소(실측)**: 전 다크 섹션 computed bg = **rgb(23,23,23) = #171717 정확**. 캔버스 모서리 픽셀도 (23,23,23)~(24,24,24) — +1은 성운 후광(paper 0.02α)이 얹힌 별빛 글로우이지 색 지정 오류 아님.
+- tsc 0 · eslint 0 · build OK · 콘솔 에러 0 · Work/WhyInvite 스크린샷 확인.
 
 ## 2026-07-04 (3) — 홈 재배치: Philosophy 삭제 → "만든 이유" 히어로형 2번째 섹션 승격
 
