@@ -50,6 +50,9 @@ type Star = {
   ph: number;
   mint: boolean;
   glow: boolean; // 근경 일부만 글로우 스프라이트
+  spd: number; // 사전 계산 — 표류 속도 계수
+  ampX: number; // 사전 계산 — 포인터 시차 진폭(px 단위)
+  ampY: number;
 };
 
 type Meteor = {
@@ -106,13 +109,33 @@ function makeGlowSprite(rgb: string): HTMLCanvasElement {
   return s;
 }
 
+/* 대형 radial(성운·후광)도 스프라이트로 — 프레임당 gradient 생성 0.
+   부드러운 그라디언트는 확대해도 손실이 없어 256px 로 굽고 스케일한다.
+   innerRatio: 중심부터 이 비율까지는 알파 1(원본 gradient 의 안쪽 원). */
+function makeRadialSprite(rgb: string, innerRatio: number): HTMLCanvasElement {
+  const size = 256;
+  const half = size / 2;
+  const s = document.createElement("canvas");
+  s.width = size;
+  s.height = size;
+  const c = s.getContext("2d")!;
+  const g = c.createRadialGradient(half, half, half * innerRatio, half, half, half);
+  g.addColorStop(0, `rgba(${rgb}, 1)`);
+  g.addColorStop(1, `rgba(${rgb}, 0)`);
+  c.fillStyle = g;
+  c.fillRect(0, 0, size, size);
+  return s;
+}
+
 export default function MoonParticles({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    /* 히어로 배경(bg-ink)과 같은 색을 직접 칠하므로 불투명 캔버스 —
+       DOM 합성에서 알파 블렌딩이 빠져 프레임 비용이 준다. */
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -146,6 +169,9 @@ export default function MoonParticles({ className = "" }: { className?: string }
 
     const glowPaper = makeGlowSprite(PAPER);
     const glowMint = makeGlowSprite(MINT);
+    const nebSprite = makeRadialSprite(PAPER, 0);
+    /* 후광 원본 gradient 의 안쪽 원 = R*0.2 / 바깥 원 = R*2.1 */
+    const haloSprite = makeRadialSprite(PAPER, 0.2 / 2.1);
 
     /* ── 형태 샘플러 ─────────────────────────────── */
 
@@ -269,6 +295,10 @@ export default function MoonParticles({ className = "" }: { className?: string }
       const rect = canvas!.getBoundingClientRect();
       if (rect.width < 10 || rect.height < 10) return;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
+      /* 백킹스토어 픽셀 상한(~7M) — 초대형·고DPI 화면에서 픽셀 수가
+         프레임 비용을 지배하지 않도록 dpr 을 부드럽게 낮춘다. */
+      const cap = Math.sqrt(7_000_000 / (rect.width * rect.height));
+      dpr = Math.max(1, Math.min(dpr, cap));
       W = Math.round(rect.width * dpr);
       H = Math.round(rect.height * dpr);
       canvas!.width = W;
@@ -329,6 +359,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
       stars = [];
       for (let i = 0; i < starCount; i++) {
         const depth = Math.pow(Math.random(), 1.6);
+        const amp = (1 + 4 * depth) * dpr;
         stars.push({
           x: Math.random() * W,
           y: Math.random() * H,
@@ -339,6 +370,9 @@ export default function MoonParticles({ className = "" }: { className?: string }
           ph: Math.random() * TAU,
           mint: Math.random() < 0.03 + 0.03 * depth,
           glow: depth > 0.75 && Math.random() < 0.3,
+          spd: 0.12 + 0.88 * depth * depth,
+          ampX: amp,
+          ampY: amp * 0.7,
         });
       }
 
@@ -353,11 +387,9 @@ export default function MoonParticles({ className = "" }: { className?: string }
 
     /* 별의 현재 위치 — 표류 + 순환 + 깊이 시차 (글린트에서도 재사용) */
     function starPos(s: Star, now: number): [number, number] {
-      const spd = 0.12 + 0.88 * s.depth * s.depth;
-      const amp = (1 + 4 * s.depth) * dpr;
       return [
-        wrap(s.x - 0.0022 * dpr * spd * now, W, 16 * dpr) - px * amp,
-        wrap(s.y + 0.00085 * dpr * spd * now, H, 16 * dpr) - py * amp * 0.7,
+        wrap(s.x - 0.0022 * dpr * s.spd * now, W, 16 * dpr) - px * s.ampX,
+        wrap(s.y + 0.00085 * dpr * s.spd * now, H, 16 * dpr) - py * s.ampY,
       ];
     }
 
@@ -475,37 +507,32 @@ export default function MoonParticles({ className = "" }: { className?: string }
       px += (ptx - px) * 0.045;
       py += (pty - py) * 0.045;
 
-      ctx!.clearRect(0, 0, W, H);
+      /* 불투명 캔버스 — 히어로 배경색으로 직접 지운다 */
+      ctx!.fillStyle = "#171717";
+      ctx!.fillRect(0, 0, W, H);
 
-      /* 성운 헤이즈 — 검정이 평면이 되지 않게, 아주 낮게 두 겹 */
+      /* 성운 헤이즈 — 검정이 평면이 되지 않게, 아주 낮게 두 겹.
+         gradient 는 스프라이트로 구워 두고 알파·위치만 프레임마다 바꾼다. */
       const n1x = W * 0.3 + Math.sin(now * 0.00007) * 40 * dpr - px * 2 * dpr;
       const n1y = H * 0.74 + Math.cos(now * 0.000056) * 30 * dpr - py * 1.5 * dpr;
       const n1r = Math.max(W, H) * 0.5;
-      const n1a = 0.02 + 0.006 * Math.sin(now * 0.00009);
-      const g1 = ctx!.createRadialGradient(n1x, n1y, 0, n1x, n1y, n1r);
-      g1.addColorStop(0, `rgba(${PAPER}, ${n1a.toFixed(4)})`);
-      g1.addColorStop(1, `rgba(${PAPER}, 0)`);
-      ctx!.fillStyle = g1;
-      ctx!.fillRect(0, 0, W, H);
+      ctx!.globalAlpha = 0.02 + 0.006 * Math.sin(now * 0.00009);
+      ctx!.drawImage(nebSprite, n1x - n1r, n1y - n1r, n1r * 2, n1r * 2);
 
       const n2x = W * 0.88 + Math.cos(now * 0.00005) * 34 * dpr - px * 2 * dpr;
       const n2y = H * 0.12 + Math.sin(now * 0.000063) * 26 * dpr - py * 1.5 * dpr;
       const n2r = Math.max(W, H) * 0.38;
-      const n2a = 0.024 + 0.007 * Math.sin(now * 0.00008 + 2);
-      const g2 = ctx!.createRadialGradient(n2x, n2y, 0, n2x, n2y, n2r);
-      g2.addColorStop(0, `rgba(${PAPER}, ${n2a.toFixed(4)})`);
-      g2.addColorStop(1, `rgba(${PAPER}, 0)`);
-      ctx!.fillStyle = g2;
-      ctx!.fillRect(0, 0, W, H);
+      ctx!.globalAlpha = 0.024 + 0.007 * Math.sin(now * 0.00008 + 2);
+      ctx!.drawImage(nebSprite, n2x - n2r, n2y - n2r, n2r * 2, n2r * 2);
 
       /* 성단 후광 */
-      const g = ctx!.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * 2.1);
-      g.addColorStop(0, `rgba(${PAPER}, 0.05)`);
-      g.addColorStop(1, `rgba(${PAPER}, 0)`);
-      ctx!.fillStyle = g;
-      ctx!.fillRect(0, 0, W, H);
+      const hr = R * 2.1;
+      ctx!.globalAlpha = 0.05;
+      ctx!.drawImage(haloSprite, cx - hr, cy - hr, hr * 2, hr * 2);
+      ctx!.globalAlpha = 1;
 
-      /* 딥필드 — 깊을수록 느리게 표류, 얕을수록 시차 크게 */
+      /* 딥필드 — 깊을수록 느리게 표류, 얕을수록 시차 크게.
+         이 크기의 점은 fillRect 가 arc 와 시각적으로 같고 훨씬 싸다. */
       for (const s of stars) {
         const [sx, sy] = starPos(s, now);
         const tw = reduced ? 1 : 0.62 + 0.38 * Math.sin(now * s.tw + s.ph);
@@ -518,9 +545,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
         }
         ctx!.globalAlpha = alpha;
         ctx!.fillStyle = s.mint ? MINT_RGB : PAPER_RGB;
-        ctx!.beginPath();
-        ctx!.arc(sx, sy, s.r, 0, TAU);
-        ctx!.fill();
+        ctx!.fillRect(sx - s.r, sy - s.r, s.r * 2, s.r * 2);
       }
       ctx!.globalAlpha = 1;
 
@@ -583,9 +608,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
 
         ctx!.globalAlpha = Math.min(p.a * tw * fade, 1);
         ctx!.fillStyle = p.mint ? MINT_RGB : PAPER_RGB;
-        ctx!.beginPath();
-        ctx!.arc(x, y, p.r, 0, TAU);
-        ctx!.fill();
+        ctx!.fillRect(x - p.r, y - p.r, p.r * 2, p.r * 2);
       }
 
       ctx!.globalAlpha = 1;

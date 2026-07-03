@@ -16,8 +16,13 @@ const jbm = JetBrains_Mono({
 const PRETENDARD =
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
 
+/* 캐노니컬 도메인 — Vercel 이 apex(lunervia.xyz)를 www 로 308 리다이렉트하므로
+   검색엔진·OG 에 주는 절대 URL 은 전부 www 기준이어야 한다. */
+const SITE_URL = "https://www.lunervia.xyz";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lunervia.xyz"),
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
   title: {
     default: "Lunervia — 생각을 현실로 만드는 소프트웨어 스튜디오",
     template: "%s · Lunervia",
@@ -28,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Lunervia",
     locale: "ko_KR",
-    url: "https://lunervia.xyz",
+    url: SITE_URL,
   },
   twitter: { card: "summary_large_image" },
 };
@@ -43,8 +48,8 @@ const JSON_LD = {
     {
       "@type": "Organization",
       name: "Lunervia",
-      url: "https://lunervia.xyz",
-      logo: "https://lunervia.xyz/brand/lunervia-symbol.png",
+      url: SITE_URL,
+      logo: `${SITE_URL}/brand/lunervia-symbol.png`,
       sameAs: [
         "https://www.instagram.com/lunerviasoft/",
         "https://www.instagram.com/_dksrlqor/",
@@ -55,7 +60,7 @@ const JSON_LD = {
     {
       "@type": "WebSite",
       name: "Lunervia",
-      url: "https://lunervia.xyz",
+      url: SITE_URL,
       inLanguage: "ko-KR",
     },
   ],
@@ -70,10 +75,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preload" as="style" href={PRETENDARD} />
         <link rel="stylesheet" href={PRETENDARD} />
-        {/* Galmuri — §3-1 받아줘 예외 구역 전용 픽셀 서체 (원본과 동일 소스) */}
+        {/* Galmuri — §3-1 받아줘 예외 구역 전용 픽셀 서체 (원본과 동일 소스).
+            @latest 는 릴리스마다 캐시가 깨지고 공급망 변경에 노출되므로 버전 고정. */}
         <link
           rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css"
+          href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css"
         />
         <script
           type="application/ld+json"

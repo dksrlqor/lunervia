@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://lunervia.xyz";
+/* 캐노니컬 = www (apex 는 www 로 308) — layout.tsx SITE_URL 과 동일 기준 */
+const BASE = "https://www.lunervia.xyz";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date("2026-07-03");

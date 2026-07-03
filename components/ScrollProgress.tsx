@@ -19,10 +19,12 @@ export default function ScrollProgress() {
 
     const update = () => {
       raf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       bar.style.transform = `scaleX(${p})`;
-      head.style.transform = `translateX(${p * window.innerWidth}px)`;
+      /* clientWidth — innerWidth 는 스크롤바를 포함해 끝에서 오버슛한다 */
+      head.style.transform = `translateX(${p * doc.clientWidth}px)`;
       head.style.opacity = p > 0.002 ? "1" : "0";
     };
     const queue = () => {

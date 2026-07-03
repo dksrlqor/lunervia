@@ -12,6 +12,18 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-04 — 백엔드 하드닝 + 성능 최적화 + 버그 스윕
+
+사용자 지시: "백엔드 더 튼튼하게, 렉 줄게 최적화, 버그 다 잡아".
+
+- **보안 헤더(`next.config.ts`)**: HSTS(2y, preload) · X-Content-Type-Options nosniff · X-Frame-Options DENY · Referrer-Policy strict-origin-when-cross-origin · Permissions-Policy(camera/mic/geo 차단) 전 경로 적용 + `poweredByHeader: false`(X-Powered-By 제거). CSP 는 인라인 스크립트(Next 런타임·JSON-LD)·CDN 허용 목록 관리 비용 대비 보류.
+- **캐노니컬 도메인 정합(버그)**: apex 는 www 로 308 리다이렉트되는데 metadataBase·og:url·JSON-LD(url/logo)·sitemap·robots 가 전부 apex 를 가리키고 있었음 → 검색엔진에 리다이렉트 체인 제공. 전부 `https://www.lunervia.xyz` 로 통일(layout `SITE_URL` 상수). 홈 canonical `/` 도 layout 에 추가(서브페이지는 기존 개별 canonical 유지).
+- **에러 바운더리 신설**: `app/error.tsx`(세그먼트 — 404 와 같은 디자인 언어, 흐린 크레센트 + "다시 시도"/"홈으로", i18n 컨텍스트 비의존) + `app/global-error.tsx`(루트 최후 방어선, html/body 직접 렌더 + globals.css 자체 import). 이전엔 클라이언트 크래시 = 백지.
+- **버그 픽스**: ① ScrollProgress 혜성 머리가 `innerWidth`(스크롤바 포함) 기준이라 끝에서 스크롤바 폭만큼 오버슛 → `documentElement.clientWidth` 로 교정 ② LanguageContext localStorage get/set 을 try/catch — 프라이버시 모드 등 storage 차단 환경에서 크래시 방지(세션 내 전환은 유지) ③ Galmuri CDN `@latest` → `@2.40.3` 고정(릴리스마다 캐시 무효화 + 공급망 노출 제거).
+- **MoonParticles 성능 패스(렉 원인 3개 제거)**: ① 매 프레임 radial gradient 3개 생성(성운2+후광) → **사전 베이크 256px 스프라이트**(부드러운 그라디언트는 확대 무손실, `makeRadialSprite`) drawImage + globalAlpha 로 교체 ② ~1,400개/프레임 `beginPath+arc+fill` → **`fillRect`**(이 크기의 점은 시각 동일, 경로 생성 비용 0) ③ 투명 캔버스 → **`alpha:false` 불투명**(#171717 직접 페인트, DOM 합성 알파 블렌딩 제거). 추가: 백킹스토어 **픽셀 상한 ~7M**(초대형·고DPI 에서 dpr 을 부드럽게 하향 — 4K 등에서 렉 방지), 별 표류속도·시차 진폭 사전 계산.
+- **검증**: tsc 0 · eslint 0 · `next build` 13 라우트 정적 OK · 콘솔 에러 0 · dev 실측 — 전 보안 헤더 응답 확인·X-Powered-By 소멸·canonical/og www · **60fps 고정, 평균 프레임 16.67ms, p95 16.8ms, 잭 프레임 0/90** · 픽셀 diff 1198(모션 유지) · 스크린샷 시각 동일. 배포 후 라이브 헤더 재검증 필요.
+- 참고: dev 콘솔의 footer 심볼 LCP 힌트는 dev 전용 휴리스틱(에러 아님, 기존).
+
 ## 2026-07-03 (2) — 히어로 우주화(풀블리드 "궤도에서 본 밤") + 스크롤 진행 민트 바
 
 사용자 지시: ① 스크롤 진행도를 사이트 최상단에 민트로 표시 ② 히어로 파티클을 별도 사각형 박스가 아니라 배경 전체로 ③ "움직이고 멈추고"가 아니라 진짜 우주에 떠 있는 듯한 상시 부유감(섬세하게). 1차본(139f82e) 직후 사용자가 "작업량 올렸어, 다 다시" → 고밀도 재작업(이 항목은 최종본 기준).
