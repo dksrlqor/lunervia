@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { makeGlowSprite } from "@/components/canvas/sprites";
 
 /* ============================================================
    /why 시그니처 — 별이 쓰는 글.
@@ -45,6 +46,7 @@ type InkDot = { x: number; y: number; r: number; a: number; mint: boolean; born:
 type Ambient = { x: number; y: number; r: number; a: number; tw: number; ph: number; mint: boolean };
 
 const PAPER = "255, 249, 250";
+const MINT = "33, 241, 168";
 const PAPER_RGB = "rgb(255, 249, 250)";
 const MINT_RGB = "rgb(33, 241, 168)";
 const TAU = Math.PI * 2;
@@ -95,6 +97,7 @@ export default function WritingParticles({
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const glowMint = makeGlowSprite(MINT);
 
     let scene: SceneDot[] = [];
     let rig: RigDot[] = [];
@@ -376,18 +379,24 @@ export default function WritingParticles({
       return false;
     }
 
-    /* 줄 k 를 u 지점까지 잉크로 채운다(이미 찍힌 곳 다음부터) */
+    /* 줄 k 를 u 지점까지 잉크로 채운다(이미 찍힌 곳 다음부터).
+       필기 압력 — 획의 굵기가 위치에 따라 오르내려 손글씨처럼 보인다:
+       느린 저주파(꾹 눌러 쓰는 구간) + 획 단위 고주파의 합. */
     function spawnLineInk(k: number, u: number, now: number, full = false) {
       let from = full ? U0 : lastInkU;
       while (from + 0.011 <= u) {
         from += 0.011;
         if (inGap(k, from)) continue;
         const [x, y] = nibAt(k, from);
+        const pressure =
+          0.62 +
+          0.3 * (0.5 + 0.5 * Math.sin(from * 7.5 + k * 2.3)) +
+          0.2 * (0.5 + 0.5 * Math.sin(from * 31 + k));
         ink.push({
           x: x * R + (Math.random() * 2 - 1) * 1.2 * dpr,
           y: y * R + (Math.random() * 2 - 1) * 1.2 * dpr,
-          r: (0.45 + Math.random() * 0.5) * dpr,
-          a: 0.5 + Math.random() * 0.4,
+          r: (0.34 + Math.random() * 0.28) * pressure * dpr,
+          a: (0.42 + Math.random() * 0.36) * (0.72 + 0.28 * pressure),
           mint: Math.random() < 0.3,
           born: now,
         });
@@ -518,6 +527,16 @@ export default function WritingParticles({
         : Math.min(Math.max((sinceStart - entryMax * 0.55) / 700, 0), 1);
       const nx = nib[0] * R;
       const ny = nib[1] * R;
+
+      /* 펜촉 미광 — 잉크가 나오는 순간(write)에만 민트로 은은히 빛난다 */
+      if (mode === "write" && rigFade > 0.05) {
+        const pulse = 0.55 + 0.45 * Math.sin(now * 0.008);
+        ctx!.globalAlpha = 0.5 * rigFade * pulse;
+        const gs = 9 * dpr;
+        ctx!.drawImage(glowMint, nx - gs, ny - gs, gs * 2, gs * 2);
+        ctx!.globalAlpha = 1;
+      }
+
       for (const p of rig) {
         const x = nx + p.ox + Math.sin(now * 0.00042 * p.sp + p.ph) * 0.9 * dpr;
         const y = ny + p.oy + Math.cos(now * 0.00037 * p.sp + p.ph) * 0.9 * dpr;
