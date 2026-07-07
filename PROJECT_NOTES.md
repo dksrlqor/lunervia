@@ -12,6 +12,18 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-08 — 대개편: 모듈 전삭제 → Coena(코이나) 승격, 홈 초간단화, 소개 통합
+
+사용자 지시(prompt-A-website-section.md + 구두 지시가 스펙을 확장): ① 지시서의 "살아있는 계층" 섹션을 만들되 이름은 **Coena(코이나)** ② 홈 첫 화면은 아주 단순하게 — 받아줘와 Coena만 남김 ③ 소개성 콘텐츠(만든이유·하는일·프로세스)는 비슷한 것끼리 소개로 통합 ④ **모듈(구독/결제) 부분 전체 삭제 — 그 자리를 Coena가 채움**. 지시서의 "모듈 코드 금지·브랜치 작업" 원칙은 사용자 구두 지시(전삭제·main 직행 관행)가 우선해 대체됨.
+
+- **모듈 전삭제**: `app/modules/**`·`app/checkout/**`·`components/modules/**`·`components/checkout/**`·`data/modules.ts`·`lib/subscription.ts` git rm. i18n `modulesHub`/`checkout`/`serviceBuilder` 블록 제거(ko 129-351·en 131-353, **sed 라인삭제** — PS BOM 이슈 회피). sitemap에서 모듈 URL 2개 제거, robots `/checkout` disallow 제거, contact lead의 "월간 모듈" 문구 제거. 빌드 라우트 13→9. `/modules`·`/checkout` = 404 확인.
+- **`components/home/CoenaSection.tsx` 신규** (`id="coena"`, ink 시트): 지시서 §4 문구 그대로(KO) + EN 쌍. eyebrow `COENA · 코이나 — LIVING LAYER R&D`(이름 반영), t-display 제목, 본문 2문장, 기능 3줄(mono 민트 태그+설명, 번호 없음), 상태 라인. **CTA는 `PROTOTYPE_URL`/`NOTES_URL` 상수가 비어 있으면 렌더 안 됨**(현재 둘 다 비움 — URL 생기면 파일 상단 상수만 채우면 됨). 사이트 컨벤션(i18n 컨텍스트) 때문에 지시서의 "서버 컴포넌트" 대신 클라이언트 컴포넌트 — 애니메이션은 여전히 순수 CSS.
+  - **히어로 SVG(생물 도식)**: viewBox 480², 핵(민트 r36)+dashed 궤도(r58), 비대칭 5제어점 blob 세포막(scale 1↔1.02 9s 호흡, transform-box:view-box), 합격 입자 4(민트, 각기 다른 각도·6.5~11s·딜레이로 막 통과 후 페이드아웃), 불합격 입자 2(#E8735A, 막 근처 왕복 귀환), 마이크로 라벨 3(verify()/retry ×3/pass, mono 11px 35%). 그라데이션·blur·라이브러리 없음, transform+opacity만. **reduced-motion: 기본 CSS가 정적 배치**(합격 2 막 밖·불합격 1 귀환 중)이고 모션은 `no-preference` 쿼리에서만 — 코드 구조로 보장. sr-only 설명 병기.
+- **홈 초간단화**: Hero(ink) → Work/받아줘(paper) → **Coena(ink)** → Contact(paper) → Footer(ink). 지시서는 "히어로 다음 다크 슬롯"이지만 히어로가 ink라 그 직후는 교차가 깨짐 → **첫 다크 슬롯(Work 다음)**으로 조정(지시서 §2가 허용한 조정). WhyInvite 섹션 삭제(git rm), i18n `whyInvite`→`coena` 대체.
+- **소개 통합(/why)**: WhyHero(ink) → 스토리 4챕터(paper) → **Process(ink) → Services(paper)** 를 홈에서 이식(컴포넌트 재사용, 교차 유지). 홈의 `#services`/`#process` 앵커는 /why로 이동.
+- **네비/푸터**: 소개(/why) · 작업(/work) · **Coena(/#coena)** · 문의(/#contact). services/modules 항목 삭제, Header 스크롤스파이 ids [work,coena,contact], isActive의 modules 분기 제거. nav.coena 키 신설.
+- **검증**: `.next` 캐시가 삭제 라우트 타입을 물고 있어 tsc 실패 → 캐시 삭제 후 재빌드로 해소(향후 라우트 삭제 시 주의). tsc 0·eslint 0·build 9라우트 OK·콘솔 0·홈/why 섹션 순서·SVG 4요소(막·핵·입자6·라벨3)·애니메이션 동작(transform 실측 변화)·375px 오버플로 0(SVG 335px) 확인.
+
 ## 2026-07-04 (5) — 별 섬세화 팩(디자인 방향 제안 후 사용자 채택)
 
 사용자: "별들이 훨씬 더 섬세하고 백엔드적으로 더 탄탄했으면" → 별 섬세화 / 문의폼 백엔드 / 모니터링·CI 등 제안(AskUserQuestion) → **별 섬세화 팩 채택**. 백엔드(문의폼·Sentry·CI·CSP·결제)는 다음 세션 후보로 대기.

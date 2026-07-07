@@ -6,6 +6,8 @@ import { useI18n } from "@/i18n/LanguageContext";
 import { fmt } from "@/components/format";
 import Reveal from "@/components/Reveal";
 import WritingParticles from "@/components/why/WritingParticles";
+import ProcessSection from "@/components/home/ProcessSection";
+import Services from "@/components/home/Services";
 import { btnPaper, btnInk, btnGhostLight } from "@/components/ui";
 
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
@@ -111,6 +113,11 @@ export default function WhyView() {
           </div>
         </div>
       </section>
+
+      {/* 소개 통합 — 홈에서 옮겨온 '이런 순서로 만듭니다'와 '하는 일'.
+          교차 유지: 스토리(paper) → 프로세스(ink) → 서비스(paper) → 푸터(ink) */}
+      <ProcessSection />
+      <Services />
     </>
   );
 }

@@ -8,9 +8,8 @@ import { useI18n } from "@/i18n/LanguageContext";
 
 const NAV = [
   { key: "about", href: "/why" },
-  { key: "services", href: "/#services" },
   { key: "work", href: "/work" },
-  { key: "modules", href: "/modules" },
+  { key: "coena", href: "/#coena" },
   { key: "contact", href: "/#contact" },
 ] as const;
 
@@ -24,7 +23,7 @@ export default function Header() {
      홈이 아니면 관찰하지 않는다(activeHash 는 isActive 에서 pathname 으로 걸러짐). */
   useEffect(() => {
     if (pathname !== "/") return;
-    const els = ["services", "work", "process", "contact"]
+    const els = ["work", "coena", "contact"]
       .map((id) => document.getElementById(id))
       .filter(Boolean) as HTMLElement[];
     if (!els.length) return;
@@ -33,7 +32,7 @@ export default function Header() {
         for (const e of entries) {
           if (e.isIntersecting) {
             const id = e.target.id;
-            setActiveHash(id === "services" || id === "contact" ? id : null);
+            setActiveHash(id === "coena" || id === "contact" ? id : null);
           }
         }
       },
@@ -58,10 +57,8 @@ export default function Header() {
   }, [open]);
 
   const isActive = (href: string) => {
-    if (href === "/#services") return pathname === "/" && activeHash === "services";
+    if (href === "/#coena") return pathname === "/" && activeHash === "coena";
     if (href === "/#contact") return pathname === "/" && activeHash === "contact";
-    if (href === "/modules")
-      return pathname.startsWith("/modules") || pathname === "/checkout";
     return pathname === href;
   };
 

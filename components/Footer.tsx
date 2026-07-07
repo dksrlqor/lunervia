@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
 
 const EXPLORE = [
-  { key: "services", href: "/#services" },
-  { key: "work", href: "/work" },
-  { key: "modules", href: "/modules" },
   { key: "about", href: "/why" },
+  { key: "work", href: "/work" },
+  { key: "coena", href: "/#coena" },
   { key: "contact", href: "/#contact" },
 ] as const;
 
