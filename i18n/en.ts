@@ -101,16 +101,16 @@ export const en: Dict = {
   coena: {
     eyebrow: "COENA — LIVING LAYER R&D",
     title: "A living layer on top of AI",
-    body: "It inspects its own output, tags the cause when it fails and rebuilds, and ships only what passes. A project that brings the biology of self-healing and homeostasis to the LLM reasoning layer.",
+    body: "AI sometimes returns a confident wrong answer. Coena is an engine that doesn't take that output on faith. It checks it again, rebuilds what's wrong, and ships only what holds up. We're borrowing the way living things repair themselves and bringing it to software.",
     features: [
-      { tag: "self.heal()", desc: "Detects an error, classifies the cause, and retries on its own" },
-      { tag: "self.verify()", desc: "Mechanically checks that every input fact made it into the output" },
-      { tag: "failure.memory", desc: "The more failures it records, the more accurate the engine gets" },
+      { tag: "self.heal()", desc: "When something breaks, it finds the cause and tries again on its own" },
+      { tag: "self.verify()", desc: "Before anything ships, it checks that nothing you asked for was dropped" },
+      { tag: "failure.memory", desc: "It remembers why it failed, so the same mistake doesn't happen twice" },
     ],
-    status: "v0.1 — first being validated on a teacher-notice assistant",
+    status: "Building v0.1 now",
     ctaPrototype: "Open the prototype",
     ctaNotes: "Tech notes",
-    srHero: "An animation of the generate–verify–retry loop",
+    srHero: "A generative animation of fine filaments growing and weaving into a living network",
   },
 
   contact: {
