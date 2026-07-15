@@ -16,9 +16,8 @@ import {
      사전 렌더한 글로우 스프라이트를 두른다.
    · 글린트: 이따금 별 하나가 십자 스파이크와 함께 잠깐 밝아진다.
    · 유성: 드물게 두 종류 — 빠르고 가는 것, 느리고 조금 밝은 것.
-   · 전경 성단: 입자가 로고의 초승달+4점 별로 맺힌 뒤 달토끼 →
-     고리 행성 → 우주 고래로 순환 모프(동물은 연속 배치 금지 — 천체가
-     사이를 가른다). 동물이 맺힌 동안 귀·꼬리가 살랑이는 관절 모션.
+   · 전경 성단: 입자가 로고의 초승달+4점 별로 맺힌 뒤 고리 행성 →
+     향유고래로 순환 모프. 고래가 맺힌 동안 꼬리가 살랑이는 관절 모션.
      맺힌 뒤에도 리사주 표류·기울기·호흡을 (전부 2주파수 합성으로)
      멈추지 않는다 — 정지 프레임 없음.
    · 포인터 시차: 마우스 이동에 레이어가 깊이별 진폭으로 반응
@@ -185,7 +184,7 @@ export default function MoonParticles({
        삼각함수는 프레임당 그룹별 한 번만 계산한다(입자당 trig 없음).
        적용은 피벗 기준 정확 회전을 가중치 w 로 보간 — 뿌리는 붙어 있고
        끝이 부드럽게 휜다. 모프 중에는 출발·목표 관절을 진행도로 블렌드. */
-    const SHAPE_KIND = ["moon", "rabbit", "planet", "whale"] as const;
+    const SHAPE_KIND = ["moon", "planet", "whale"] as const;
     const limbCT = new Float64Array(4).fill(1);
     const limbST = new Float64Array(4);
     const limbCF = new Float64Array(4).fill(1);
@@ -200,18 +199,7 @@ export default function MoonParticles({
         C[g] = 1;
         S[g] = 0;
       }
-      if (kind === "rabbit") {
-        /* 떡방아 — 절굿공이(g1)가 어깨 피벗으로 쿵덕, 귀(g2/g3)는 위상 다르게 쫑긋 */
-        const a1 = 0.13 * Math.sin(now * 0.0016);
-        const a2 = 0.06 * Math.sin(now * 0.0013);
-        const a3 = 0.06 * Math.sin(now * 0.0013 + 2.1);
-        C[1] = Math.cos(a1);
-        S[1] = Math.sin(a1);
-        C[2] = Math.cos(a2);
-        S[2] = Math.sin(a2);
-        C[3] = Math.cos(a3);
-        S[3] = Math.sin(a3);
-      } else if (kind === "whale") {
+      if (kind === "whale") {
         /* 꼬리(g1) 살랑 */
         const a1 = 0.1 * Math.sin(now * 0.0009);
         C[1] = Math.cos(a1);
@@ -295,8 +283,8 @@ export default function MoonParticles({
 
     /* ② 동물 실루엣 — 회전 타원 합집합. 부위(el)마다 관절 그룹 g 를 달아
        샘플 시점에 그룹·가중치(피벗 거리 기반)를 함께 굽는다 — 런타임 영역
-       판정이 없어 부위 경계가 어긋날 수 없다. 좌표는 레퍼런스(떡방아 토끼·
-       향유고래) 기준 ASCII 시뮬로 튜닝한 확정값.
+       판정이 없어 부위 경계가 어긋날 수 없다. 좌표는 레퍼런스(향유고래)
+       기준 ASCII 시뮬로 튜닝한 확정값.
        대역: 채움(내부) / 외곽선(경계 파라메트릭 + 0.9 수축 합집합 기각 —
        진짜 테두리만, 작은 부위일수록 촘촘) / 강조(눈 클러스터 + 윤곽). */
     type El = [cx: number, cy: number, rx: number, ry: number, rot: number]; // R 배수
@@ -382,39 +370,6 @@ export default function MoonParticles({
       }
       return { pts, art: { G, W, P: pivots } };
     }
-
-    /* 달토끼 — 레퍼런스: 서서 절굿공이를 들고 절구를 찧는 옆모습.
-       g1 = 팔+절굿공이(떡방아), g2/g3 = 귀(쫑긋) */
-    const RABBIT_PARTS: Part[] = [
-      { el: [-0.38, -0.42, 0.2, 0.19, 0], g: 0 }, // 머리
-      { el: [-0.42, 0.08, 0.26, 0.38, 0.05], g: 0 }, // 몸통
-      { el: [-0.52, -0.72, 0.075, 0.27, -0.3], g: 2 }, // 왼귀(뒤로 젖힘)
-      { el: [-0.3, -0.76, 0.075, 0.27, 0.12], g: 3 }, // 오른귀
-      { el: [-0.16, -0.32, 0.2, 0.065, -0.5], g: 1 }, // 팔
-      { el: [0.02, -0.42, 0.34, 0.045, -0.95], g: 1 }, // 절굿공이 자루
-      { el: [0.23, -0.71, 0.13, 0.085, -0.95], g: 1 }, // 절굿공이 머리
-      { el: [-0.4, 0.38, 0.22, 0.14, 0.1], g: 0 }, // 뒷다리
-      { el: [-0.26, 0.47, 0.14, 0.06, 0], g: 0 }, // 발
-      { el: [-0.66, 0.3, 0.07, 0.07, 0], g: 0 }, // 꼬리
-      { el: [0.34, 0.4, 0.29, 0.09, 0], g: 0 }, // 절구 테
-      { el: [0.34, 0.55, 0.26, 0.14, 0], g: 0 }, // 절구 몸
-    ];
-    const RABBIT_PIVOTS: [number, number][] = [
-      [0, 0],
-      [-0.22, -0.26], // 어깨(절굿공이 피벗)
-      [-0.46, -0.48], // 왼귀 뿌리
-      [-0.33, -0.49], // 오른귀 뿌리
-    ];
-    const RABBIT_REACH = [1, 0.62, 0.55, 0.55];
-    const rabbitTargets = (count: number) =>
-      silhouetteTargets(
-        count,
-        RABBIT_PARTS,
-        [[-0.31, -0.45]],
-        [-0.88, -1.05, 0.85, 0.8],
-        RABBIT_PIVOTS,
-        RABBIT_REACH,
-      );
 
     /* 향유고래 — 레퍼런스: 대각선 상승(머리 좌상단). 뭉툭한 대두 + 좁은
        아래턱 + 등혹·너클 + 작은 두 갈래 꼬리. g1 = 후미+꼬리(살랑) */
@@ -517,11 +472,10 @@ export default function MoonParticles({
          개별 입자는 더 작게(아래 r 계수 0.9배). 저성능 기기는 loop 의
          적응 품질이 밀도를 자동으로 낮춘다. */
       const count = rect.width < 480 ? 820 : 1500;
-      /* 순환: 초승달 → 달토끼 → 고리 행성 → 고래 — 동물이 연속되지 않는 배치 */
-      const rb = rabbitTargets(count);
+      /* 순환: 초승달 → 고리 행성 → 향유고래 */
       const wh = whaleTargets(count);
-      targets = [crescentTargets(count), rb.pts, planetTargets(count), wh.pts];
-      arts = [null, rb.art, null, wh.art];
+      targets = [crescentTargets(count), planetTargets(count), wh.pts];
+      arts = [null, null, wh.art];
       shapeIdx = 0;
       prevShape = 0;
 
