@@ -82,6 +82,43 @@
     letter-spacing: 0.18em;
   }
 
+  /* 히어로 카메라 항행 — 트랙이 스크롤 여정, 무대는 핀 고정.
+     낮은 뷰포트(가로 폰)·reduced-motion 에서는 핀을 풀어 1화면 히어로로. */
+  .hero-track {
+    position: relative;
+    height: 165svh;
+  }
+  .hero-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+  @media (min-width: 768px) {
+    .hero-track {
+      height: 190svh;
+    }
+  }
+  @media (max-height: 500px) {
+    .hero-track {
+      height: auto;
+    }
+    .hero-stage {
+      position: relative;
+      height: auto;
+      min-height: 100svh;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-track {
+      height: auto;
+    }
+    .hero-stage {
+      position: relative;
+      height: auto;
+      min-height: 100svh;
+    }
+  }
+
   /* 다크↔라이트 교차 — 시트가 이전 섹션 위로 살짝 겹치며 닫힌다 */
   .sheet {
     position: relative;

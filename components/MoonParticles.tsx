@@ -108,6 +108,15 @@ const TAU = Math.PI * 2;
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeInOut = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const sstep = (x: number) => {
+  const t = clamp01(x);
+  return t * t * (3 - 2 * t);
+};
+
+/* 히어로 스크롤 카메라 — Hero 가 rAF 로 채우고 이 캔버스가 프레임마다 읽는다.
+   p: 트랙 진행도 0~1(하강·접근), v: 정규화 스크롤 속도 -1~1(궤적·관성). */
+export type HeroCamera = { p: number; v: number };
 
 /* 표류 좌표 순환 — 여백 m 을 두고 캔버스 밖으로 나가면 반대편에서 돌아온다 */
 const wrap = (v: number, max: number, m: number) => {
@@ -118,7 +127,13 @@ const wrap = (v: number, max: number, m: number) => {
 };
 
 
-export default function MoonParticles({ className = "" }: { className?: string }) {
+export default function MoonParticles({
+  className = "",
+  cameraRef,
+}: {
+  className?: string;
+  cameraRef?: { current: HeroCamera };
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -160,6 +175,13 @@ export default function MoonParticles({ className = "" }: { className?: string }
     let py = 0;
     let ptx = 0;
     let pty = 0;
+
+    /* 스크롤 카메라 — 프레임마다 cameraRef 에서 읽는다(reduced 는 항상 0) */
+    let camP = 0; // 진행도 0~1
+    let camV = 0; // 정규화 속도 -1~1
+    let camEase = 0; // 접근 이징(성단 확대·하강용)
+    let expo = 1; // 3막 노출 디밍
+    let lagY = 0; // 성단 관성 지연(스크롤 속도 반대 방향)
 
     const glowPaper = makeGlowSprite(PAPER);
     const glowMint = makeGlowSprite(MINT);
@@ -413,11 +435,17 @@ export default function MoonParticles({ className = "" }: { className?: string }
       phaseAt = performance.now();
     }
 
-    /* 별의 현재 위치 — 표류 + 순환 + 깊이 시차 (글린트에서도 재사용) */
+    /* 별의 현재 위치 — 표류 + 순환 + 깊이 시차 (글린트에서도 재사용).
+       카메라 하강은 깊이별 진폭(원경 5%H … 근경 15%H)으로 y 를 끌어올린다 —
+       wrap 안에 넣어 하늘이 끊기지 않고 순환한다. */
     function starPos(s: Star, now: number): [number, number] {
       return [
         wrap(s.x - 0.0022 * dpr * s.spd * now, W, 16 * dpr) - px * s.ampX,
-        wrap(s.y + 0.00085 * dpr * s.spd * now, H, 16 * dpr) - py * s.ampY,
+        wrap(
+          s.y + 0.00085 * dpr * s.spd * now - camP * H * (0.05 + 0.1 * s.depth),
+          H,
+          16 * dpr,
+        ) - py * s.ampY,
       ];
     }
 
@@ -579,28 +607,45 @@ export default function MoonParticles({ className = "" }: { className?: string }
       px += (ptx - px) * 0.045;
       py += (pty - py) * 0.045;
 
+      /* 스크롤 카메라 읽기 — 접근 이징·노출·성단 관성 */
+      if (cameraRef && !reduced) {
+        camP = cameraRef.current.p;
+        camV = cameraRef.current.v;
+      }
+      camEase = easeInOut(clamp01(camP / 0.85));
+      expo = 1 - 0.32 * sstep((camP - 0.75) / 0.25);
+      lagY += (-camV * 16 * dpr - lagY) * 0.09;
+
       /* 불투명 캔버스 — 히어로 배경색으로 직접 지운다 */
       ctx!.fillStyle = "#171717";
       ctx!.fillRect(0, 0, W, H);
 
       /* 성운 헤이즈 — 검정이 평면이 되지 않게, 아주 낮게 두 겹.
-         gradient 는 스프라이트로 구워 두고 알파·위치만 프레임마다 바꾼다. */
+         gradient 는 스프라이트로 구워 두고 알파·위치만 프레임마다 바꾼다.
+         카메라 하강 시 가장 느린 층(4%H)으로 함께 밀린다. */
+      const nebLift = camP * H * 0.04;
       const n1x = W * 0.3 + Math.sin(now * 0.00007) * 40 * dpr - px * 2 * dpr;
-      const n1y = H * 0.74 + Math.cos(now * 0.000056) * 30 * dpr - py * 1.5 * dpr;
+      const n1y =
+        H * 0.74 + Math.cos(now * 0.000056) * 30 * dpr - py * 1.5 * dpr - nebLift;
       const n1r = Math.max(W, H) * 0.5;
       ctx!.globalAlpha = 0.02 + 0.006 * Math.sin(now * 0.00009);
       ctx!.drawImage(nebSprite, n1x - n1r, n1y - n1r, n1r * 2, n1r * 2);
 
       const n2x = W * 0.88 + Math.cos(now * 0.00005) * 34 * dpr - px * 2 * dpr;
-      const n2y = H * 0.12 + Math.sin(now * 0.000063) * 26 * dpr - py * 1.5 * dpr;
+      const n2y =
+        H * 0.12 + Math.sin(now * 0.000063) * 26 * dpr - py * 1.5 * dpr - nebLift;
       const n2r = Math.max(W, H) * 0.38;
       ctx!.globalAlpha = 0.024 + 0.007 * Math.sin(now * 0.00008 + 2);
       ctx!.drawImage(nebSprite, n2x - n2r, n2y - n2r, n2r * 2, n2r * 2);
 
+      /* 성단 접근 — 카메라가 달로 하강: 중심이 화면 중앙 쪽으로 내려오며 커진다 */
+      const ccy = cy + camEase * H * 0.07;
+      const camScale = 1 + 0.16 * camEase;
+
       /* 성단 후광 */
-      const hr = R * 2.1;
-      ctx!.globalAlpha = 0.05;
-      ctx!.drawImage(haloSprite, cx - hr, cy - hr, hr * 2, hr * 2);
+      const hr = R * 2.1 * camScale;
+      ctx!.globalAlpha = 0.05 * expo;
+      ctx!.drawImage(haloSprite, cx - hr, ccy - hr, hr * 2, hr * 2);
       ctx!.globalAlpha = 1;
 
       /* 딥필드 — 깊을수록 느리게 표류, 얕을수록 시차 크게.
@@ -618,7 +663,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
           const burst = b > 0.86 ? (b - 0.86) / 0.14 : 0; // 상위 14% 구간만
           tw = base + burst * 0.5;
         }
-        const alpha = Math.min(s.a * tw, 0.9);
+        const alpha = Math.min(s.a * tw, 0.9) * expo;
         if (alpha < 0.012) continue;
         const rgb = s.mint ? MINT_RGB : PAPER_RGB;
         if (s.glow) {
@@ -626,26 +671,41 @@ export default function MoonParticles({ className = "" }: { className?: string }
           const gs = s.r * (5 + 3 * s.mag);
           ctx!.drawImage(s.mint ? glowMint : glowPaper, sx - gs, sy - gs, gs * 2, gs * 2);
         }
-        ctx!.globalAlpha = alpha;
-        if (s.r > 1.15 * dpr) {
-          const d2 = s.r * 2.4;
-          ctx!.drawImage(s.mint ? dotMint : dotPaper, sx - s.r * 1.2, sy - s.r * 1.2, d2, d2);
-        } else {
-          ctx!.fillStyle = rgb;
-          ctx!.fillRect(sx - s.r, sy - s.r, s.r * 2, s.r * 2);
-        }
-        /* 회절 스파이크 — 밝은 별에만, 트윙클과 함께 숨 쉰다 */
-        if (s.spike) {
-          const len = s.r * (3.4 + 2.2 * Math.sin(now * s.tw + s.ph));
-          ctx!.globalAlpha = alpha * 0.5;
+        /* 속도 궤적 — 빠른 스크롤에서 별이 깊이별 길이의 짧은 획으로 늘어난다.
+           스크롤 다운(v>0) = 하늘이 위로 → 궤적은 진행 반대(아래)로 남는다. */
+        const streak =
+          Math.abs(camV) > 0.15 ? Math.abs(camV) * (3 + 14 * s.depth) * dpr : 0;
+        if (streak > s.r * 2.2) {
+          ctx!.globalAlpha = alpha * 0.85;
           ctx!.strokeStyle = rgb;
-          ctx!.lineWidth = Math.max(0.5, dpr * 0.5);
+          ctx!.lineWidth = Math.max(s.r * 0.9, 0.6);
+          ctx!.lineCap = "round";
           ctx!.beginPath();
-          ctx!.moveTo(sx - len, sy);
-          ctx!.lineTo(sx + len, sy);
-          ctx!.moveTo(sx, sy - len);
-          ctx!.lineTo(sx, sy + len);
+          ctx!.moveTo(sx, sy);
+          ctx!.lineTo(sx, sy + (camV > 0 ? streak : -streak));
           ctx!.stroke();
+        } else {
+          ctx!.globalAlpha = alpha;
+          if (s.r > 1.15 * dpr) {
+            const d2 = s.r * 2.4;
+            ctx!.drawImage(s.mint ? dotMint : dotPaper, sx - s.r * 1.2, sy - s.r * 1.2, d2, d2);
+          } else {
+            ctx!.fillStyle = rgb;
+            ctx!.fillRect(sx - s.r, sy - s.r, s.r * 2, s.r * 2);
+          }
+          /* 회절 스파이크 — 밝은 별에만, 트윙클과 함께 숨 쉰다 */
+          if (s.spike) {
+            const len = s.r * (3.4 + 2.2 * Math.sin(now * s.tw + s.ph));
+            ctx!.globalAlpha = alpha * 0.5;
+            ctx!.strokeStyle = rgb;
+            ctx!.lineWidth = Math.max(0.5, dpr * 0.5);
+            ctx!.beginPath();
+            ctx!.moveTo(sx - len, sy);
+            ctx!.lineTo(sx + len, sy);
+            ctx!.moveTo(sx, sy - len);
+            ctx!.lineTo(sx, sy + len);
+            ctx!.stroke();
+          }
         }
       }
       ctx!.globalAlpha = 1;
@@ -657,17 +717,23 @@ export default function MoonParticles({ className = "" }: { className?: string }
       }
 
       /* 성단 — 궤도 위 정거장처럼 표류·기울기·호흡을 계속한다.
-         전부 2주파수 합성이라 같은 자세가 다시 오지 않는다. */
+         전부 2주파수 합성이라 같은 자세가 다시 오지 않는다.
+         카메라: 접근 스케일·중앙 하강(ccy)·미세 틸트, 그리고 스크롤 속도의
+         반대 방향으로 밀렸다 돌아오는 관성 지연(lagY). */
       const ox =
         (6 * Math.sin(now * 0.00019) + 2.5 * Math.sin(now * 0.00047 + 1.3)) * dpr -
         px * 7 * dpr;
       const oy =
         (5 * Math.cos(now * 0.00016) + 2 * Math.sin(now * 0.00041 + 0.5)) * dpr -
         py * 5 * dpr;
-      const rot = 0.022 * Math.sin(now * 0.00013) + 0.01 * Math.sin(now * 0.00031 + 2.1);
-      const sc = 1 + 0.008 * Math.sin(now * 0.00017 + 0.7);
+      const rot =
+        0.022 * Math.sin(now * 0.00013) +
+        0.01 * Math.sin(now * 0.00031 + 2.1) +
+        camEase * 0.03 +
+        camV * 0.012;
+      const sc = (1 + 0.008 * Math.sin(now * 0.00017 + 0.7)) * camScale;
       ctx!.save();
-      ctx!.translate(cx + ox, cy + oy);
+      ctx!.translate(cx + ox, ccy + oy + lagY);
       ctx!.rotate(rot);
       ctx!.scale(sc, sc);
 
@@ -723,7 +789,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
         const tw =
           phase === "entry" ? 1 : 0.84 + 0.16 * Math.sin(now * 0.0012 * p.sp + p.ph);
 
-        ctx!.globalAlpha = Math.min(p.a * tw * fade, 1);
+        ctx!.globalAlpha = Math.min(p.a * tw * fade, 1) * expo;
         ctx!.fillStyle = p.mint ? MINT_RGB : PAPER_RGB;
         ctx!.fillRect(x - p.r, y - p.r, p.r * 2, p.r * 2);
       }
@@ -803,7 +869,7 @@ export default function MoonParticles({ className = "" }: { className?: string }
       window.removeEventListener("pointermove", onPointer);
       document.documentElement.removeEventListener("mouseleave", onPointerOut);
     };
-  }, []);
+  }, [cameraRef]);
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
 }

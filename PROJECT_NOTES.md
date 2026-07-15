@@ -12,6 +12,17 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-15 (2) — 히어로 시네마틱 재설계: "카메라 항행" (A안, 사용자 선택)
+
+사용자 지시: 구성·방향성 유지하되 다층 패럴랙스·마스킹·카메라 무빙·속도 반응 결합한 시네마틱 히어로. A/B/C 3안 제안(AskUserQuestion) → **A안(카메라 항행) 확정**.
+
+- **구조**: `Hero.tsx` = `.hero-track`(165svh/데스크톱 190svh) 안에 `.hero-stage`(sticky top-0 100svh) 핀 고정. 스크롤 진행도 p = -track.top/(trackH-vh). **rAF 1개**가 공유 ref(cam{p,v})에 쓰고 캔버스·타이포가 각자 읽음. IO+visibilitychange 로 정지, 트랙 벗어나면 v 리셋.
+- **3막 연출**: 1막(0~0.3) 카피 유지+미세 시차 → 2막(0.3~0.6) 카피 계단식 이탈(eyebrow 0.10vh·행별 0.16+0.08i·서브 0.34·CTA 0.44 배율 + opacity 페이드 0.26~0.58, o<0.35 시 pointer-events:none) → 3막(0.78~1) **종이 수평선 크레스트**(200vw×80vh 타원, bottom:-60vh, translateY 26%→0%로 20vh 노출)가 밤을 닫고 Work(paper) 시트에 인계.
+- **주의(중요)**: 진입 모션(fade-up)의 `animation-fill-mode: forwards` 가 inline transform 을 영구히 이기므로 **스크롤 시차는 별도 부모 래퍼**(eyebrowRef/subRef/ctaRef div)에 건다. line-mask 는 outer span 이 애니메이션 없어서 직접 transform 가능.
+- **MoonParticles 카메라 이식**(`export type HeroCamera = {p,v}` + `cameraRef` prop, reduced 는 항상 0): ① 층별 하강 — 성운 4%H·딥필드 깊이별 5~15%H(wrap 안에 넣어 순환 유지)·성단은 반대로 중앙 하강(ccy=cy+camEase·7%H) ② **접근 스케일** camScale 1→1.16(camEase=easeInOut(p/0.85)) + 틸트 camEase·0.03+camV·0.012 ③ **속도 궤적** — |v|>0.15 에서 별이 깊이별 길이(≤17px)의 획으로(스크롤 다운=궤적 아래로), 궤적 중엔 도트·스파이크 대신 stroke ④ **성단 관성** lagY→-v·16px lerp 0.09(시뮬: 피크 32px·발산 없이 수렴) ⑤ **3막 노출 디밍** expo 1→0.68(별·성단·후광).
+- **폴백**: reduced-motion·낮은 뷰포트(max-height 500px) = CSS 로 핀 해제(트랙 auto·스테이지 relative min-h-100svh) + JS 가드(travel<0.35vh 면 카메라 0). globals.css `@layer components` 에 `.hero-track/.hero-stage`.
+- **검증**: tsc 0·eslint 0·build 10라우트·fresh 탭 콘솔 0·375px 오버플로 0(수평선 200vw 는 stage overflow-hidden 이 클립)·카피 100svh 무대 안 수납 확인. **sticky 핀 실측**(스크롤 0/300/647/648/900 → stage top 0 유지 후 정확히 릴리스). rAF 는 프리뷰 패널 미렌더로 실행 불가 → **Node 시뮬**로 전 구간 검증(계단식 순서·opacity/수평선 끝값·camEase/expo/camScale 범위·wrap 범위·궤적 임계·lag 수렴 = PASS). ⚠ 이번에 확인된 함정: **dev 서버 켠 채 `npm run build` 하면 `.next` 공유로 dev 가 스테일 CSS 서빙** → 서버 정지+`.next` 삭제+재기동으로 해소. HMR 중 훅 deps 크기 변경 콘솔 에러는 잔재(fresh 탭 0 실증).
+
 ## 2026-07-15 — Coena 섹션 개편: 균사 캔버스 삭제 → GooeyText 모프 + 요금제 카드
 
 사용자 지시: ① 코이나 섹션 변경 ② 균사체 히어로 삭제 ③ GooeyText 로 짧은 단어 모션 ④ CreativePricing 기반 결제창 ⑤ 사이트 전체 점검 + 색상 코드 보고. (동봉 스펙의 "메인 히어로 교체"는 균사체=Coena 캔버스 오인으로 판단해 달 히어로 유지, SmoothScrollHero 는 코드 미제공+사진 기반이라 3색 규율 충돌로 보류 — 둘 다 사용자 확인 대기.)
