@@ -16,9 +16,11 @@ import {
      사전 렌더한 글로우 스프라이트를 두른다.
    · 글린트: 이따금 별 하나가 십자 스파이크와 함께 잠깐 밝아진다.
    · 유성: 드물게 두 종류 — 빠르고 가는 것, 느리고 조금 밝은 것.
-   · 전경 성단: 입자가 로고의 초승달+4점 별로 맺힌 뒤 큰 별 →
-     고리 행성으로 순환 모프. 맺힌 뒤에도 리사주 표류·기울기·호흡을
-     (전부 2주파수 합성으로) 멈추지 않는다 — 정지 프레임 없음.
+   · 전경 성단: 입자가 로고의 초승달+4점 별로 맺힌 뒤 달토끼 →
+     고리 행성 → 우주 고래로 순환 모프(동물은 연속 배치 금지 — 천체가
+     사이를 가른다). 동물이 맺힌 동안 귀·꼬리가 살랑이는 관절 모션.
+     맺힌 뒤에도 리사주 표류·기울기·호흡을 (전부 2주파수 합성으로)
+     멈추지 않는다 — 정지 프레임 없음.
    · 포인터 시차: 마우스 이동에 레이어가 깊이별 진폭으로 반응
      (원경 1px … 성단 7px, lerp 추종). 터치·reduced-motion 제외.
    · canvas 2D 단일 요소, 외부 라이브러리 없음. globalAlpha +
@@ -169,6 +171,39 @@ export default function MoonParticles({
     let phaseAt = performance.now();
     let entryMax = 0;
     let shapeIdx = 0;
+    let prevShape = 0;
+
+    /* 형태별 관절 모션 — 동물이 맺힌 동안 귀·꼬리가 살랑인다.
+       입자 좌표(형태 공간)에서 부위 피벗 기준 미세 회전, 결과는 aox/aoy 에
+       쓴다(프레임당 튜플 할당 없음). 모프 중에는 출발·목표 형태의 오프셋을
+       진행도로 가중해 자연스럽게 이어진다. */
+    const SHAPE_KIND = ["moon", "rabbit", "planet", "whale"] as const;
+    const isAnimal = (k: string) => k === "rabbit" || k === "whale";
+    let aox = 0;
+    let aoy = 0;
+    function artOffset(kind: string, x: number, y: number, now: number) {
+      aox = 0;
+      aoy = 0;
+      if (kind === "rabbit") {
+        /* 귀 쫑긋 — 위쪽(귀 영역)만, 좌우 위상 다르게, 귀뿌리 피벗 회전 */
+        const w = -y / R - 0.25;
+        if (w <= 0) return;
+        const ww = Math.min(w / 0.5, 1);
+        const th = 0.09 * Math.sin(now * 0.0013 + (x < 0 ? 0 : 2.1)) * ww;
+        const rx = x - (x < 0 ? -0.17 : 0.17) * R;
+        const ry = y + 0.2 * R;
+        aox = -th * ry;
+        aoy = th * rx;
+      } else if (kind === "whale") {
+        /* 꼬리 살랑 — 꼬리자루 피벗 기준, 뒤로 갈수록 크게 */
+        const w = x / R - 0.3;
+        if (w <= 0) return;
+        const ww = Math.min(w / 0.55, 1);
+        const th = 0.1 * Math.sin(now * 0.001) * ww;
+        aox = -th * y;
+        aoy = th * (x - 0.3 * R);
+      }
+    }
 
     /* 포인터 시차 — 목표값(ptx,pty)을 향해 현재값(px,py)이 lerp 로 따라온다 */
     let px = 0;
@@ -244,24 +279,99 @@ export default function MoonParticles({
       return out;
     }
 
-    /* ② 큰 4점 별 + 잔별 */
-    function starTargets(count: number): [number, number][] {
+    /* ② 동물 실루엣 — 회전 타원 합집합으로 정의하고 별자리처럼 샘플링.
+       대역: 채움(내부) / 외곽선(합집합 경계) / 강조(눈 클러스터 + 윤곽). */
+    type El = [cx: number, cy: number, rx: number, ry: number, rot: number]; // R 배수
+    const inEl = (x: number, y: number, e: El, scale: number) => {
+      const c = Math.cos(e[4]);
+      const s = Math.sin(e[4]);
+      const dx = x - e[0] * R;
+      const dy = y - e[1] * R;
+      const u = (dx * c + dy * s) / (e[2] * R * scale);
+      const v = (-dx * s + dy * c) / (e[3] * R * scale);
+      return u * u + v * v <= 1;
+    };
+    const inUnion = (x: number, y: number, els: El[], scale: number) => {
+      for (const e of els) if (inEl(x, y, e, scale)) return true;
+      return false;
+    };
+
+    function silhouetteTargets(
+      count: number,
+      els: El[],
+      eyes: [number, number][],
+      box: [number, number, number, number], // xmin,ymin,xmax,ymax (R 배수)
+    ): [number, number][] {
       const out: [number, number][] = [];
+      /* 외곽선 — 임의 타원의 경계를 파라메트릭으로 뽑고, 다른 부위 내부에
+         묻히는 점은 버린다(합집합의 진짜 테두리만 남는다). 타원을 균등으로
+         고르므로 귀·지느러미 같은 작은 부위가 더 촘촘해져 형태가 잘 읽힌다. */
+      const edgePoint = (): [number, number] | null => {
+        const e = els[Math.floor(Math.random() * els.length)];
+        const th = Math.random() * TAU;
+        const sc = 0.9 + Math.random() * 0.1;
+        const c = Math.cos(e[4]);
+        const s = Math.sin(e[4]);
+        const u = Math.cos(th) * e[2] * R * sc;
+        const v = Math.sin(th) * e[3] * R * sc;
+        const x = e[0] * R + u * c - v * s;
+        const y = e[1] * R + u * s + v * c;
+        return inUnion(x, y, els, 0.88) ? null : [x, y];
+      };
       for (let i = 0; i < count; i++) {
         const f = i / count;
-        if (f < B1) {
-          out.push(starPoint(0, 0, R * 0.78, R * 0.15));
-        } else if (f < B2) {
-          out.push(starPoint(0, 0, R * 0.82, R * 0.05));
-        } else {
-          const r3 = Math.random();
-          if (r3 < 0.4) out.push(starPoint(-0.58 * R, -0.42 * R, R * 0.2, R * 0.035));
-          else if (r3 < 0.75) out.push(starPoint(0.62 * R, 0.44 * R, R * 0.15, R * 0.03));
-          else out.push(starPoint(0, 0, R * 0.16, R * 0.05));
+        let p: [number, number] | null = null;
+        for (let k = 0; k < 120 && !p; k++) {
+          if (f < B1) {
+            const x = (box[0] + Math.random() * (box[2] - box[0])) * R;
+            const y = (box[1] + Math.random() * (box[3] - box[1])) * R;
+            if (inUnion(x, y, els, 1)) p = [x, y];
+          } else if (f < B2) {
+            p = edgePoint();
+          } else if (eyes.length && Math.random() < 0.45) {
+            const e = eyes[Math.floor(Math.random() * eyes.length)];
+            const th = Math.random() * TAU;
+            const rr = Math.sqrt(Math.random()) * 0.045 * R;
+            p = [e[0] * R + Math.cos(th) * rr, e[1] * R + Math.sin(th) * rr];
+          } else {
+            p = edgePoint();
+          }
         }
+        out.push(p ?? [0, 0]);
       }
       return out;
     }
+
+    /* 달토끼 — 정면. 머리+몸통+긴 귀 둘+앞발, 밝은 눈 두 점 */
+    const RABBIT_ELS: El[] = [
+      [0, -0.02, 0.34, 0.3, 0], // 머리
+      [0, 0.52, 0.44, 0.36, 0], // 몸통
+      [-0.17, -0.55, 0.11, 0.4, -0.18], // 왼귀
+      [0.17, -0.55, 0.11, 0.4, 0.18], // 오른귀
+      [-0.18, 0.82, 0.1, 0.06, 0], // 왼발
+      [0.18, 0.82, 0.1, 0.06, 0], // 오른발
+    ];
+    const rabbitTargets = (count: number) =>
+      silhouetteTargets(
+        count,
+        RABBIT_ELS,
+        [
+          [-0.13, -0.05],
+          [0.13, -0.05],
+        ],
+        [-0.75, -1.0, 0.75, 0.95],
+      );
+
+    /* 우주 고래 — 왼쪽(카피 쪽)을 보고 헤엄친다. 몸통+꼬리자루+두 갈래 꼬리+가슴지느러미 */
+    const WHALE_ELS: El[] = [
+      [-0.13, 0.04, 0.78, 0.36, -0.06], // 몸통
+      [0.57, -0.02, 0.22, 0.12, -0.25], // 꼬리자루
+      [0.79, -0.22, 0.24, 0.09, 0.85], // 위 꼬리
+      [0.79, 0.14, 0.24, 0.09, -0.85], // 아래 꼬리
+      [-0.17, 0.34, 0.17, 0.08, 0.5], // 가슴지느러미
+    ];
+    const whaleTargets = (count: number) =>
+      silhouetteTargets(count, WHALE_ELS, [[-0.63, -0.04]], [-1.0, -0.55, 1.1, 0.55]);
 
     /* ③ 고리 행성 — 위쪽 고리는 행성 뒤로 숨는다 */
     function planetTargets(count: number): [number, number][] {
@@ -330,8 +440,15 @@ export default function MoonParticles({
       R = Math.min(W, H) * (mobile ? 0.34 : 0.27);
 
       const count = rect.width < 480 ? 640 : 1100;
-      targets = [crescentTargets(count), starTargets(count), planetTargets(count)];
+      /* 순환: 초승달 → 달토끼 → 고리 행성 → 고래 — 동물이 연속되지 않는 배치 */
+      targets = [
+        crescentTargets(count),
+        rabbitTargets(count),
+        planetTargets(count),
+        whaleTargets(count),
+      ];
       shapeIdx = 0;
+      prevShape = 0;
 
       const far = Math.max(W, H);
       ps = [];
@@ -583,6 +700,7 @@ export default function MoonParticles({
         phase = "hold";
         phaseAt = now;
       } else if (phase === "hold" && now - phaseAt > HOLD_MS && !reduced) {
+        prevShape = shapeIdx;
         shapeIdx = (shapeIdx + 1) % targets.length;
         for (let i = 0; i < ps.length; i++) {
           const p = ps[i];
@@ -770,9 +888,28 @@ export default function MoonParticles({
           const swirl = Math.sin(e * Math.PI) * p.wob * 0.35;
           bx = p.fx + (p.tx - p.fx) * e + swirl * Math.sin(p.ph);
           by = p.fy + (p.ty - p.fy) * e + swirl * Math.cos(p.ph);
+          /* 관절 — 출발·목표 형태의 살랑임을 진행도로 가중해 잇는다 */
+          const kf = SHAPE_KIND[prevShape];
+          if (isAnimal(kf)) {
+            artOffset(kf, p.fx, p.fy, now);
+            bx += aox * (1 - e);
+            by += aoy * (1 - e);
+          }
+          const kt = SHAPE_KIND[shapeIdx];
+          if (isAnimal(kt)) {
+            artOffset(kt, p.tx, p.ty, now);
+            bx += aox * e;
+            by += aoy * e;
+          }
         } else {
           bx = p.tx;
           by = p.ty;
+          const k = SHAPE_KIND[shapeIdx];
+          if (!reduced && isAnimal(k)) {
+            artOffset(k, p.tx, p.ty, now);
+            bx += aox;
+            by += aoy;
+          }
         }
 
         /* 개별 미세 표류 — 두 주파수를 겹쳐 기계적 반복감을 없앤다 */
