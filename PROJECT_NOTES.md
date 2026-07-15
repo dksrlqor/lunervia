@@ -12,6 +12,17 @@ npm run dev
 http://localhost:3000/
 ```
 
+## 2026-07-15 — Coena 섹션 개편: 균사 캔버스 삭제 → GooeyText 모프 + 요금제 카드
+
+사용자 지시: ① 코이나 섹션 변경 ② 균사체 히어로 삭제 ③ GooeyText 로 짧은 단어 모션 ④ CreativePricing 기반 결제창 ⑤ 사이트 전체 점검 + 색상 코드 보고. (동봉 스펙의 "메인 히어로 교체"는 균사체=Coena 캔버스 오인으로 판단해 달 히어로 유지, SmoothScrollHero 는 코드 미제공+사진 기반이라 3색 규율 충돌로 보류 — 둘 다 사용자 확인 대기.)
+
+- **`components/home/CoenaSection.tsx` 재작성**: 균사 생태 캔버스 엔진 전체 삭제(Canvas 3장·생장·풍화·펄스 ~500줄). 새 흐름 = 인트로 → **모프 밴드**(섹션의 유일한 볼드 요소, border-y paper/10) → 기능 3열(기존 mono 태그+설명 유지) → 요금제 → 상태 라인. `PROTOTYPE_URL`/`NOTES_URL` 상수 패턴 유지.
+- **`components/coena/GooeyText.tsx` 신규**: 짧은 동사들이 blur 모프로 순환(KO 검증하고→회복하고→기억하고→내보낸다 / EN Verify.→Recover.→Remember.→Ship. — 실제 파이프라인 순서). 데모 코드 대비 수정: rAF id 저장·cancel(누수 방지), filter id `useId`(다중 인스턴스 충돌 방지), blur 분모 하한 1e-4(NaN 방지), dt 클램프 0.1s(탭 복귀 점프 방지), IO 로 화면 밖 정지, 모션 텍스트 aria-hidden + sr-only 문장, **reduced-motion = 루프 미기동 + `motion-reduce:` CSS 로 전체 문구 정적 표시**. 스팬 A 는 흐름에 남겨 밴드 높이 고정(레이아웃 흔들림 없음).
+- **`components/coena/CoenaPricing.tsx` 신규**: 오프셋 섀도 카드 3장(rounded-2xl border-2, 호버 transform 만). 원본 CreativePricing 의 동적 `text-${color}` 제거(정적 분기), 손글씨 폰트·이모지·달러가격·카드 회전 제거. **가격 임의 생성 금지** — Preview 무료(공개 시)/Standard 가격 미정/Studio 별도 문의(highlighted, 민트 보더+배지 "지금 가능"). CTA 전부 실존 앵커 `/#contact`. TODO: 가격 확정 시 i18n `coena.pricing` 교체.
+- **i18n**: ko/en `coena.gooey`/`gooeySr`/`pricing` 추가, `srHero` 삭제(캔버스 소멸). 개인 인스타 핸들 `@_dksrlqor → @4ever2short`(대표 직통, contact 채널 + layout JSON-LD sameAs — 공식 `@lunerviasoft`·틱톡은 그대로) 도 이 커밋에 포함.
+- **색상 감사**: 코어 3색 규율 정확히 준수(#171717/#FFF9FA/#21F1A8 + 투명도 파생만). 신규 색 없음 — 요금제 섀도도 rgba 파생. §3-1 받아줘 존 14색은 프레임 밖 유출 없음. 대비 실측 paper/ink 17:1·mint/ink 12:1.
+- **검증**: tsc 0 · eslint 0 · build 10라우트 OK · 콘솔 0(/,/work,/why,404) · 320/375px 오버플로 0 · KO/EN 전환 OK · CTA 터치 44px+. 프리뷰 패널이 이 세션 미렌더(document.hidden, rAF 0 — 기존 기록된 환경 이슈 재발)라 스크린샷 불가 → DOM 수치 + **Node 상태머신 시뮬 20s**(전체 순환·3s 점프·NaN 0)로 대체 검증.
+
 ## 2026-07-08 — 대개편: 모듈 전삭제 → Coena(코이나) 승격, 홈 초간단화, 소개 통합
 
 사용자 지시(prompt-A-website-section.md + 구두 지시가 스펙을 확장): ① 지시서의 "살아있는 계층" 섹션을 만들되 이름은 **Coena(코이나)** ② 홈 첫 화면은 아주 단순하게 — 받아줘와 Coena만 남김 ③ 소개성 콘텐츠(만든이유·하는일·프로세스)는 비슷한 것끼리 소개로 통합 ④ **모듈(구독/결제) 부분 전체 삭제 — 그 자리를 Coena가 채움**. 지시서의 "모듈 코드 금지·브랜치 작업" 원칙은 사용자 구두 지시(전삭제·main 직행 관행)가 우선해 대체됨.

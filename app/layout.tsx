@@ -52,7 +52,7 @@ const JSON_LD = {
       logo: `${SITE_URL}/brand/lunervia-symbol.png`,
       sameAs: [
         "https://www.instagram.com/lunerviasoft/",
-        "https://www.instagram.com/_dksrlqor/",
+        "https://www.instagram.com/4ever2short/",
         "https://www.tiktok.com/@_dksrlqor",
         "https://github.com/dksrlqor",
       ],

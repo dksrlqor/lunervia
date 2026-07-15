@@ -100,6 +100,9 @@ export const ko = {
     eyebrow: "COENA · 코이나 — LIVING LAYER R&D",
     title: "AI 위에 얹는, 살아있는 계층",
     body: "AI는 가끔 그럴듯한 오답을 내놓습니다. 코이나는 그 결과를 그대로 믿지 않는 엔진입니다. 한 번 더 확인하고, 틀린 건 다시 만들고, 확인이 끝난 것만 내보냅니다. 생물이 스스로를 회복하는 방식을 소프트웨어에 옮겨보고 있습니다.",
+    /* 모프 밴드 — 코이나의 실제 파이프라인 순서(검증→회복→기억→내보냄) */
+    gooey: ["검증하고", "회복하고", "기억하고", "내보낸다"],
+    gooeySr: "코이나는 검증하고, 회복하고, 기억하고 — 확인이 끝난 것만 내보냅니다.",
     features: [
       { tag: "self.heal()", desc: "오류가 나면 원인을 찾아 스스로 다시 시도합니다" },
       { tag: "self.verify()", desc: "내보내기 전에 빠뜨린 내용이 없는지 스스로 대조합니다" },
@@ -108,7 +111,63 @@ export const ko = {
     status: "지금 v0.1을 만들고 있습니다",
     ctaPrototype: "시제품 열기",
     ctaNotes: "기술 노트",
-    srHero: "가는 실이 자라나 서로 이어지는, 살아있는 균사 네트워크 애니메이션",
+    /* TODO(가격·결제): 실제 가격 확정·결제 연동 시 price/billing/cta 교체.
+       그 전까지는 확인된 사실만 — 결제되는 것처럼 보이게 하지 않는다. */
+    pricing: {
+      label: "PRICING",
+      title: "코이나를 만나는 세 가지 방법",
+      lead: "아직 만드는 중입니다. 그래서 약속할 수 있는 것만 적어 두었습니다 — 가격은 정식 출시 때 공개합니다.",
+      tiers: [
+        {
+          id: "preview",
+          tag: "v0.1 — PREVIEW",
+          name: "Preview",
+          desc: "공개 시제품. 코이나의 검증 루프를 가장 먼저 써 봅니다.",
+          price: "무료",
+          billing: "공개 시점부터",
+          features: [
+            "self.verify() 검증 루프 체험",
+            "공개 시제품 접근",
+            "출시 소식 우선 안내",
+          ],
+          cta: "출시 알림 받기",
+          badge: "",
+          highlighted: false,
+        },
+        {
+          id: "standard",
+          tag: "v1.0 — STANDARD",
+          name: "Standard",
+          desc: "정식 버전. 혼자서도, 팀으로도 쓰는 플랜.",
+          price: "가격 미정",
+          billing: "출시 때 공개",
+          features: [
+            "self.heal() 자기 회복",
+            "self.verify() 자기 검증",
+            "failure.memory 실패 기억",
+          ],
+          cta: "출시 알림 받기",
+          badge: "",
+          highlighted: false,
+        },
+        {
+          id: "studio",
+          tag: "NOW — STUDIO",
+          name: "Studio",
+          desc: "Lunervia가 만드는 프로젝트에 코이나 파이프라인을 함께 설계합니다.",
+          price: "별도 문의",
+          billing: "프로젝트 단위",
+          features: [
+            "프로젝트 맞춤 검증 설계",
+            "구현·배포까지 스튜디오가 직접",
+            "대표 직통 소통",
+          ],
+          cta: "프로젝트 문의",
+          badge: "지금 가능",
+          highlighted: true,
+        },
+      ],
+    },
   },
 
   contact: {
@@ -117,7 +176,7 @@ export const ko = {
     lead: "문의는 Instagram DM이 가장 빠릅니다. 신규 제작, 리뉴얼, 협업 — 어떤 단계든 좋습니다.",
     channels: [
       { name: "Instagram", handle: "@lunerviasoft", meta: "공식 채널 · DM 문의", href: "https://www.instagram.com/lunerviasoft/" },
-      { name: "Instagram", handle: "@_dksrlqor", meta: "대표 직통", href: "https://www.instagram.com/_dksrlqor/" },
+      { name: "Instagram", handle: "@4ever2short", meta: "대표 직통", href: "https://www.instagram.com/4ever2short/" },
       { name: "TikTok", handle: "@_dksrlqor", meta: "비하인드 영상", href: "https://www.tiktok.com/@_dksrlqor" },
       { name: "Email", handle: "준비 중", meta: "곧 열립니다", href: "" },
     ],
