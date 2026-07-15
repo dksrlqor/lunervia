@@ -159,6 +159,7 @@ export default function MoonParticles({
     let glint: Glint | null = null;
     let glintNext = 0;
     let targets: [number, number][][] = [];
+    let arts: (ArtMap | null)[] = []; // 형태별 관절 맵(동물만, 그 외 null)
     let W = 0;
     let H = 0;
     let R = 0;
@@ -173,35 +174,48 @@ export default function MoonParticles({
     let shapeIdx = 0;
     let prevShape = 0;
 
-    /* 형태별 관절 모션 — 동물이 맺힌 동안 귀·꼬리가 살랑인다.
-       입자 좌표(형태 공간)에서 부위 피벗 기준 미세 회전, 결과는 aox/aoy 에
-       쓴다(프레임당 튜플 할당 없음). 모프 중에는 출발·목표 형태의 오프셋을
-       진행도로 가중해 자연스럽게 이어진다. */
+    /* 적응 품질 — 평균 프레임이 예산을 넘기는 기기에서 한 번 밀도를 낮춘다 */
+    let lastLoopT = 0;
+    let emaDt = 16.7;
+    let frameN = 0;
+    let degraded = false;
+
+    /* 형태별 관절 모션 — 동물이 맺힌 동안 부위가 살랑인다.
+       그룹·가중치는 샘플 시점에 구워 둔 것(arts)을 쓰고, 관절 각의
+       삼각함수는 프레임당 그룹별 한 번만 계산한다(입자당 trig 없음).
+       적용은 피벗 기준 정확 회전을 가중치 w 로 보간 — 뿌리는 붙어 있고
+       끝이 부드럽게 휜다. 모프 중에는 출발·목표 관절을 진행도로 블렌드. */
     const SHAPE_KIND = ["moon", "rabbit", "planet", "whale"] as const;
-    const isAnimal = (k: string) => k === "rabbit" || k === "whale";
-    let aox = 0;
-    let aoy = 0;
-    function artOffset(kind: string, x: number, y: number, now: number) {
-      aox = 0;
-      aoy = 0;
+    const limbCT = new Float64Array(4).fill(1);
+    const limbST = new Float64Array(4);
+    const limbCF = new Float64Array(4).fill(1);
+    const limbSF = new Float64Array(4);
+    function bakeLimbs(
+      kind: string,
+      now: number,
+      C: Float64Array,
+      S: Float64Array,
+    ) {
+      for (let g = 1; g < 4; g++) {
+        C[g] = 1;
+        S[g] = 0;
+      }
       if (kind === "rabbit") {
-        /* 귀 쫑긋 — 위쪽(귀 영역)만, 좌우 위상 다르게, 귀뿌리 피벗 회전 */
-        const w = -y / R - 0.25;
-        if (w <= 0) return;
-        const ww = Math.min(w / 0.5, 1);
-        const th = 0.09 * Math.sin(now * 0.0013 + (x < 0 ? 0 : 2.1)) * ww;
-        const rx = x - (x < 0 ? -0.17 : 0.17) * R;
-        const ry = y + 0.2 * R;
-        aox = -th * ry;
-        aoy = th * rx;
+        /* 떡방아 — 절굿공이(g1)가 어깨 피벗으로 쿵덕, 귀(g2/g3)는 위상 다르게 쫑긋 */
+        const a1 = 0.13 * Math.sin(now * 0.0016);
+        const a2 = 0.06 * Math.sin(now * 0.0013);
+        const a3 = 0.06 * Math.sin(now * 0.0013 + 2.1);
+        C[1] = Math.cos(a1);
+        S[1] = Math.sin(a1);
+        C[2] = Math.cos(a2);
+        S[2] = Math.sin(a2);
+        C[3] = Math.cos(a3);
+        S[3] = Math.sin(a3);
       } else if (kind === "whale") {
-        /* 꼬리 살랑 — 꼬리자루 피벗 기준, 뒤로 갈수록 크게 */
-        const w = x / R - 0.3;
-        if (w <= 0) return;
-        const ww = Math.min(w / 0.55, 1);
-        const th = 0.1 * Math.sin(now * 0.001) * ww;
-        aox = -th * y;
-        aoy = th * (x - 0.3 * R);
+        /* 꼬리(g1) 살랑 */
+        const a1 = 0.1 * Math.sin(now * 0.0009);
+        C[1] = Math.cos(a1);
+        S[1] = Math.sin(a1);
       }
     }
 
@@ -279,9 +293,19 @@ export default function MoonParticles({
       return out;
     }
 
-    /* ② 동물 실루엣 — 회전 타원 합집합으로 정의하고 별자리처럼 샘플링.
-       대역: 채움(내부) / 외곽선(합집합 경계) / 강조(눈 클러스터 + 윤곽). */
+    /* ② 동물 실루엣 — 회전 타원 합집합. 부위(el)마다 관절 그룹 g 를 달아
+       샘플 시점에 그룹·가중치(피벗 거리 기반)를 함께 굽는다 — 런타임 영역
+       판정이 없어 부위 경계가 어긋날 수 없다. 좌표는 레퍼런스(떡방아 토끼·
+       향유고래) 기준 ASCII 시뮬로 튜닝한 확정값.
+       대역: 채움(내부) / 외곽선(경계 파라메트릭 + 0.9 수축 합집합 기각 —
+       진짜 테두리만, 작은 부위일수록 촘촘) / 강조(눈 클러스터 + 윤곽). */
     type El = [cx: number, cy: number, rx: number, ry: number, rot: number]; // R 배수
+    type Part = { el: El; g: number };
+    type ArtMap = {
+      G: Int8Array; // 입자별 관절 그룹(0 = 정적)
+      W: Float32Array; // 입자별 가중치 0~1 — 피벗에서 멀수록 크게 휜다
+      P: [number, number][]; // 그룹별 피벗(R 배수), 인덱스 = g
+    };
     const inEl = (x: number, y: number, e: El, scale: number) => {
       const c = Math.cos(e[4]);
       const s = Math.sin(e[4]);
@@ -291,87 +315,137 @@ export default function MoonParticles({
       const v = (-dx * s + dy * c) / (e[3] * R * scale);
       return u * u + v * v <= 1;
     };
-    const inUnion = (x: number, y: number, els: El[], scale: number) => {
-      for (const e of els) if (inEl(x, y, e, scale)) return true;
+    const inUnion = (x: number, y: number, parts: Part[], scale: number) => {
+      for (const p of parts) if (inEl(x, y, p.el, scale)) return true;
       return false;
     };
 
     function silhouetteTargets(
       count: number,
-      els: El[],
+      parts: Part[],
       eyes: [number, number][],
       box: [number, number, number, number], // xmin,ymin,xmax,ymax (R 배수)
-    ): [number, number][] {
-      const out: [number, number][] = [];
-      /* 외곽선 — 임의 타원의 경계를 파라메트릭으로 뽑고, 다른 부위 내부에
-         묻히는 점은 버린다(합집합의 진짜 테두리만 남는다). 타원을 균등으로
-         고르므로 귀·지느러미 같은 작은 부위가 더 촘촘해져 형태가 잘 읽힌다. */
-      const edgePoint = (): [number, number] | null => {
-        const e = els[Math.floor(Math.random() * els.length)];
+      pivots: [number, number][],
+      reach: number[],
+    ): { pts: [number, number][]; art: ArtMap } {
+      const pts: [number, number][] = [];
+      const G = new Int8Array(count);
+      const W = new Float32Array(count);
+      const edgePoint = (): [number, number, number] | null => {
+        const part = parts[(Math.random() * parts.length) | 0];
+        const e = part.el;
         const th = Math.random() * TAU;
-        const sc = 0.9 + Math.random() * 0.1;
+        const sc = 0.92 + Math.random() * 0.08;
         const c = Math.cos(e[4]);
         const s = Math.sin(e[4]);
         const u = Math.cos(th) * e[2] * R * sc;
         const v = Math.sin(th) * e[3] * R * sc;
         const x = e[0] * R + u * c - v * s;
         const y = e[1] * R + u * s + v * c;
-        return inUnion(x, y, els, 0.88) ? null : [x, y];
+        return inUnion(x, y, parts, 0.9) ? null : [x, y, part.g];
       };
       for (let i = 0; i < count; i++) {
         const f = i / count;
-        let p: [number, number] | null = null;
-        for (let k = 0; k < 120 && !p; k++) {
+        let p: [number, number, number] | null = null;
+        for (let k = 0; k < 140 && !p; k++) {
           if (f < B1) {
             const x = (box[0] + Math.random() * (box[2] - box[0])) * R;
             const y = (box[1] + Math.random() * (box[3] - box[1])) * R;
-            if (inUnion(x, y, els, 1)) p = [x, y];
+            for (const part of parts) {
+              if (inEl(x, y, part.el, 1)) {
+                p = [x, y, part.g];
+                break;
+              }
+            }
           } else if (f < B2) {
             p = edgePoint();
-          } else if (eyes.length && Math.random() < 0.45) {
-            const e = eyes[Math.floor(Math.random() * eyes.length)];
+          } else if (eyes.length && Math.random() < 0.4) {
+            const e = eyes[(Math.random() * eyes.length) | 0];
             const th = Math.random() * TAU;
-            const rr = Math.sqrt(Math.random()) * 0.045 * R;
-            p = [e[0] * R + Math.cos(th) * rr, e[1] * R + Math.sin(th) * rr];
+            const rr = Math.sqrt(Math.random()) * 0.04 * R;
+            p = [e[0] * R + Math.cos(th) * rr, e[1] * R + Math.sin(th) * rr, 0];
           } else {
             p = edgePoint();
           }
         }
-        out.push(p ?? [0, 0]);
+        if (!p) p = [0, 0, 0];
+        pts.push([p[0], p[1]]);
+        const g = p[2];
+        G[i] = g;
+        W[i] = g
+          ? Math.min(
+              Math.hypot(p[0] - pivots[g][0] * R, p[1] - pivots[g][1] * R) /
+                (reach[g] * R),
+              1,
+            )
+          : 0;
       }
-      return out;
+      return { pts, art: { G, W, P: pivots } };
     }
 
-    /* 달토끼 — 정면. 머리+몸통+긴 귀 둘+앞발, 밝은 눈 두 점 */
-    const RABBIT_ELS: El[] = [
-      [0, -0.02, 0.34, 0.3, 0], // 머리
-      [0, 0.52, 0.44, 0.36, 0], // 몸통
-      [-0.17, -0.55, 0.11, 0.4, -0.18], // 왼귀
-      [0.17, -0.55, 0.11, 0.4, 0.18], // 오른귀
-      [-0.18, 0.82, 0.1, 0.06, 0], // 왼발
-      [0.18, 0.82, 0.1, 0.06, 0], // 오른발
+    /* 달토끼 — 레퍼런스: 서서 절굿공이를 들고 절구를 찧는 옆모습.
+       g1 = 팔+절굿공이(떡방아), g2/g3 = 귀(쫑긋) */
+    const RABBIT_PARTS: Part[] = [
+      { el: [-0.38, -0.42, 0.2, 0.19, 0], g: 0 }, // 머리
+      { el: [-0.42, 0.08, 0.26, 0.38, 0.05], g: 0 }, // 몸통
+      { el: [-0.52, -0.72, 0.075, 0.27, -0.3], g: 2 }, // 왼귀(뒤로 젖힘)
+      { el: [-0.3, -0.76, 0.075, 0.27, 0.12], g: 3 }, // 오른귀
+      { el: [-0.16, -0.32, 0.2, 0.065, -0.5], g: 1 }, // 팔
+      { el: [0.02, -0.42, 0.34, 0.045, -0.95], g: 1 }, // 절굿공이 자루
+      { el: [0.23, -0.71, 0.13, 0.085, -0.95], g: 1 }, // 절굿공이 머리
+      { el: [-0.4, 0.38, 0.22, 0.14, 0.1], g: 0 }, // 뒷다리
+      { el: [-0.26, 0.47, 0.14, 0.06, 0], g: 0 }, // 발
+      { el: [-0.66, 0.3, 0.07, 0.07, 0], g: 0 }, // 꼬리
+      { el: [0.34, 0.4, 0.29, 0.09, 0], g: 0 }, // 절구 테
+      { el: [0.34, 0.55, 0.26, 0.14, 0], g: 0 }, // 절구 몸
     ];
+    const RABBIT_PIVOTS: [number, number][] = [
+      [0, 0],
+      [-0.22, -0.26], // 어깨(절굿공이 피벗)
+      [-0.46, -0.48], // 왼귀 뿌리
+      [-0.33, -0.49], // 오른귀 뿌리
+    ];
+    const RABBIT_REACH = [1, 0.62, 0.55, 0.55];
     const rabbitTargets = (count: number) =>
       silhouetteTargets(
         count,
-        RABBIT_ELS,
-        [
-          [-0.13, -0.05],
-          [0.13, -0.05],
-        ],
-        [-0.75, -1.0, 0.75, 0.95],
+        RABBIT_PARTS,
+        [[-0.31, -0.45]],
+        [-0.88, -1.05, 0.85, 0.8],
+        RABBIT_PIVOTS,
+        RABBIT_REACH,
       );
 
-    /* 우주 고래 — 왼쪽(카피 쪽)을 보고 헤엄친다. 몸통+꼬리자루+두 갈래 꼬리+가슴지느러미 */
-    const WHALE_ELS: El[] = [
-      [-0.13, 0.04, 0.78, 0.36, -0.06], // 몸통
-      [0.57, -0.02, 0.22, 0.12, -0.25], // 꼬리자루
-      [0.79, -0.22, 0.24, 0.09, 0.85], // 위 꼬리
-      [0.79, 0.14, 0.24, 0.09, -0.85], // 아래 꼬리
-      [-0.17, 0.34, 0.17, 0.08, 0.5], // 가슴지느러미
+    /* 향유고래 — 레퍼런스: 대각선 상승(머리 좌상단). 뭉툭한 대두 + 좁은
+       아래턱 + 등혹·너클 + 작은 두 갈래 꼬리. g1 = 후미+꼬리(살랑) */
+    const WHALE_PARTS: Part[] = [
+      { el: [-0.33, -0.4, 0.36, 0.26, 0.785], g: 0 }, // 머리 블록
+      { el: [-0.52, -0.58, 0.14, 0.24, 0.785], g: 0 }, // 앞머리(뭉툭한 코)
+      { el: [-0.5, -0.18, 0.2, 0.04, 0.7], g: 0 }, // 아래턱
+      { el: [0.0, -0.02, 0.42, 0.21, 0.7], g: 0 }, // 몸통 중앙
+      { el: [0.28, 0.3, 0.3, 0.13, 0.75], g: 1 }, // 몸통 후미
+      { el: [0.48, 0.55, 0.18, 0.075, 0.8], g: 1 }, // 꼬리자루
+      { el: [0.72, 0.62, 0.15, 0.055, -0.05], g: 1 }, // 꼬리 위갈래
+      { el: [0.58, 0.8, 0.15, 0.055, 1.3], g: 1 }, // 꼬리 아래갈래
+      { el: [-0.02, 0.16, 0.1, 0.05, 1.0], g: 0 }, // 가슴지느러미
+      { el: [0.3, 0.02, 0.05, 0.05, 0], g: 0 }, // 등혹
+      { el: [0.39, 0.13, 0.045, 0.045, 0], g: 0 }, // 너클1
+      { el: [0.47, 0.24, 0.04, 0.04, 0], g: 0 }, // 너클2
     ];
+    const WHALE_PIVOTS: [number, number][] = [
+      [0, 0],
+      [0.28, 0.3], // 꼬리 피벗(후미 시작점)
+    ];
+    const WHALE_REACH = [1, 0.75];
     const whaleTargets = (count: number) =>
-      silhouetteTargets(count, WHALE_ELS, [[-0.63, -0.04]], [-1.0, -0.55, 1.1, 0.55]);
+      silhouetteTargets(
+        count,
+        WHALE_PARTS,
+        [[-0.3, -0.22]],
+        [-0.98, -0.95, 1.05, 1.0],
+        WHALE_PIVOTS,
+        WHALE_REACH,
+      );
 
     /* ③ 고리 행성 — 위쪽 고리는 행성 뒤로 숨는다 */
     function planetTargets(count: number): [number, number][] {
@@ -439,14 +513,15 @@ export default function MoonParticles({
       cy = H * (mobile ? 0.27 : 0.41);
       R = Math.min(W, H) * (mobile ? 0.34 : 0.27);
 
-      const count = rect.width < 480 ? 640 : 1100;
+      /* "섬세하게 많이" — 입자 수 상향(모바일 820·데스크톱 1500), 대신
+         개별 입자는 더 작게(아래 r 계수 0.9배). 저성능 기기는 loop 의
+         적응 품질이 밀도를 자동으로 낮춘다. */
+      const count = rect.width < 480 ? 820 : 1500;
       /* 순환: 초승달 → 달토끼 → 고리 행성 → 고래 — 동물이 연속되지 않는 배치 */
-      targets = [
-        crescentTargets(count),
-        rabbitTargets(count),
-        planetTargets(count),
-        whaleTargets(count),
-      ];
+      const rb = rabbitTargets(count);
+      const wh = whaleTargets(count);
+      targets = [crescentTargets(count), rb.pts, planetTargets(count), wh.pts];
+      arts = [null, rb.art, null, wh.art];
       shapeIdx = 0;
       prevShape = 0;
 
@@ -466,10 +541,10 @@ export default function MoonParticles({
           sy: ty + Math.sin(th) * d,
           r:
             (f < B1
-              ? 0.4 + Math.random() * 0.7
+              ? 0.36 + Math.random() * 0.62
               : f < B2
-                ? 0.55 + Math.random() * 0.85
-                : 0.7 + Math.random() * 1.0) * dpr,
+                ? 0.5 + Math.random() * 0.76
+                : 0.63 + Math.random() * 0.9) * dpr,
           a:
             f < B1
               ? 0.13 + Math.random() * 0.37
@@ -488,8 +563,9 @@ export default function MoonParticles({
 
       /* 딥필드 — depth 를 원경 쪽으로 스큐해 "먼 별이 훨씬 많은" 하늘.
          밝기 상한은 낮게 눌러 성단(시그니처)이 항상 주인공으로 남는다. */
+      /* "별을 더 섬세하게" — 밀도 상향, 개별 밝기 분포는 유지(성단이 주인공) */
       const starCount = Math.round(
-        Math.min(300, Math.max(90, (rect.width * rect.height) / 6500)),
+        Math.min(360, Math.max(110, (rect.width * rect.height) / 5400)),
       );
       stars = [];
       for (let i = 0; i < starCount; i++) {
@@ -542,6 +618,13 @@ export default function MoonParticles({
       }
       earthA = 1;
       sparks = [];
+
+      /* 적응 품질이 이미 발동한 기기면 재초기화 후에도 낮춘 밀도 유지.
+         ps 는 뒤에서부터 자르므로 targets/arts 와의 인덱스 정렬이 깨지지 않는다. */
+      if (degraded) {
+        ps.length = (ps.length * 0.72) | 0;
+        stars.length = (stars.length * 0.75) | 0;
+      }
 
       meteor = null;
       meteorNext = performance.now() + 6000 + Math.random() * 4000;
@@ -674,6 +757,11 @@ export default function MoonParticles({
         return;
       }
       const s = stars[glint.idx];
+      if (!s) {
+        /* 적응 품질·리사이즈로 배열이 줄어든 경우 — 조용히 재추첨 대기 */
+        glint = null;
+        return;
+      }
       const [gx, gy] = starPos(s, now);
       const e = Math.sin(Math.PI * t);
       const len = (3 + 9 * e) * dpr;
@@ -870,7 +958,17 @@ export default function MoonParticles({
         ctx!.globalAlpha = 1;
       }
 
-      for (const p of ps) {
+      /* 관절 각 — 입자 루프 밖에서 그룹별로 한 번만 굽는다 */
+      const artT = arts[shapeIdx];
+      const artF = arts[prevShape];
+      if (!reduced) {
+        if (artT) bakeLimbs(SHAPE_KIND[shapeIdx], now, limbCT, limbST);
+        if (artF && phase === "morph")
+          bakeLimbs(SHAPE_KIND[prevShape], now, limbCF, limbSF);
+      }
+
+      for (let i = 0; i < ps.length; i++) {
+        const p = ps[i];
         let bx: number;
         let by: number;
         let fade = 1;
@@ -889,26 +987,40 @@ export default function MoonParticles({
           bx = p.fx + (p.tx - p.fx) * e + swirl * Math.sin(p.ph);
           by = p.fy + (p.ty - p.fy) * e + swirl * Math.cos(p.ph);
           /* 관절 — 출발·목표 형태의 살랑임을 진행도로 가중해 잇는다 */
-          const kf = SHAPE_KIND[prevShape];
-          if (isAnimal(kf)) {
-            artOffset(kf, p.fx, p.fy, now);
-            bx += aox * (1 - e);
-            by += aoy * (1 - e);
-          }
-          const kt = SHAPE_KIND[shapeIdx];
-          if (isAnimal(kt)) {
-            artOffset(kt, p.tx, p.ty, now);
-            bx += aox * e;
-            by += aoy * e;
+          if (!reduced) {
+            if (artF) {
+              const g = artF.G[i];
+              if (g) {
+                const w = artF.W[i] * (1 - e);
+                const rx = p.fx - artF.P[g][0] * R;
+                const ry = p.fy - artF.P[g][1] * R;
+                bx += w * (limbCF[g] * rx - limbSF[g] * ry - rx);
+                by += w * (limbSF[g] * rx + limbCF[g] * ry - ry);
+              }
+            }
+            if (artT) {
+              const g = artT.G[i];
+              if (g) {
+                const w = artT.W[i] * e;
+                const rx = p.tx - artT.P[g][0] * R;
+                const ry = p.ty - artT.P[g][1] * R;
+                bx += w * (limbCT[g] * rx - limbST[g] * ry - rx);
+                by += w * (limbST[g] * rx + limbCT[g] * ry - ry);
+              }
+            }
           }
         } else {
           bx = p.tx;
           by = p.ty;
-          const k = SHAPE_KIND[shapeIdx];
-          if (!reduced && isAnimal(k)) {
-            artOffset(k, p.tx, p.ty, now);
-            bx += aox;
-            by += aoy;
+          if (!reduced && artT) {
+            const g = artT.G[i];
+            if (g) {
+              const w = artT.W[i];
+              const rx = p.tx - artT.P[g][0] * R;
+              const ry = p.ty - artT.P[g][1] * R;
+              bx += w * (limbCT[g] * rx - limbST[g] * ry - rx);
+              by += w * (limbST[g] * rx + limbCT[g] * ry - ry);
+            }
           }
         }
 
@@ -937,6 +1049,22 @@ export default function MoonParticles({
 
     function loop(now: number) {
       if (!visible) return;
+      /* 적응 품질 — 이동평균 프레임이 26ms(≈38fps)를 넘기면 한 번 밀도를
+         낮춘다. 탭 복귀 등 80ms 초과 스파이크는 표본에서 제외. */
+      if (lastLoopT) {
+        const d = now - lastLoopT;
+        if (d < 80) {
+          emaDt += (d - emaDt) * 0.05;
+          frameN++;
+          if (!degraded && frameN > 150 && emaDt > 26) {
+            degraded = true;
+            ps.length = (ps.length * 0.72) | 0;
+            stars.length = (stars.length * 0.75) | 0;
+            glint = null; // 잘린 인덱스 참조 방지
+          }
+        }
+      }
+      lastLoopT = now;
       draw(now);
       raf = requestAnimationFrame(loop);
     }
@@ -998,10 +1126,39 @@ export default function MoonParticles({
       ro.observe(canvas);
     }
 
+    /* DPR 변화(모니터 이동·브라우저 줌) — 크기가 같으면 RO 가 침묵하므로
+       resolution 미디어쿼리로 감지해 백킹스토어를 다시 만든다. */
+    let dprMql: MediaQueryList | null = null;
+    const onDprChange = () => {
+      init(false);
+      if (reduced) draw(performance.now());
+      watchDpr();
+    };
+    const watchDpr = () => {
+      dprMql?.removeEventListener("change", onDprChange);
+      dprMql = window.matchMedia(
+        `(resolution: ${window.devicePixelRatio}dppx)`,
+      );
+      dprMql.addEventListener("change", onDprChange);
+    };
+    watchDpr();
+
+    /* 드물게 오는 캔버스 2D 컨텍스트 유실 — 복구 시 처음부터 다시 그린다 */
+    const onCtxLost = (e: Event) => e.preventDefault();
+    const onCtxRestored = () => {
+      init(false);
+      if (reduced) draw(performance.now());
+    };
+    canvas.addEventListener("contextlost", onCtxLost);
+    canvas.addEventListener("contextrestored", onCtxRestored);
+
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
       ro?.disconnect();
+      dprMql?.removeEventListener("change", onDprChange);
+      canvas.removeEventListener("contextlost", onCtxLost);
+      canvas.removeEventListener("contextrestored", onCtxRestored);
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("pointermove", onPointer);
       document.documentElement.removeEventListener("mouseleave", onPointerOut);

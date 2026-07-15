@@ -53,22 +53,42 @@ export default function Hero() {
     let lastT = 0;
     let vSm = 0;
 
+    /* 레이아웃 캐시 — 프레임마다 getBoundingClientRect 로 레이아웃을 강제하지
+       않는다. 트랙 위치·뷰포트는 RO/resize 이벤트에서만 다시 잰다. */
+    let trackTop = 0;
+    let travel = 1;
+    let vh = 1;
+    const measure = () => {
+      vh = window.innerHeight;
+      const rect = track.getBoundingClientRect();
+      trackTop = rect.top + window.scrollY;
+      travel = rect.height - vh;
+    };
+
     const setLift = (el: HTMLElement | null, amt: number) => {
       if (el) el.style.transform = `translateY(${amt.toFixed(1)}px)`;
     };
 
-    const apply = () => {
-      const vh = window.innerHeight;
-      const rect = track.getBoundingClientRect();
-      const travel = rect.height - vh;
+    let lastP = -1;
+    let lastVW = 0;
+    const apply = (force = false) => {
       /* 핀이 해제된 레이아웃(낮은 뷰포트 CSS 폴백)에서는 카메라를 끈다 */
       if (travel < vh * 0.35) {
         cam.p = 0;
         cam.v = 0;
         return;
       }
-      const p = clamp01(-rect.top / travel);
+      const p = clamp01((window.scrollY - trackTop) / travel);
       cam.p = p;
+      /* 변화가 없으면 DOM 을 건드리지 않는다 — 최상단 대기 중 쓰기 0 */
+      if (
+        !force &&
+        Math.abs(p - lastP) < 0.0004 &&
+        Math.abs(cam.v - lastVW) < 0.01
+      )
+        return;
+      lastP = p;
+      lastVW = cam.v;
 
       /* 2막 — 계단식 타이포 이탈: 요소마다 다른 속도로 떠오른다 */
       setLift(eyebrowRef.current, -p * 0.1 * vh);
@@ -135,11 +155,27 @@ export default function Hero() {
       else start();
     };
     document.addEventListener("visibilitychange", onVis);
-    apply();
+
+    /* 트랙 크기(svh 변화 포함)·뷰포트가 바뀌면 캐시를 다시 잰다 */
+    const ro = new ResizeObserver(() => {
+      measure();
+      apply(true);
+    });
+    ro.observe(track);
+    const onResize = () => {
+      measure();
+      apply(true);
+    };
+    window.addEventListener("resize", onResize);
+
+    measure();
+    apply(true);
 
     return () => {
       stop();
       io.disconnect();
+      ro.disconnect();
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
@@ -153,7 +189,7 @@ export default function Hero() {
         </div>
 
         <div ref={copyRef} className="wrap relative z-10 pt-44 pb-20 md:pb-28">
-          <div ref={eyebrowRef}>
+          <div ref={eyebrowRef} className="will-change-transform">
             <p className="t-label fade-up text-mint/80" style={d(150)}>
               {t.hero.eyebrow}
             </p>
@@ -166,7 +202,7 @@ export default function Hero() {
                 ref={(el) => {
                   lineRefs.current[i] = el;
                 }}
-                className="line-mask"
+                className="line-mask will-change-transform"
                 aria-hidden="true"
               >
                 <span style={d(280 + i * 150)}>{fmt(line)}</span>
@@ -174,7 +210,7 @@ export default function Hero() {
             ))}
           </h1>
 
-          <div ref={subRef}>
+          <div ref={subRef} className="will-change-transform">
             <p
               className="fade-up mt-7 max-w-xl text-base leading-relaxed text-paper/78 md:text-lg"
               style={d(720)}
@@ -183,7 +219,7 @@ export default function Hero() {
             </p>
           </div>
 
-          <div ref={ctaRef}>
+          <div ref={ctaRef} className="will-change-transform">
             <div className="fade-up mt-10 flex flex-wrap items-center gap-4" style={d(880)}>
               <Link href="/#contact" className={btnPaper}>
                 {t.hero.ctaContact}
@@ -207,7 +243,7 @@ export default function Hero() {
         <div
           ref={horizonRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[-60vh] left-[-50vw] z-20 h-[80vh] w-[200vw] rounded-[50%] bg-paper"
+          className="pointer-events-none absolute bottom-[-60vh] left-[-50vw] z-20 h-[80vh] w-[200vw] rounded-[50%] bg-paper will-change-transform"
           style={{ transform: "translateY(26%)" }}
         />
       </div>
