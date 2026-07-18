@@ -1,6 +1,5 @@
 /* LUNERVIA i18n — 한국어(기본). 구조가 원본, en.ts 는 이 타입을 따른다.
-   문자열 안 **단어** 는 액센트 스팬으로 렌더된다(components/format.tsx).
-   원칙: 확인된 사실만 적는다 — 가짜 고객사·수치·기능 금지. */
+   하이라이트: 문자열 안 **단어** 는 민트 스팬으로 렌더된다(components/format.tsx). */
 
 export const ko = {
   misc: {
@@ -17,128 +16,84 @@ export const ko = {
     work: "작업",
     coena: "Coena",
     contact: "문의",
-    cta: "프로젝트 문의",
   },
 
   hero: {
-    eyebrow: "LUNERVIA — SOFTWARE STUDIO & PRODUCT LAB",
-    titleLines: ["작동하는 서비스는", "**검증 가능한 구조**에서 나온다."],
-    sub: "루네르비아는 기획부터 배포까지 한 팀이 끝까지 책임지는 소프트웨어 스튜디오입니다. 화면이 아니라, 주소가 있고 접속되는 서비스를 만듭니다.",
-    ctaWork: "작업 보기",
+    eyebrow: "LUNERVIA — SOFTWARE STUDIO",
+    status: "신규 프로젝트 모집 중",
+    titleLines: ["당신의 생각을", "**현실**로 만들어 드립니다."],
+    sub: "기획, 설계, 구현, 배포까지. 화면이 아니라 작동하는 서비스를 만듭니다.",
     ctaContact: "프로젝트 문의",
-    ctaCoena: "Coena 미리 보기",
-    fabricSr:
-      "루네르비아의 작업 체계를 나타낸 도식 — 기획, 구현, 검증, 회복, 배포가 하나의 시스템으로 연결되어 있습니다.",
-    /* 패브릭 노드 — 히어로와 프로세스 섹션이 공유하는 파이프라인 어휘 */
-    stages: {
-      spec: "기획",
-      build: "구현",
-      verify: "검증",
-      recover: "회복",
-      ship: "배포",
-    },
-    panels: {
-      verifyTitle: "coena.verify()",
-      verifyLines: ["structure — ok", "empty state — ok", "retry path — ok"],
-      verifyMeta: "3 checks passed",
-      shipTitle: "takemyletter.site",
-      shipMeta: "LIVE · 200 OK",
-      shipDesc: "받아줘 — 운영 중",
-      buildTitle: "letter.form.tsx",
-      buildLines: ["- alert(\"전송 실패\")", "+ <RetryNotice at={savedDraft} />"],
-      buildMeta: "실패 화면까지 설계",
-    },
+    ctaWork: "작업 보기",
+    moonAlt: "입자가 모여 이루는 초승달",
   },
 
-  proof: {
-    label: "PROOF",
-    sr: "운영 근거 요약",
-    items: [
-      { state: "live" as const, tag: "LIVE", text: "받아줘 · takemyletter.site", meta: "운영 중" },
-      { state: "warn" as const, tag: "BUILDING", text: "Coena v0.1 검증 엔진", meta: "개발 중" },
-      { state: "ok" as const, tag: "SHIPPED", text: "기획→배포 전 과정 직접 수행", meta: "원 팀" },
-      {
-        state: "plain" as const,
-        tag: "STACK",
-        text: "Next.js · React · TypeScript · Supabase",
-        meta: "운영 스택",
-      },
-    ],
-  },
-
-  builds: {
-    label: "WHAT LUNERVIA BUILDS",
-    title: "네 개의 축으로 만듭니다",
-    lead: "스튜디오 제작이 중심이고, 나머지 세 축이 그 기준을 끌어올립니다.",
+  services: {
+    label: "SERVICES",
+    title: "Lunervia가 하는 일",
+    lead: "기획에서 배포까지, 서비스가 실제로 작동하는 데 필요한 전부.",
     items: [
       {
-        id: "studio",
-        tag: "STUDIO",
-        name: "클라이언트 웹서비스 제작",
-        desc: "아이디어를 로그인, 데이터, 배포까지 갖춘 서비스로 구현합니다. 랜딩 페이지부터 운영형 웹서비스까지, 범위를 문장으로 고정하고 시작합니다.",
-        link: "프로젝트 문의",
-        href: "/#contact",
+        tag: "WEB",
+        name: "웹서비스 개발",
+        desc: "아이디어를 로그인, 데이터, 배포까지 갖춘 서비스로 구현합니다.",
       },
       {
-        id: "product",
-        tag: "PRODUCT",
-        name: "자체 서비스 운영",
-        desc: "익명 손편지 서비스 '받아줘'를 직접 만들어 운영합니다. 남의 서비스를 만들기 전에, 우리 서비스로 먼저 검증합니다.",
-        link: "받아줘 보기",
-        href: "/work",
+        tag: "ARCHITECTURE",
+        name: "프론트엔드 시스템 설계",
+        desc: "오래 유지보수할 수 있는 컴포넌트 구조와 상태 설계.",
       },
       {
-        id: "coena",
-        tag: "COENA",
-        name: "검증 계층 R&D",
-        desc: "AI 출력을 그대로 믿지 않는 엔진, 코이나를 만들고 있습니다. 검증하고, 회복하고, 기억하는 계층입니다.",
-        link: "Coena 소개",
-        href: "/#coena",
+        tag: "UI/UX",
+        name: "UI/UX 리디자인",
+        desc: "쓰기 어려운 화면을 쓰기 쉬운 화면으로 다시 설계합니다.",
       },
       {
-        id: "lab",
-        tag: "LAB",
-        name: "실험과 프로토타입",
-        desc: "UI 연구와 서비스 실험. 본 작업에 쓸 도구를 여기서 먼저 부러뜨려 봅니다.",
-        link: "작업 전체",
-        href: "/work",
+        tag: "LANDING",
+        name: "랜딩 페이지",
+        desc: "전환을 만드는 구조와 카피, 로딩 속도까지 함께 다룹니다.",
+      },
+      {
+        tag: "BRAND",
+        name: "브랜드 경험",
+        desc: "로고부터 웹사이트까지, 하나로 읽히는 브랜드 화면.",
+      },
+      {
+        tag: "AI",
+        name: "AI 워크플로 연동",
+        desc: "반복 작업을 AI 파이프라인으로 바꿉니다.",
       },
     ],
   },
 
-  caseStudy: {
-    label: "CASE — 001",
-    title: "받아줘 — Take My Letter",
-    status: "운영 중 · takemyletter.site",
-    desc: "익명 손편지를 받는 픽셀 감성 편지함. 내 편지함 링크를 인스타 스토리에 올리면 누구나 익명 또는 이름으로 편지를 보냅니다. 기획, 디자인, 프론트엔드, 백엔드까지 전부 루네르비아가 직접 만들어 운영합니다.",
-    roleLabel: "ROLE",
-    role: "기획 · UX · 프론트엔드 · 백엔드",
-    stackLabel: "STACK",
-    stack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "Framer Motion"],
-    builtLabel: "만든 것들",
-    built: [
-      "익명 편지함 — 링크 하나로 받는 손편지",
-      "24시간 일회성 편지 링크",
-      "편지지 템플릿 4종",
-      "스토리 공유 이미지 자동 생성",
-    ],
-    mockNote: "제품 화면 재구성",
-    mockInbox: "내 편지함",
-    mockLetters: ["익명의 편지 · 방금", "이름 있는 편지 · 3시간 전", "익명의 편지 · 어제"],
-    mockCta: "편지 쓰기",
+  work: {
+    label: "WORK",
+    title: "증명은 배포로 합니다.",
+    lead: "지금 운영 중인 서비스와 실제 클라이언트 작업.",
+    featuredName: "받아줘 — Take My Letter",
+    featuredStatus: "운영 중 · takemyletter.site",
+    featuredDesc:
+      "익명 손편지를 받는 픽셀 감성 편지함. 기획부터 프론트엔드, Supabase 백엔드까지 전부 Lunervia가 만들었습니다.",
+    featuredRole: "기획 · UX · 프론트엔드 · 백엔드",
+    featuredCta: "프로젝트 자세히",
     visitCta: "서비스 열기",
-    moreCta: "프로젝트 자세히",
+    labName: "Lunervia Lab",
+    labStatus: "준비 중",
+    labDesc: "서비스 실험, UI 연구, 프로토타입.",
+    moreCta: "작업 전체 보기",
   },
 
-  philosophy: {
-    label: "HOW WE THINK",
-    quote: "서비스는 화면의 합이 아니라,\n**결정**의 합입니다.",
-    principles: [
-      "기획한 사람이 구현하고, 구현한 사람이 배포된 화면을 끝까지 지켜봅니다.",
-      "잘 되는 순간만이 아니라 실패하고, 비어 있고, 기다리는 순간까지 그린 다음에야 배포합니다.",
-      "배포한 날은 완성한 날이 아니라 다듬기를 시작하는 날입니다.",
+  process: {
+    label: "PROCESS",
+    title: "이런 순서로 만듭니다",
+    lead: "다섯 단계. 각 단계의 결과물이 다음 단계의 입력이 됩니다.",
+    steps: [
+      { name: "기획", en: "PLAN", desc: "범위와 목표를 문장으로 고정합니다." },
+      { name: "UX 설계", en: "FLOW", desc: "화면 흐름을 먼저 그립니다. 디자인보다 순서가 먼저입니다." },
+      { name: "UI 디자인", en: "DESIGN", desc: "토큰과 컴포넌트로 화면을 조립합니다." },
+      { name: "구현", en: "BUILD", desc: "프론트엔드와 백엔드를 구현하고 직접 검증합니다." },
+      { name: "배포", en: "LAUNCH", desc: "배포하고, 지표를 보고, 다음 개선 목록을 만듭니다." },
     ],
-    cta: "만든 이유 읽기",
   },
 
   coena: {
@@ -154,6 +109,8 @@ export const ko = {
       { tag: "failure.memory", desc: "실패한 이유를 기억해 같은 실수를 반복하지 않습니다" },
     ],
     status: "지금 v0.1을 만들고 있습니다",
+    ctaPrototype: "시제품 열기",
+    ctaNotes: "기술 노트",
     /* TODO(가격·결제): 실제 가격 확정·결제 연동 시 price/billing/cta 교체.
        그 전까지는 확인된 사실만 — 결제되는 것처럼 보이게 하지 않는다. */
     pricing: {
@@ -168,7 +125,11 @@ export const ko = {
           desc: "공개 시제품. 코이나의 검증 루프를 가장 먼저 써 봅니다.",
           price: "무료",
           billing: "공개 시점부터",
-          features: ["self.verify() 검증 루프 체험", "공개 시제품 접근", "출시 소식 우선 안내"],
+          features: [
+            "self.verify() 검증 루프 체험",
+            "공개 시제품 접근",
+            "출시 소식 우선 안내",
+          ],
           cta: "출시 알림 받기",
           badge: "",
           highlighted: false,
@@ -180,7 +141,11 @@ export const ko = {
           desc: "정식 버전. 혼자서도, 팀으로도 쓰는 플랜.",
           price: "가격 미정",
           billing: "출시 때 공개",
-          features: ["self.heal() 자기 회복", "self.verify() 자기 검증", "failure.memory 실패 기억"],
+          features: [
+            "self.heal() 자기 회복",
+            "self.verify() 자기 검증",
+            "failure.memory 실패 기억",
+          ],
           cta: "출시 알림 받기",
           badge: "",
           highlighted: false,
@@ -189,10 +154,14 @@ export const ko = {
           id: "studio",
           tag: "NOW — STUDIO",
           name: "Studio",
-          desc: "루네르비아가 만드는 프로젝트에 코이나 파이프라인을 함께 설계합니다.",
+          desc: "Lunervia가 만드는 프로젝트에 코이나 파이프라인을 함께 설계합니다.",
           price: "별도 문의",
           billing: "프로젝트 단위",
-          features: ["프로젝트 맞춤 검증 설계", "구현·배포까지 스튜디오가 직접", "대표 직통 소통"],
+          features: [
+            "프로젝트 맞춤 검증 설계",
+            "구현·배포까지 스튜디오가 직접",
+            "대표 직통 소통",
+          ],
           cta: "프로젝트 문의",
           badge: "지금 가능",
           highlighted: true,
@@ -201,36 +170,13 @@ export const ko = {
     },
   },
 
-  process: {
-    label: "PROCESS",
-    title: "이런 순서로 만듭니다",
-    lead: "다섯 단계. 각 단계의 결과물이 다음 단계의 입력이 됩니다.",
-    steps: [
-      { code: "SPEC", name: "기획", desc: "범위와 목표를 문장으로 고정합니다." },
-      { code: "FLOW", name: "UX 설계", desc: "화면 흐름을 먼저 그립니다. 디자인보다 순서가 먼저입니다." },
-      { code: "BUILD", name: "구현", desc: "토큰과 컴포넌트로 화면을 조립하고, 프론트와 백엔드를 만듭니다." },
-      { code: "VERIFY", name: "검증", desc: "실패·빈 화면·대기 상태까지 직접 확인한 다음에야 내보냅니다." },
-      { code: "SHIP", name: "배포", desc: "배포하고, 지표를 보고, 다음 개선 목록을 만듭니다." },
-    ],
-  },
-
   contact: {
     label: "CONTACT",
     title: "프로젝트, 시작합시다.",
     lead: "문의는 Instagram DM이 가장 빠릅니다. 신규 제작, 리뉴얼, 협업 — 어떤 단계든 좋습니다.",
     channels: [
-      {
-        name: "Instagram",
-        handle: "@lunerviasoft",
-        meta: "공식 채널 · DM 문의",
-        href: "https://www.instagram.com/lunerviasoft/",
-      },
-      {
-        name: "Instagram",
-        handle: "@4ever2short",
-        meta: "대표 직통",
-        href: "https://www.instagram.com/4ever2short/",
-      },
+      { name: "Instagram", handle: "@lunerviasoft", meta: "공식 채널 · DM 문의", href: "https://www.instagram.com/lunerviasoft/" },
+      { name: "Instagram", handle: "@4ever2short", meta: "대표 직통", href: "https://www.instagram.com/4ever2short/" },
       { name: "TikTok", handle: "@_dksrlqor", meta: "비하인드 영상", href: "https://www.tiktok.com/@_dksrlqor" },
       { name: "Email", handle: "준비 중", meta: "곧 열립니다", href: "" },
     ],
@@ -253,7 +199,7 @@ export const ko = {
     badajwo: {
       status: "운영 중 · takemyletter.site",
       name: "받아줘 — Take My Letter",
-      desc: "익명 손편지를 받는 픽셀 감성 편지함. 내 편지함 링크를 인스타 스토리에 올리면 누구나 익명 또는 이름으로 편지를 보냅니다. 기획, 디자인, 프론트엔드, 백엔드까지 전부 루네르비아가 직접 만들어 운영합니다.",
+      desc: "익명 손편지를 받는 픽셀 감성 편지함. 내 편지함 링크를 인스타 스토리에 올리면 누구나 익명 또는 이름으로 편지를 보냅니다. 기획, 디자인, 프론트엔드, 백엔드까지 전부 Lunervia가 직접 만들어 운영합니다.",
       stackLabel: "STACK",
       stack: ["React 18", "Vite", "Tailwind CSS", "Supabase", "Framer Motion"],
       featuresLabel: "만든 것들",
@@ -267,6 +213,7 @@ export const ko = {
       ],
       role: "기획 · UX · 프론트엔드 · 백엔드",
       cta: "서비스 열기",
+      petHint: "고양이를 쓰다듬어 보세요",
     },
     cards: [
       { tag: "LAB", name: "Lunervia Lab", status: "준비 중", desc: "서비스 실험, UI 연구, 프로토타입." },
@@ -284,6 +231,7 @@ export const ko = {
     heroLines: ["왜 만들었는지,", "여기 **적어** 둡니다."],
     heroSub:
       "루네르비아라는 이름 아래에서 화면을 만드는 사람이 직접 쓴, 조금 긴 글입니다. 5분이면 읽습니다.",
+    readCta: "만든 이유 읽기",
     storyLabel: "THE STORY",
     chapters: [
       {

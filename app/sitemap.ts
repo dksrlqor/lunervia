@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 const BASE = "https://www.lunervia.xyz";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-07-18");
+  const lastModified = new Date("2026-07-07");
   return [
     { url: `${BASE}/`, lastModified, changeFrequency: "monthly", priority: 1 },
     { url: `${BASE}/work`, lastModified, changeFrequency: "monthly", priority: 0.8 },

@@ -1,25 +1,17 @@
-import Hero from "@/components/sections/Hero";
-import ProofRail from "@/components/sections/ProofRail";
-import Builds from "@/components/sections/Builds";
-import CasePanel from "@/components/sections/CasePanel";
-import Philosophy from "@/components/sections/Philosophy";
-import CoenaSection from "@/components/coena/CoenaSection";
-import ProcessSection from "@/components/sections/ProcessSection";
-import ContactSection from "@/components/sections/ContactSection";
+import Hero from "@/components/home/Hero";
+import WorkSection from "@/components/home/WorkSection";
+import CoenaSection from "@/components/home/CoenaSection";
+import ContactSection from "@/components/home/ContactSection";
 
-/* 홈 — 하나의 이야기:
-   시스템(Hero) → 증거(Proof) → 무엇을(Builds) → 어떻게 증명하나(Case)
-   → 왜(Philosophy·라이트) → 제품(Coena) → 방식(Process) → 행동(Contact). */
+/* 홈 — 아주 단순하게: 히어로, 받아줘(작업), Coena, 문의.
+   소개성 콘텐츠(하는 일·프로세스·만든 이유)는 /why 로 통합됐다.
+   다크↔라이트 교차: ink → paper → ink → paper → footer(ink). */
 export default function Home() {
   return (
     <>
       <Hero />
-      <ProofRail />
-      <Builds />
-      <CasePanel />
-      <Philosophy />
+      <WorkSection />
       <CoenaSection />
-      <ProcessSection />
       <ContactSection />
     </>
   );

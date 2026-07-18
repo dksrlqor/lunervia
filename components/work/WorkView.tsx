@@ -1,107 +1,120 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
-import Reveal from "@/components/motion/Reveal";
-
-/* /work — 작업 아카이브. 받아줘 상세 + 준비 중인 축들.
-   확인된 사실만: 기능 목록·스택·역할 전부 실제 구현 내역이다. */
+import Reveal from "@/components/Reveal";
+import PageHeader from "@/components/PageHeader";
+import LetterScene from "@/components/badajwo/LetterScene";
+import { btnPaper, btnGhostLight } from "@/components/ui";
 
 export default function WorkView() {
   const { t } = useI18n();
   const w = t.workPage;
-  const b = w.badajwo;
 
   return (
     <>
-      {/* 페이지 헤드 */}
-      <section className="border-b border-line pt-16">
+      <PageHeader label={w.label} title={w.title} lead={w.lead} />
+
+      {/* Featured — 받아줘. §3-1: 다크 흐름 속에서 열리는 따뜻한 픽셀 세계 */}
+      <section className="sheet bg-ink text-paper">
         <div className="wrap py-16 md:py-24">
-          <Reveal variant="fade" className="sect-head">
-            <p className="t-label text-ink3">{w.label}</p>
-          </Reveal>
-          <Reveal variant="mask" as="h1" delay={80} className="t-hero mt-8 max-w-3xl">
-            {w.title}
-          </Reveal>
-          <Reveal variant="fade" as="p" delay={160} className="mt-5 max-w-md text-ink2">
-            {w.lead}
-          </Reveal>
-        </div>
-      </section>
+          <Reveal>
+            <div className="grid gap-8 md:grid-cols-[1fr_1.05fr] md:gap-12">
+              <div className="min-h-72 md:min-h-96">
+                <LetterScene catPx={9} interactive petHint={w.badajwo.petHint} />
+              </div>
 
-      {/* 받아줘 상세 */}
-      <section className="sect">
-        <div className="wrap grid items-start gap-10 md:grid-cols-12">
-          <div className="md:col-span-7">
-            <p className="t-meta flex items-center gap-2 text-ok">
-              <span className="dot dot-ok pulse-live" />
-              {b.status}
-            </p>
-            <Reveal variant="mask" as="h2" delay={60} className="t-display mt-4">
-              {b.name}
-            </Reveal>
-            <Reveal variant="fade" as="p" delay={120} className="mt-5 max-w-2xl leading-relaxed text-ink2">
-              {b.desc}
-            </Reveal>
+              <div>
+                <p className="t-label inline-flex items-center gap-2 text-paper/55">
+                  <span
+                    aria-hidden="true"
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-mint"
+                  />
+                  {w.badajwo.status}
+                </p>
+                <h2 className="mt-4 text-3xl font-extrabold tracking-tight">
+                  {w.badajwo.name}
+                </h2>
+                <p className="mt-4 max-w-lg leading-relaxed text-paper/70">
+                  {w.badajwo.desc}
+                </p>
 
-            <Reveal variant="fade" delay={180} className="mt-9">
-              <h3 className="t-label text-ink3">{b.featuresLabel}</h3>
-              <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
-                {b.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink2">
-                    <span aria-hidden="true" className="mt-[7px] dot dot-ok size-1.5!" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+                <h3 className="t-label mt-8 text-paper/40">{w.badajwo.featuresLabel}</h3>
+                <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+                  {w.badajwo.features.map((f) => (
+                    <li key={f} className="flex gap-2.5 text-sm leading-relaxed text-paper/70">
+                      <span
+                        aria-hidden="true"
+                        className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-paper/35"
+                      />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
 
-            <Reveal variant="fade" delay={220} className="mt-9">
-              <a
-                href="https://takemyletter.site"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-fill"
-              >
-                {b.cta}
-                <span className="sr-only"> — {t.misc.externalNote}</span>
-              </a>
-            </Reveal>
-          </div>
+                <h3 className="t-label mt-7 text-paper/40">{w.badajwo.stackLabel}</h3>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {w.badajwo.stack.map((s) => (
+                    <li
+                      key={s}
+                      className="rounded-full border border-paper/15 px-3 py-1 font-mono text-[10px] tracking-[0.12em] text-paper/55 uppercase"
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </ul>
 
-          <Reveal variant="dock" delay={140} className="md:col-span-5">
-            <div className="panel p-6 md:p-7">
-              <h3 className="t-label text-ink3">{b.stackLabel}</h3>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {b.stack.map((s) => (
-                  <li key={s} className="t-meta rounded border border-line px-2.5 py-1.5 text-ink2">
-                    {s}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-7 border-t border-line pt-6">
-                <h3 className="t-label text-ink3">ROLE</h3>
-                <p className="mt-3 text-sm text-ink2">{b.role}</p>
+                <div className="mt-9 flex flex-wrap items-center gap-4">
+                  <a
+                    href="https://takemyletter.site"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={btnPaper}
+                  >
+                    {w.badajwo.cta}
+                  </a>
+                  <span className="font-mono text-[11px] tracking-[0.14em] text-paper/40">
+                    {w.badajwo.role}
+                  </span>
+                </div>
               </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* 준비 중인 축들 */}
-      <section id="lab" className="sect-tight scroll-mt-16 border-t border-line">
-        <div className="wrap">
-          <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-2">
-            {w.cards.map((card, i) => (
-              <Reveal as="div" key={card.name} variant="fade" delay={i * 100} className="bg-bg1 p-6 md:p-8">
-                <p className="t-label flex items-center justify-between text-ink3">
-                  {card.tag}
-                  <span className="t-meta tracking-normal normal-case text-warn">{card.status}</span>
-                </p>
-                <h2 className="mt-4 text-lg font-bold tracking-tight">{card.name}</h2>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink2">{card.desc}</p>
-              </Reveal>
+      {/* 그 외 작업 — 라이트 */}
+      <section className="sheet bg-paper text-ink">
+        <div className="wrap py-16 md:py-24">
+          <ul className="grid gap-4 md:grid-cols-3">
+            {w.cards.map((c, i) => (
+              <li key={c.name} className="h-full">
+                <Reveal delay={i * 90} className="h-full">
+                  <div className="h-full rounded-2xl border border-ink/10 p-6">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono text-[10px] tracking-[0.18em] text-ink/40 uppercase">
+                        {c.tag}
+                      </p>
+                      <p className="font-mono text-[10px] tracking-[0.12em] text-ink/45 uppercase">
+                        {c.status}
+                      </p>
+                    </div>
+                    <h2 className="mt-4 text-lg font-bold">{c.name}</h2>
+                    <p className="mt-2 text-sm leading-relaxed text-ink/60">{c.desc}</p>
+                  </div>
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
+
+          <Reveal className="mt-12">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-ink/10 p-7 md:p-9">
+              <p className="text-lg font-bold">{t.contact.title}</p>
+              <Link href="/#contact" className={btnGhostLight}>
+                {t.hero.ctaContact}
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>
