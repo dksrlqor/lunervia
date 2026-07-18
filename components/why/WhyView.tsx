@@ -1,16 +1,12 @@
 "use client";
 
-import { Fragment } from "react";
 import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
 import { fmt } from "@/components/format";
-import Reveal from "@/components/Reveal";
-import WritingParticles from "@/components/why/WritingParticles";
-import ProcessSection from "@/components/home/ProcessSection";
-import Services from "@/components/home/Services";
-import { btnPaper, btnInk, btnGhostLight } from "@/components/ui";
+import Reveal from "@/components/motion/Reveal";
 
-const d = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
+/* /why — 만든 이유. 에디토리얼 페이지: 장치 없이 타이포와 문단이 전부.
+   챕터 번호는 실제 이야기의 순서(이름→시작→방식→앞으로)를 나른다. */
 
 export default function WhyView() {
   const { t } = useI18n();
@@ -18,106 +14,102 @@ export default function WhyView() {
 
   return (
     <>
-      {/* 히어로 — 별이 손과 책이 되어 글을 쓴다. 홈 히어로와 같은 문법 */}
-      <section className="relative flex min-h-svh items-end overflow-hidden bg-ink text-paper">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <WritingParticles className="h-full w-full" />
-        </div>
-
-        <div className="wrap relative z-10 pt-44 pb-20 md:pb-28">
-          <p className="t-label fade-up text-mint/80" style={d(150)}>
-            {w.eyebrow}
-          </p>
-
-          <h1 className="t-hero mt-6" aria-label={w.heroLines.join(" ")}>
-            {w.heroLines.map((line, i) => (
-              <span key={i} className="line-mask" aria-hidden="true">
-                <span style={d(280 + i * 150)}>{fmt(line)}</span>
+      {/* 헤드 */}
+      <section className="border-b border-line pt-16">
+        <div className="wrap py-16 md:py-24">
+          <Reveal variant="fade" className="sect-head">
+            <p className="t-label text-ink3">{w.eyebrow}</p>
+          </Reveal>
+          <Reveal variant="mask" as="h1" delay={80} className="t-hero mt-8 max-w-3xl">
+            {w.heroLines.map((l, i) => (
+              <span key={i} className="block">
+                {fmt(l)}
               </span>
             ))}
-          </h1>
-
-          <p
-            className="fade-up mt-7 max-w-xl text-base leading-relaxed text-paper/78 md:text-lg"
-            style={d(700)}
-          >
+          </Reveal>
+          <Reveal variant="fade" as="p" delay={160} className="mt-5 max-w-md text-ink2">
             {w.heroSub}
-          </p>
-
-          <div className="fade-up mt-10" style={d(860)}>
-            <a href="#story" className={btnPaper}>
-              {w.readCta} <span aria-hidden="true">↓</span>
-            </a>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* 장문 스토리 — 가독이 전부인 지면 */}
-      <section id="story" className="sheet bg-paper text-ink">
-        <div className="wrap py-24 md:py-32">
-          <div className="mx-auto max-w-2xl">
-            <Reveal>
-              <p className="t-label text-ink/60">{w.storyLabel}</p>
-            </Reveal>
+      {/* 본문 — 챕터 1·2 */}
+      <section className="sect">
+        <div className="wrap">
+          <Reveal variant="fade" className="sect-head">
+            <h2 className="t-label text-ink3">{w.storyLabel}</h2>
+          </Reveal>
 
-            {w.chapters.map((ch, ci) => (
-              <Fragment key={ch.no}>
-                <Reveal className={ci === 0 ? "mt-10" : "mt-20 md:mt-24"}>
-                  <div className="flex items-center gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="inline-block h-2 w-2 rounded-full bg-mint"
-                    />
-                    <span className="font-mono text-sm font-semibold tracking-[0.12em] text-ink/60">
-                      {ch.no}
-                    </span>
-                    <h2 className="text-2xl font-extrabold tracking-tight md:text-[1.75rem]">
-                      {ch.title}
-                    </h2>
-                  </div>
-                </Reveal>
-
-                <Reveal className="mt-7">
-                  <div className="space-y-7 text-[1.0625rem] leading-[1.95] text-ink/82 md:text-lg">
-                    {ch.paragraphs.map((p, pi) => (
-                      <p key={pi}>{p}</p>
-                    ))}
-                  </div>
-                </Reveal>
-
-                {/* 인용 — 다크 카드 위에서만 민트 단어를 켠다 */}
-                {(ci === 1 || ci === 2) && (
-                  <Reveal className="my-16 md:my-20">
-                    <blockquote className="rounded-3xl bg-ink px-8 py-10 text-paper md:px-12 md:py-14">
-                      <p className="t-quote">{fmt(ci === 1 ? w.quote1 : w.quote2)}</p>
-                    </blockquote>
+          {w.chapters.slice(0, 2).map((ch) => (
+            <article key={ch.no} className="mt-16 grid gap-6 md:grid-cols-12 md:gap-8">
+              <Reveal variant="fade" className="md:col-span-4">
+                <p className="t-label text-ink3">{ch.no}</p>
+                <h3 className="t-title mt-3">{ch.title}</h3>
+              </Reveal>
+              <div className="space-y-5 md:col-span-7 md:col-start-6">
+                {ch.paragraphs.map((p, i) => (
+                  <Reveal as="p" key={i} variant="fade" delay={i * 70} className="leading-[1.85] text-ink2">
+                    {p}
                   </Reveal>
-                )}
-              </Fragment>
-            ))}
-
-            <Reveal className="mt-16 border-t border-ink/10 pt-8">
-              <p className="font-mono text-sm leading-relaxed text-ink/55">{w.sign}</p>
-            </Reveal>
-
-            <Reveal className="mt-10">
-              <div className="flex flex-wrap gap-3">
-                <Link href="/#contact" className={btnInk}>
-                  {w.ctaContact}
-                </Link>
-                <Link href="/work" className={btnGhostLight}>
-                  {w.ctaWork}
-                </Link>
+                ))}
               </div>
-            </Reveal>
-          </div>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* 소개 통합 — 홈에서 옮겨온 '이런 순서로 만듭니다'와 '하는 일'.
-          교차 유지: 스토리(paper) → 프로세스(ink) → 서비스(paper) → 푸터(ink) */}
-      <ProcessSection />
-      <Services />
+      {/* 인용 1 — 라이트 브레이크 */}
+      <section className="on-paper bg-paper text-paperink">
+        <div className="wrap sect-tight">
+          <Reveal variant="mask" as="p" className="t-quote max-w-3xl">
+            {fmt(w.quote1)}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 본문 — 챕터 3·4 */}
+      <section className="sect">
+        <div className="wrap">
+          {w.chapters.slice(2).map((ch, idx) => (
+            <article
+              key={ch.no}
+              className={`grid gap-6 md:grid-cols-12 md:gap-8 ${idx > 0 ? "mt-16" : ""}`}
+            >
+              <Reveal variant="fade" className="md:col-span-4">
+                <p className="t-label text-ink3">{ch.no}</p>
+                <h3 className="t-title mt-3">{ch.title}</h3>
+              </Reveal>
+              <div className="space-y-5 md:col-span-7 md:col-start-6">
+                {ch.paragraphs.map((p, i) => (
+                  <Reveal as="p" key={i} variant="fade" delay={i * 70} className="leading-[1.85] text-ink2">
+                    {p}
+                  </Reveal>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* 인용 2 + 마무리 */}
+      <section className="border-t border-line bg-bg1/50">
+        <div className="wrap sect">
+          <Reveal variant="mask" as="p" className="t-quote max-w-3xl">
+            {fmt(w.quote2)}
+          </Reveal>
+          <Reveal variant="fade" delay={120} className="t-meta mt-10 text-ink3">
+            {w.sign}
+          </Reveal>
+          <Reveal variant="fade" delay={180} className="mt-9 flex flex-wrap gap-3">
+            <Link href="/#contact" className="btn btn-fill">
+              {w.ctaContact}
+            </Link>
+            <Link href="/work" className="btn btn-ghost">
+              {w.ctaWork}
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </>
   );
 }

@@ -4,7 +4,6 @@ import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
 
 const jbm = JetBrains_Mono({
   subsets: ["latin"],
@@ -24,11 +23,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   title: {
-    default: "Lunervia — 생각을 현실로 만드는 소프트웨어 스튜디오",
+    default: "Lunervia — 작동하는 서비스를 만드는 소프트웨어 스튜디오",
     template: "%s · Lunervia",
   },
   description:
-    "기획, 설계, 구현, 배포까지. 화면이 아니라 작동하는 웹서비스를 만드는 소프트웨어 스튜디오, Lunervia.",
+    "기획, 구현, 검증, 배포까지 한 팀이 책임지는 소프트웨어 스튜디오. 화면이 아니라 주소가 있고 접속되는 서비스를 만듭니다.",
   openGraph: {
     type: "website",
     siteName: "Lunervia",
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#171717",
+  themeColor: "#0b0e13",
 };
 
 const JSON_LD = {
@@ -75,20 +74,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preload" as="style" href={PRETENDARD} />
         <link rel="stylesheet" href={PRETENDARD} />
-        {/* Galmuri — §3-1 받아줘 예외 구역 전용 픽셀 서체 (원본과 동일 소스).
-            @latest 는 릴리스마다 캐시가 깨지고 공급망 변경에 노출되므로 버전 고정. */}
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
       </head>
-      <body>
+      <body id="top">
         <LanguageProvider>
-          <ScrollProgress />
           <Header />
           <main id="main">{children}</main>
           <Footer />
