@@ -8,7 +8,7 @@ export default function ContactSection() {
   const { t } = useI18n();
 
   return (
-    <section id="contact" className="sheet bg-paper text-ink">
+    <section id="contact" className="scroll-mt-20 sheet bg-paper text-ink">
       <div className="wrap py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr]">
           <Reveal>

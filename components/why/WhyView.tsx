@@ -45,7 +45,22 @@ export default function WhyView() {
           </p>
 
           <div className="fade-up mt-10" style={d(860)}>
-            <a href="#story" className={btnPaper}>
+            {/* 전역 scroll-behavior:smooth 제거(라우터 충돌) 후에도 이 버튼만은
+                부드럽게 — JS 로 직접, 모션 축소 환경에선 즉시 점프 */}
+            <a
+              href="#story"
+              className={btnPaper}
+              onClick={(e) => {
+                const el = document.getElementById("story");
+                if (!el) return;
+                e.preventDefault();
+                el.scrollIntoView({
+                  behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "auto"
+                    : "smooth",
+                });
+              }}
+            >
               {w.readCta} <span aria-hidden="true">↓</span>
             </a>
           </div>
@@ -53,7 +68,7 @@ export default function WhyView() {
       </section>
 
       {/* 장문 스토리 — 가독이 전부인 지면 */}
-      <section id="story" className="sheet bg-paper text-ink">
+      <section id="story" className="scroll-mt-20 sheet bg-paper text-ink">
         <div className="wrap py-24 md:py-32">
           <div className="mx-auto max-w-2xl">
             <Reveal>

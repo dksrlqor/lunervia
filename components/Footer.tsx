@@ -85,7 +85,14 @@ export default function Footer() {
           </p>
           <button
             type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+              })
+            }
             className="cursor-pointer font-mono text-[11px] tracking-[0.15em] text-paper/40 uppercase transition-colors hover:text-mint"
           >
             {t.footer.top} ↑

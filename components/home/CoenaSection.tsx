@@ -22,7 +22,7 @@ export default function CoenaSection() {
   const c = t.coena;
 
   return (
-    <section id="coena" className="sheet bg-ink text-paper">
+    <section id="coena" className="scroll-mt-20 sheet bg-ink text-paper">
       <div className="wrap py-24 md:py-32">
         <Reveal>
           <p className="t-label text-mint/80">{c.eyebrow}</p>

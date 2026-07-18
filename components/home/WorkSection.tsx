@@ -10,7 +10,7 @@ export default function WorkSection() {
   const { t } = useI18n();
 
   return (
-    <section id="work" className="sheet bg-paper text-ink">
+    <section id="work" className="scroll-mt-20 sheet bg-paper text-ink">
       <div className="wrap py-24 md:py-32">
         <Reveal>
           <p className="t-label flex items-center gap-2.5 text-ink/60">

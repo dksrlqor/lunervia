@@ -21,9 +21,10 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+  /* html { scroll-behavior: smooth } 금지 — Next 라우터의 해시 스크롤
+     (/#coena 등 Link 이동)이 통째로 무시되는 충돌을 실측으로 확인했다.
+     data-scroll-behavior="smooth" 속성도 이 버전(16.2)에선 해결 못 함.
+     부드러운 스크롤이 필요한 곳은 개별 JS(scrollIntoView)로 처리한다. */
   body {
     @apply bg-ink text-paper font-sans antialiased;
     overflow-x: hidden;
@@ -351,9 +352,6 @@
     animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  html {
-    scroll-behavior: auto;
   }
   .line-mask > span {
     transform: none !important;
