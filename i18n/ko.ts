@@ -21,11 +21,25 @@ export const ko = {
   hero: {
     eyebrow: "LUNERVIA — SOFTWARE STUDIO",
     status: "신규 프로젝트 모집 중",
-    titleLines: ["당신의 생각을", "**현실**로 만들어 드립니다."],
-    sub: "기획, 설계, 구현, 배포까지. 화면이 아니라 작동하는 서비스를 만듭니다.",
+    titleLines: ["이렇게 만든 서비스가", "지금 **운영** 중입니다."],
+    sub: "기획, UX, 프론트엔드, 백엔드, 배포까지 한 팀이 직접 만듭니다. 받아줘는 그렇게 만들어 지금도 돌아가고 있습니다.",
     ctaContact: "프로젝트 문의",
     ctaWork: "작업 보기",
-    moonAlt: "입자가 모여 이루는 초승달",
+    /* 빌드 패스 — 오른쪽 무대의 라벨은 전부 확인된 사실만:
+       실제 기획 문장, 실제 검증 항목, 실제 도메인. */
+    build: {
+      sr: "받아줘가 만들어지는 과정 — 기획, 조립, 검증을 거쳐 지금 운영 중입니다.",
+      stages: ["기획", "조립", "검증", "LIVE"],
+      specLabel: "SPEC",
+      spec: "링크 하나로 받는 익명 편지",
+      uiTo: "받는 사람 — 내 편지함",
+      uiBtn: "편지 보내기",
+      checks: ["빈 화면 확인", "실패 화면 확인"],
+      live: "LIVE · takemyletter.site",
+      note: "받아줘 화면을 간추린 재구성",
+      open: "받아줘 열기",
+      replay: "과정 다시 보기",
+    },
   },
 
   services: {

@@ -23,11 +23,23 @@ export const en: Dict = {
   hero: {
     eyebrow: "LUNERVIA — SOFTWARE STUDIO",
     status: "Available for projects",
-    titleLines: ["Your ideas,", "made **real**."],
-    sub: "Planning, design, build, launch. Not mockups — working software.",
+    titleLines: ["This is how we build —", "and it's **live** now."],
+    sub: "One team carries the product from first plan to production. Take My Letter runs on exactly that process, today.",
     ctaContact: "Start a project",
     ctaWork: "View work",
-    moonAlt: "A crescent moon formed by particles",
+    build: {
+      sr: "How Take My Letter was built — planned, assembled, verified, and now live.",
+      stages: ["Plan", "Assemble", "Verify", "LIVE"],
+      specLabel: "SPEC",
+      spec: "Anonymous letters through a single link",
+      uiTo: "To — my letterbox",
+      uiBtn: "Send letter",
+      checks: ["Empty states checked", "Failure states checked"],
+      live: "LIVE · takemyletter.site",
+      note: "The product screen, condensed",
+      open: "Open Take My Letter",
+      replay: "Replay the build",
+    },
   },
 
   services: {

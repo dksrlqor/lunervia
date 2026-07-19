@@ -13,8 +13,9 @@ import { makeGlowSprite } from "@/components/canvas/sprites";
    · 주변에는 옅은 별이 느리게 표류 — 홈 히어로와 같은 밤하늘 문법.
    · 진입은 홈과 동일한 산개→수렴. 이후 구성 전체가 궤도 위처럼
      리사주 표류·기울기·호흡을 계속한다(정지 프레임 없음).
-   · canvas 2D 단일 요소, fillRect·불투명 캔버스 — MoonParticles 와
-     같은 성능 문법. reduced-motion: 네 줄이 완성된 정적 1프레임.
+   · canvas 2D 단일 요소, fillRect·불투명 캔버스(구 홈 히어로 MoonParticles
+     의 성능 문법 계승 — 그 파일은 2026-07-19 히어로 교체로 삭제됨).
+     reduced-motion: 네 줄이 완성된 정적 1프레임.
    ============================================================ */
 
 type SceneDot = {
