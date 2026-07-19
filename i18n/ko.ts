@@ -38,7 +38,6 @@ export const ko = {
       live: "LIVE · takemyletter.site",
       note: "받아줘 화면을 간추린 재구성",
       open: "받아줘 열기",
-      replay: "과정 다시 보기",
     },
   },
 

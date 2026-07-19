@@ -38,7 +38,6 @@ export const en: Dict = {
       live: "LIVE · takemyletter.site",
       note: "The product screen, condensed",
       open: "Open Take My Letter",
-      replay: "Replay the build",
     },
   },
 

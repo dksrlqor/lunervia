@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import Link from "next/link";
 import { useI18n } from "@/i18n/LanguageContext";
 import { btnPaper, btnGhostDark } from "@/components/ui";
@@ -54,7 +54,6 @@ const at = (wd: number, mwd: number): CSSProperties =>
 export default function Hero() {
   const { t } = useI18n();
   const b = t.hero.build;
-  const [run, setRun] = useState(0);
 
   const sceneRef = useRef<HTMLElement>(null);
   const guidesRef = useRef<SVGSVGElement>(null);
@@ -172,14 +171,12 @@ export default function Hero() {
       if (fine) window.removeEventListener("pointermove", onMove);
       window.clearTimeout(mt);
     };
-  }, [run]);
+  }, []);
 
   let w = 0; // 어절 전역 인덱스 (두 줄 연속 안무)
 
   return (
-    /* key 리마운트 = 리플레이. 가이드·펄스·본문이 모두 .fb-run 범위 안에 있어
-       한 번에 처음부터 재생된다. */
-    <section key={run} ref={sceneRef} className="fb-hero fb-run relative bg-ink text-paper">
+    <section ref={sceneRef} className="fb-hero fb-run relative bg-ink text-paper">
       {/* 청사진 가이드라인 — 어절과 부품이 타고 오는 선 */}
       <svg
         ref={guidesRef}
@@ -448,16 +445,7 @@ export default function Hero() {
                 ))}
               </ol>
 
-              <div className="flex items-center gap-4">
-                <span className="text-[11px] text-paper/40">{b.note}</span>
-                <button
-                  type="button"
-                  onClick={() => setRun((n) => n + 1)}
-                  className="hidden cursor-pointer font-mono text-[11px] tracking-[0.1em] text-paper/55 underline decoration-paper/30 underline-offset-4 transition-colors hover:text-paper motion-safe:md:inline"
-                >
-                  {b.replay} ↺
-                </button>
-              </div>
+              <span className="text-[11px] text-paper/40">{b.note}</span>
             </div>
           </div>
         </div>
